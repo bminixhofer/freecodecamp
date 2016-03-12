@@ -38,7 +38,7 @@ app.get(/.*/, function(req, res) {
 		res.end();
 	}
 });
-app.listen(8080);
+app.listen(process.env.PORT || 8080);
 
 function convertFromNaturalDate(date) {
 	var matches = date.match(/(\w+)%20(\d+),%20(\d+)/i) || [];
