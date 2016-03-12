@@ -1,64 +1,69 @@
 'use strict';
 
 var express = require('express');
+var mongo = require('mongodb').MongoClient;
 var app = express();
-
-var months = [
-	"January",
-	"February",
-	"March",
-	"April",
-	"May",
-	"June",
-	"July",
-	"August",
-	"September",
-	"October",
-	"November",
-	"December"
-];
+var viableCharacters = "abcdefghijklmnopqrstuvwxyz0123456789";
 
 app.use(express.static(__dirname + '/public'));
 
-app.get(/.*/, function(req, res) {
-	var input = req.url.slice(1);
-	
-	if(input.length > 0) {
-		var jsDate = convertFromNaturalDate(input);
-		var date = new Date((jsDate != "Invalid Date") ? jsDate : Number(input));
-		var obj = { unix: null, natural: null };
-	
-		if(date.toString() != "Invalid Date") {
-			obj.unix = date.getTime();
-			obj.natural = months[date.getMonth()] + " " + date.getDate() + ", " + date.getUTCFullYear();
-		}
-			
-		res.end(JSON.stringify(obj));
-	} else {
-		res.end();
-	}
+app.get(/\/new\/.+/, function(req, res) {
+    var currentUrl = req.url.slice(5);
+    var isValidUrl = /^(https?:\/\/)?w{3}\.\w+\.\w+/.test(currentUrl);
+    
+    if(isValidUrl) {
+        mongo.connect('mongodb://localhost:27017', function(err, db) {
+            if(err) throw err;
+            
+            var urls = db.collection('urls');
+            urls.find().sort({_id: -1}).limit(1).toArray(function(err, docs) {
+                if(err) throw err;
+                var short = (docs.length > 0) ? docs[0].shortenedChar : 'a'; 
+                
+                if(short[short.length - 1] == viableCharacters[viableCharacters.length - 1]) {
+                    short = short.split('');
+                    short[short.length - 1] = 'a';
+                    short.push('a');
+                    short = short.join('');
+                } else {
+                    short = short.slice(0, short.length - 1) + viableCharacters[viableCharacters.indexOf(short[short.length -1]) + 1];
+                }
+            
+                var obj = {
+                 shortenedChar: short,
+                 url: currentUrl,
+                 shortened: req.get('host') + '/' + short
+                };
+            
+                urls.insert(obj, function(err, data) {
+                    if(err) throw err;
+                    
+                    res.end(JSON.stringify( {
+                        url: obj.url,
+                        short: obj.shortened
+                    }));    
+                });
+            });
+        });
+    } else {
+        res.end(JSON.stringify({ error: "invalid url" }));
+    }
 });
-app.listen(8080);
 
-function convertFromNaturalDate(date) {
-	var matches = date.match(/(\w+)%20(\d+),%20(\d+)/i) || [];
-	if(matches.length == 4) {
-		matches = matches.slice(1);
-		var compareMonths = months.map(function(value) {
-			return value.toLowerCase();	
-		});
-		return addZeros(matches[2], 4) + "-" + addZeros(compareMonths.indexOf(matches[0].toLowerCase()) + 1, 2) + "-" + addZeros(matches[1]); 
-	} else {
-		return "Invalid Date";
-	}
-}
-
-function addZeros(str, num) {
-	for(var i = 0; i < str.length; i++) {
-		if(str.length < num) {
-			str = "0" + str;
-		}
-	}
-	
-	return str;
-}
+app.get(/^\/\w+$/, function(req, res) { 
+    var shortenedUrl = req.url.slice(1);
+    mongo.connect('mongodb://localhost:27017', function(err, db) {
+        if(err) throw err;
+        
+        db.collection('urls').find({ shortenedChar: { $eq: shortenedUrl }}).toArray(function(err, arr) {
+            if(err) throw err;
+            
+            if(arr.length > 0) {
+            res.redirect((arr[0].url.indexOf("http://") === -1 && arr[0].url.indexOf("https://") === -1) ? "http://" + arr[0].url : arr[0].url);
+            } else {
+                res.end(JSON.stringify( { error: "URL not assigned" }));
+            }
+        });
+    });
+});
+app.listen(process.env.PORT || 8080);
