@@ -15,7 +15,7 @@ app.get("/getdata", function(req, res) {
 		res.end(JSON.stringify(obj));
 	});
 });
-app.listen(8080);
+app.listen(process.env.PORT);
 
 function callAjax(url, callback){
     var xmlhttp;
