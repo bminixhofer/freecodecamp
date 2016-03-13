@@ -12,7 +12,7 @@ app.get(/\/new\/.+/, function(req, res) {
     var isValidUrl = /^(https?:\/\/)?w{3}\.\w+\.\w+/.test(currentUrl);
     
     if(isValidUrl) {
-        mongo.connect(process.env.MONGO_URI, function(err, db) {
+        mongo.connect(process.env.MONGOLAB_URI, function(err, db) {
             if(err) throw err;
             
             var urls = db.collection('urls');
@@ -52,7 +52,7 @@ app.get(/\/new\/.+/, function(req, res) {
 
 app.get(/^\/\w+$/, function(req, res) { 
     var shortenedUrl = req.url.slice(1);
-    mongo.connect(process.env.MONGO_URI, function(err, db) {
+    mongo.connect(process.env.MONGOLAB_URI, function(err, db) {
         if(err) throw err;
         
         db.collection('urls').find({ shortenedChar: { $eq: shortenedUrl }}).toArray(function(err, arr) {
