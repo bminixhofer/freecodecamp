@@ -6,21 +6,10 @@
 </head>
 
 <body>
-  <h1>FCC Project: Timestamp Microservice</h1>
+  <h1>FCC Project: Request Header Parser Microservice</h1>
   <br>
-  <p><i>Timestamp Microservice</i> is a simple project to display natural and unix time when a valid date is passed as parameter.<br> Valid date formats in this context are: </p>
-  <span><code>&lt;Month&gt; &lt;Date&gt;, &lt;Year&gt;</code> for example <code>March 6, 2016</code></span>
-  
-  <br>
-  
-  <span><code>&lt;Milliseconds since January 1, 1970&gt;</code> for example <code>1457222400000</code></span>
-  <p>in this example case the service would display a JSON containing natural and unix timestamps of the current date like:</p>
-  
-  <code>{ "unix": 1457222400000, "natural": "March 6, 2016" }</code>
-  <p>if an invalid date gets passed</p>
-  
-  <code>{ "unix": null, "natural": null }</code>
-  <p>is returned.</p>
+  <p>The <i>Request Header Parser Microservice</i> is a simple project to display the users ip, language and browser OS in JSON format when requested.<br> To display the data send a GET request to this URL: </p>
+  <span><code>http://bminixhofer-header-parser-ms.herokuapp.com/getdata</code></span>
   
   <div>
     <p><i>Coded by Benjamin Minixhofer</i></p>
