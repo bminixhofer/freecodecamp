@@ -41,7 +41,14 @@ app.get("/mostrecent", function(req, res) {
         db.collection('recentsearches').find().sort({_id: -1}).limit(10).toArray(function(err, docs) {
             if(err) throw err;
             
-            res.end(JSON.stringify( { search: docs.search, time: docs.time } ));
+            docs = docs.map(function(obj) {
+                return {
+                    search: obj.search,
+                    time: obj.time
+                };
+            });
+            
+            res.end(JSON.stringify(docs));
         });
     });
 });
