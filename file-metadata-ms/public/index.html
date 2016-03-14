@@ -1,33 +1,20 @@
 <head>
-    <title>Timestamp Microservice</title>
+    <title>Image Search</title>
     <link rel="stylesheet" href="/css/main.css">
     <link href='https://fonts.googleapis.com/css?family=Open+Sans' rel='stylesheet' type='text/css'>
     <link href='https://fonts.googleapis.com/css?family=Source+Code+Pro' rel='stylesheet' type='text/css'>
 </head>
 
 <body>
-  <h1>FCC Project: URL Shortener</h1>
+  <h1>FCC Project: Image Search</h1>
   <br>
-  <p><i>URL Shortener</i> is a microservice made shorten URLs passed as a parameter<br> Valid url formats in this context are: </p>
-  <span><code>www.example.com</code></span>
-  
+  <p><i>Image Search</i> is a microservice to search for images and view there URL, source URL, thumbnail and snippet in JSON format when making a GET request to </p><br>
+  <span><code>bminixhofer-image-search.herokuapp.com/imagesearch/&ltquery&gt</code></span>
+  <p>where &ltquery&gt is your search term.</p>
   <br>
-  
-  <span><code>http://www.example.com</code></span>
-  
+  <p>You can also view the most recent searches done with this service by navigating to</p>
   <br>
-  
-  <p>and a valid get request would be:</p>
-  
-  <br>
-  
-  <span><code>https://url-shortener-ms-bminixhofer.c9users.io/new/www.example.com</code></span>
-  
-  <br>
-  <p>the application would shorten the url and display a JSON with the original and shortened URL like:</p>
-  
-  <code>{ "url": "www.example.com", "short": "https://url-shortener-ms-bminixhofer.c9users.io/x" }</code>
-  <p>if an invalid URL gets passed, a JSON describing the error is shown.</p>
+  <span><code>bminixhofer-image-search.herokuapp.com/mostrecent</code></span>
   
   <div>
     <p><i>Coded by Benjamin Minixhofer</i></p>
