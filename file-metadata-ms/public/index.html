@@ -1,20 +1,17 @@
 <head>
-    <title>Image Search</title>
+    <title>File Metadata Microservice</title>
     <link rel="stylesheet" href="/css/main.css">
     <link href='https://fonts.googleapis.com/css?family=Open+Sans' rel='stylesheet' type='text/css'>
     <link href='https://fonts.googleapis.com/css?family=Source+Code+Pro' rel='stylesheet' type='text/css'>
 </head>
 
 <body>
-  <h1>FCC Project: Image Search</h1>
-  <br>
-  <p><i>Image Search</i> is a microservice to search for images and view there URL, source URL, thumbnail and snippet in JSON format when making a GET request to </p><br>
-  <span><code>bminixhofer-image-search.herokuapp.com/imagesearch/&ltquery&gt</code></span>
-  <p>where &ltquery&gt is your search term.</p>
-  <br>
-  <p>You can also view the most recent searches done with this service by navigating to</p>
-  <br>
-  <span><code>bminixhofer-image-search.herokuapp.com/mostrecent</code></span>
+  <h1>FCC Project: File Metadata Microservice</h1>
+  
+  <form action="./filedata" enctype="multipart/form-data" method="post">
+    <input type="file" name="fileToUpload">
+    <input id="submitInput" type="submit" value="Upload File">
+  </form>
   
   <div>
     <p><i>Coded by Benjamin Minixhofer</i></p>
