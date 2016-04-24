@@ -13,8 +13,7 @@
 
         var token = window.location.pathname.split('/');
         token = token[token.length - 1];
-        console.log(Chart);
-
+        
         $("#deletepoll").click(function() {
           $.ajax({
             url: './deletePoll',

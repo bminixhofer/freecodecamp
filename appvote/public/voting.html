@@ -41,7 +41,6 @@
               dataType: 'json',
               data: $('.newPoll').serialize() + "&poll[count]=" + choiceCount,
               success: function(response) {
-                console.log(response);
                 if(response.error === "none") {
                   window.location.replace("/poll/" + response.token);
                 }
