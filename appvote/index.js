@@ -25,7 +25,7 @@ app.get('/', function(req, res) {
 app.use(express.static(__dirname + '/public'));
 
 app.post('/loginUser', function(req, res) {
-  mongo.connect('mongodb://localhost:27017', function(err, db) {
+  mongo.connect(process.env.MONGOLAB_URI, function(err, db) {
     if(err) throw err;
 
     var users = db.collection('users');
@@ -52,7 +52,7 @@ app.get('/getUser', function(req, res) {
 });
 
 app.post('/addUser', function(req, res) {
-  mongo.connect('mongodb://localhost:27017', function(err, db) {
+  mongo.connect(process.env.MONGOLAB_URI, function(err, db) {
     if(err) throw err;
 
     var username = req.body.user.name;
@@ -91,7 +91,7 @@ app.post('/addUser', function(req, res) {
 });
 
 app.post('/vote', function(req, res) {
-  mongo.connect('mongodb://localhost:27017', function(err, db) {
+  mongo.connect(process.env.MONGOLAB_URI, function(err, db) {
     if(err) throw err;
 
     var polls = db.collection('polls');
@@ -115,7 +115,7 @@ app.get('/logoutUser', function(req, res) {
 });
 
 app.post('/setPoll', function(req, res) {
-  mongo.connect("mongodb://localhost:27017", function(err, db) {
+  mongo.connect(process.env.MONGOLAB_URI, function(err, db) {
     if(err) throw err;
 
     var polls = db.collection('polls');
@@ -149,7 +149,7 @@ app.post('/setPoll', function(req, res) {
 });
 
 app.post("/getPoll", function(req, res) {
-  mongo.connect("mongodb://localhost:27017", function(err, db) {
+  mongo.connect(process.env.MONGOLAB_URI, function(err, db) {
     if(err) throw err;
 
     var polls = db.collection('polls');
@@ -166,7 +166,7 @@ app.post("/getPoll", function(req, res) {
 });
 
 app.get("/poll/:token", function(req, res) {
-  mongo.connect('mongodb://localhost:27017', function(err, db) {
+  mongo.connect(process.env.MONGOLAB_URI, function(err, db) {
     if(err) throw err;
 
     var polls = db.collection('polls');
@@ -183,7 +183,7 @@ app.get("/poll/:token", function(req, res) {
 });
 
 app.get('/getAllPolls', function(req, res) {
-  mongo.connect('mongodb://localhost:27017', function(err, db) {
+  mongo.connect(process.env.MONGOLAB_URI, function(err, db) {
     if(err) throw err;
 
     var polls = db.collection('polls');
@@ -201,7 +201,7 @@ app.get('/getAllPolls', function(req, res) {
 });
 
 app.post('/deletePoll', function(req, res) {
-  mongo.connect('mongodb://localhost:27017', function(err, db) {
+  mongo.connect(process.env.MONGOLAB_URI, function(err, db) {
     if(err) throw err;
 
     var polls = db.collection('polls');
@@ -222,7 +222,7 @@ app.post('/deletePoll', function(req, res) {
 });
 
 app.post('/addPoll', function(req, res) {
-  mongo.connect('mongodb://localhost:27017', function(err, db) {
+  mongo.connect(process.env.MONGOLAB_URI, function(err, db) {
     if(err) throw err;
     var polls = db.collection('polls');
 
