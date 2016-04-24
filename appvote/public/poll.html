@@ -4,7 +4,7 @@
     <meta charset="utf-8">
     <title>Poll | Appvote</title>
     <link href='https://fonts.googleapis.com/css?family=Lato' rel='stylesheet' type='text/css'>
-    <script src="../scripts/Chart.bundle.min.js"></script>
+    <script src="../scripts/Chart.min.js"></script>
     <script src="../scripts/jquery-2.2.3.min.js"></script>
     <script src="../scripts/jquery.form.min.js"></script>
 
@@ -13,7 +13,7 @@
 
         var token = window.location.pathname.split('/');
         token = token[token.length - 1];
-        console.log(token);
+        console.log(Chart);
 
         $("#deletepoll").click(function() {
           $.ajax({
@@ -38,7 +38,6 @@
               type: 'get',
               dataType: 'json',
               success: function(res) {
-                console.log(res.user + ":" + poll.author);
                 if(res.user == poll.author) {
                   $("#deletepoll").css("opacity", "1");
                 }
@@ -48,7 +47,6 @@
             $.get("https://api.ipify.org/?format=json", function(data) {
               var ip = data.ip.replace(/\./g, 'x');
 
-              console.log(poll);
               $(".title").text(poll.question);
 
               if(!poll.voters[ip]) {
