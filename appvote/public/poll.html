@@ -13,10 +13,10 @@
 
         var token = window.location.pathname.split('/');
         token = token[token.length - 1];
-        
+
         $("#deletepoll").click(function() {
           $.ajax({
-            url: './deletePoll',
+            url: '/deletePoll',
             type: 'post',
             data: { token: token },
             success: function() {
@@ -75,7 +75,7 @@
                       dataType: 'json',
                       data: { poll: poll },
                       success: function() {
-                        location.reload();
+                        window.location.reload(true);
                       }
                     });
                   }
