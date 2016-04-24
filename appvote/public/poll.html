@@ -75,7 +75,8 @@
                       dataType: 'json',
                       data: { poll: poll },
                       success: function() {
-                        window.location.reload(true);
+                        //window.location.replace() not working on heroku for some reason
+                        window.location.replace(window.location.href);
                       }
                     });
                   }
