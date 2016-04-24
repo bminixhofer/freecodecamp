@@ -111,7 +111,6 @@
                     label: poll[j].name
                   });
                 }
-                Chart.defaults.Pie.segmentStrokeColor = "#E9E9E9";
                 var ctx = $("#chart").get(0).getContext("2d");
                 var chart = new Chart(ctx).Pie(data, {
                   animationEasing: "easeInQuart",
