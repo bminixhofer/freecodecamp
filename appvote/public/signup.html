@@ -12,7 +12,7 @@
     <script>
     $(document).ready(function() {
       $('.inputs').ajaxForm({
-        url : 'http://localhost:8080/addUser',
+        url : '/addUser',
         dataType : 'json',
         success : function (response) {
           $(".errorMessage").removeClass("shown");
