@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <link rel="stylesheet" type="text/css" href="style/voting.css">
+    <link href='https://fonts.googleapis.com/css?family=Lato' rel='stylesheet' type='text/css'>
+    <title>Polls | Appvote</title>
+    <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.7/jquery.js"></script>
+    <script src="http://malsup.github.com/jquery.form.js"></script>
+    <script>
+      var choiceCount = 2;
+      var isLoggedIn = false;
+
+      $("document").ready(function() {
+        var formElements = ["poll[question]"];
+
+        $.ajax({
+          url: '/getAllPolls',
+          dataType: 'json',
+          type: 'get',
+          success: function(data) {
+            data.forEach(function(element) {
+                $(".polls").append(
+                  '<div class="poll"><a href="' + element.link + '"><h4>' + element.question + '</h4></a></div>'
+                );
+            });
+          }
+        });
+
+        $(".newPoll").submit(function() {
+          var isEmpty = false;
+          $(":input").each(function() {
+            if($(this).val() === "") {
+              isEmpty = true;
+            }
+          });
+          if(!isEmpty) {
+            $.ajax({
+              url:'/addPoll',
+              type:'post',
+              dataType: 'json',
+              data: $('.newPoll').serialize() + "&poll[count]=" + choiceCount,
+              success: function(response) {
+                console.log(response);
+                if(response.error === "none") {
+                  window.location.replace("/poll/" + response.token);
+                }
+              }
+            });
+          }
+          return false;
+        });
+
+        $(".addChoice").click(function() {
+          if(choiceCount < 5) {
+            choiceCount++;
+            formElements.push("choice[" + choiceCount + "]");
+            $(".choices").html  ($(".choices").html() +
+              "<input name='poll[" + choiceCount + "][name]' type='text' placeholder='Choice " + choiceCount + "'></input><br>");
+          }
+        });
+        callAjax('getUser', function(response) {
+            response = JSON.parse(response);
+            if(response.user == 'j:null') {
+                isLoggedIn = false;
+                document.querySelector('.user').textContent = "Not logged in";
+                $("#logout").val('Login');
+            } else {
+              isLoggedIn = true;
+              document.querySelector('.user').textContent = response.user;
+            }
+        });
+
+
+        $("#logout").click(function() {
+          if(isLoggedIn) {
+            callAjax('logoutUser', function() {
+              window.location.replace("/index.html");
+            });
+          } else {
+            window.location.replace('/login.html');
+          }
+        });
+      });
+
+      function callAjax(url, callback){
+        var xmlhttp;
+        xmlhttp = new XMLHttpRequest();
+        xmlhttp.onreadystatechange = function() {
+          if (xmlhttp.readyState == 4 && xmlhttp.status == 200){
+              callback(xmlhttp.responseText);
+          }
+        }
+        xmlhttp.open("GET", url, true);
+        xmlhttp.send();
+      }
+    </script>
+  </head>
+  <body>
+    <div id="header">
+      <input value="Logout" id="logout" type="button">
+      <h2 class="user">User</h2>
+    </div>
+    <div id="createNew">
+      <h3>Create New</h3>
+      <form method="post" class="newPoll" name="form">
+        <input name="poll[question]" type="text" class="question" placeholder="Question"></input><br>
+        <div class="choices">
+          <input name="poll[1][name]" type="text" placeholder="Choice 1"></input><br>
+          <input name="poll[2][name]" type="text" placeholder="Choice 2"></input><br>
+        </div>
+        <div class="addChoice">+</div>
+        <input type="submit" value="Add"></input>
+      </form>
+    </div>
+    <h1>Polls</h1>
+    <div class="separator"></div>
+    <div class="polls">
+    </div>
+  </body>
+</html>

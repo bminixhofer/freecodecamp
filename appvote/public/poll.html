@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>Poll | Appvote</title>
+    <link href='https://fonts.googleapis.com/css?family=Lato' rel='stylesheet' type='text/css'>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/1.0.2/Chart.min.js"></script>
+    <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.7/jquery.js"></script>
+    <script src="http://malsup.github.com/jquery.form.js"></script>
+
+    <script type="text/javascript">
+      $("document").ready(function() {
+
+        var token = window.location.pathname.split('/');
+        token = token[token.length - 1];
+        console.log(token);
+
+        $("#deletepoll").click(function() {
+          $.ajax({
+            url: '/deletePoll',
+            type: 'post',
+            data: { token: token },
+            success: function() {
+              window.location.replace('/voting.html');
+            }
+          });
+        });
+
+        $.ajax({
+          url: '/getPoll',
+          dataType: 'json',
+          type: 'post',
+          data: { token: token },
+          success: function(response) {
+            var poll = JSON.parse(response);
+            $.ajax({
+              url: '/getUser',
+              type: 'get',
+              dataType: 'json',
+              success: function(res) {
+                console.log(res.user + ":" + poll.author);
+                if(res.user == poll.author) {
+                  $("#deletepoll").css("opacity", "1");
+                }
+              }
+            });
+
+            $.get("https://api.ipify.org/?format=json", function(data) {
+              var ip = data.ip.replace(/\./g, 'x');
+
+              console.log(poll);
+              $(".title").text(poll.question);
+
+              if(!poll.voters[ip]) {
+                //user hasnt voted yet
+                $("body").append(
+                  '<form method="post" class="choices"><div class="submit">' +
+                      '<input value="Vote!" type="submit">' +
+                    '</div>' +
+                  '</form><br>'
+                );
+
+                for(var i = poll.count; i >= 1; i--) {
+                  $(".choices").prepend(
+                    '<br><input id="checkbox' + i + '" type="checkbox" name="' + i + '" class="css-checkbox"/><label for="checkbox' + i + '" class="css-label">' + poll["" + i].name + '</label><br>'
+                  );
+                }
+
+                $(".choices").ajaxForm({
+                  url : '/vote',
+                  dataType: 'json',
+                  data: { token: token },
+                  success: function(res) {
+                    poll.voters[ip] = res.name;
+                    $.ajax({
+                      url: '/setPoll',
+                      type: 'post',
+                      dataType: 'json',
+                      data: { poll: poll },
+                      success: function() {
+                        location.reload();
+                      }
+                    });
+                  }
+                });
+
+                $("input[type=checkbox]").click(function() {
+                  var id = $(this).prop("id");
+                  var index = Number(id[id.length - 1] - 1);
+
+                  $("input[type='checkbox']").each(function(i) {
+                    if(i !== index) {
+                      $(this).prop("checked", false);
+                    }
+                  });
+                });
+              } else {
+                //user already voted
+                $("body").append(
+                  '<h2>You have voted for "' + poll.voters[ip] + '"</h2>' +
+                  '<canvas id="chart" width="600" height="400"></canvas>'
+                );
+
+                var data = [];
+                var colors = ["#6C2AA8", "#F94831", "#5DD62A", "#F9E731", "#AD229C"];
+
+                for(var j = 1; j <= poll.count; j++) {
+                  data.push( {
+                    color: colors[j - 1],
+                    value: poll[j].votes,
+                    label: poll[j].name
+                  });
+                }
+                Chart.defaults.Pie.segmentStrokeColor = "#E9E9E9";
+                var ctx = $("#chart").get(0).getContext("2d");
+                var chart = new Chart(ctx).Pie(data, {
+                  animationEasing: "easeInQuart",
+                  animationSteps: 50
+                });
+              }
+            });
+          }
+        });
+      });
+    </script>
+    <style>
+        /*generated checkbox*/
+        input[type=checkbox].css-checkbox {
+          position: absolute; z-index: -1000; left:-1000px; overflow: hidden; clip: rect(0 0 0 0); height: 1px; width: 1px; margin:-1px; padding:0; border:0;
+        }
+
+        input[type=checkbox].css-checkbox + label.css-label {
+          padding-left: 37px;
+          height: 32px;
+          display:inline-block;
+          line-height:32px;
+          background-repeat:no-repeat;
+          background-position: 0 0;
+          font-size:32px;
+          vertical-align:middle;
+          cursor:pointer;
+        }
+
+        input[type=checkbox].css-checkbox:checked + label.css-label {
+          background-position: 0 -32px;
+        }
+        label.css-label {
+          z-index: 1000;
+          background-image:url(http://csscheckbox.com/checkboxes/u/csscheckbox_4ea63867c02e5cae931bd62523a0c675.png);
+          -webkit-touch-callout: none;
+          -webkit-user-select: none;
+          -khtml-user-select: none;
+          -moz-user-select: none;
+          -ms-user-select: none;
+          user-select: none;
+      }
+      /*end*/
+
+      * {
+        font-family: Lato;
+      }
+
+      input {
+        display: inline-block;
+      }
+
+      body {
+        text-align: center;
+        background-color: #E9E9E9;
+      }
+
+      h3 {
+        font-size: 30px;
+        display: inline-block;
+        color: #424242;
+      }
+
+      h1 {
+        color: #FF9900;
+        font-size: 50px;
+      }
+
+      h2 {
+        margin-bottom: 150px;
+      }
+
+      .choices {
+        margin: 0 auto;
+        display: inline-block;
+        text-align: left;
+        margin-bottom: 40px;
+      }
+
+      input[type="submit"] {
+        border: none;
+        margin-top: 1em;
+        width: 140px;
+        height: 50px;
+        color: #E9E9E9;
+        background-color: #3299BB;
+        font-size: 25px;
+        border-radius: 8px;
+      }
+
+      .submit {
+        text-align: center;
+      }
+
+      #deletepoll {
+        opacity: 0;
+        font-size: 20px;
+        color: #FFF;
+        border: none;
+        width: 150px;
+        height: 40px;
+        border-radius: 5px;
+        background-color: #F94831;
+        position: absolute;
+        right: 20px;
+        bottom: 20px;
+      }
+
+    </style>
+  </head>
+  <body>
+    <h1 class="title"></h1>
+    <input id="deletepoll" type="button" value="Delete this Poll">
+  </body>
+</html>

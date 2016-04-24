@@ -1,0 +1,43 @@
+body {
+  background-color: #E9E9E9;
+}
+
+* {
+  font-family: Lato;
+}
+
+#title {
+  text-align: center;
+}
+
+h1 {
+  color: #FF9900;
+  font-size: 70px;
+  margin-top: 4em;
+}
+
+h3 {
+  color: #FF9900;
+  margin-top: -1em;
+  font-size: 25px;
+}
+
+#signup {
+  margin-top: 3em;
+  border: none;
+  width: 170px;
+  height: 50px;
+  color: #FFF;
+  background-color: #3299BB;
+  font-size: 25px;
+  border-radius: 8px;
+}
+
+p {
+  color: #424242;
+}
+
+a {
+  color: #FF9900;
+  text-decoration: none;
+}

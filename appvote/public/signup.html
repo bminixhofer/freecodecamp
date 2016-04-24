@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>Sign Up | Appvote</title>
+    <link rel="stylesheet" type="text/css" href="style/signup.css">
+    <link href='https://fonts.googleapis.com/css?family=Lato' rel='stylesheet' type='text/css'>
+
+    <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.7/jquery.js"></script>
+    <script src="http://malsup.github.com/jquery.form.js"></script>
+
+    <script>
+    $(document).ready(function() {
+      $('.inputs').ajaxForm({
+        url : 'http://localhost:8080/addUser',
+        dataType : 'json',
+        success : function (response) {
+          $(".errorMessage").removeClass("shown");
+          if(response.error !== "none") {
+            $("#error").text(response.error);
+            $(".errorMessage").delay(200).addClass("shown");
+          } else {
+            window.location.replace("/voting.html");
+          }
+        }
+      });
+    });
+    </script>
+  </head>
+  <body>
+    <div id="wrapper">
+      <h1>Sign Up</h1>
+      <div class="separator"></div>
+      <div class="errorMessage">
+        <img src="data:image/svg+xml;utf8;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0iaXNvLTg4NTktMSI/Pgo8IURPQ1RZUEUgc3ZnIFBVQkxJQyAiLS8vVzNDLy9EVEQgU1ZHIDEuMS8vRU4iICJodHRwOi8vd3d3LnczLm9yZy9HcmFwaGljcy9TVkcvMS4xL0RURC9zdmcxMS5kdGQiPgo8c3ZnIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyIgeG1sbnM6eGxpbms9Imh0dHA6Ly93d3cudzMub3JnLzE5OTkveGxpbmsiIHZlcnNpb249IjEuMSIgdmlld0JveD0iMCAwIDUxMiA1MTIiIGVuYWJsZS1iYWNrZ3JvdW5kPSJuZXcgMCAwIDUxMiA1MTIiIHdpZHRoPSIxMjhweCIgaGVpZ2h0PSIxMjhweCI+CiAgPHBhdGggZD0ibTUwNy42NDEsNDMxLjg3NmwtMjI0LTM4NC4wMDJjLTUuNzM0LTkuODI4LTE2LjI1OC0xNS44NzUtMjcuNjQxLTE1Ljg3NS0xMS4zODMsMC0yMS45MDYsNi4wNDctMjcuNjQxLDE1Ljg3NWwtMjI0LDM4NC4wMDJjLTUuNzczLDkuODk4LTUuODEzLDIyLjEyNS0wLjEwOSwzMi4wNjMgNS43MTEsOS45MzggMTYuMjg5LDE2LjA2MyAyNy43NSwxNi4wNjNoNDQ4LjAwMWMxMS40NjEsMCAyMi4wMzktNi4xMjUgMjcuNzUtMTYuMDYzIDUuNzAzLTkuOTM4IDUuNjY0LTIyLjE2NS0wLjExLTMyLjA2M3ptLTI1MS42NDEtMTUuODc4Yy0xNy42NTYsMC0zMi0xNC4zMjgtMzItMzIgMC0xNy42NzIgMTQuMzQ0LTMyIDMyLTMyIDE3LjY4OCwwIDMyLDE0LjMyOCAzMiwzMiAwLDE3LjY3MS0xNC4zMTIsMzItMzIsMzJ6bTMyLTEyNy45OThjMCwxNy42NzItMTQuMzI4LDMyLTMyLDMycy0zMi0xNC4zMjgtMzItMzJ2LTk2YzAtMTcuNjcyIDE0LjMyOC0zMiAzMi0zMnMzMiwxNC4zMjggMzIsMzJ2OTZ6IiBmaWxsPSIjRDgwMDI3Ii8+Cjwvc3ZnPgo=" />
+        <p id="error">Error</p>
+      </div>
+      <form class="inputs" method="post">
+        <input name="user[name]" type="text" placeholder="Username"><br>
+        <input name="user[password]" type="password" placeholder="Password"><br>
+        <input name="user[confirmPassword]" type="password" placeholder="Confirm Password"><br>
+        <input id="continue" type="submit" value="Continue">
+      </form>
+    </div>
+  </body>
+</html>

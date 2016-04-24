@@ -1,0 +1,19 @@
+{
+  "name": "appvote",
+  "version": "1.0.0",
+  "description": "A simple and free voting app.",
+  "main": "index.js",
+  "scripts": {
+    "test": "npm test"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/bminixhofer/appvote.git"
+  },
+  "keywords": [
+    "app",
+    "vote"
+  ],
+  "author": "Benjamin Minixhofer",
+  "license": "ISC"
+}
