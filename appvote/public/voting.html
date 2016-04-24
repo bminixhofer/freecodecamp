@@ -7,7 +7,7 @@
     <title>Polls | Appvote</title>
     <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.7/jquery.js"></script>
     <script src="http://malsup.github.com/jquery.form.js"></script>
-    <script>
+    <script type="text/javascript">
       var choiceCount = 2;
       var isLoggedIn = false;
 
@@ -15,7 +15,7 @@
         var formElements = ["poll[question]"];
 
         $.ajax({
-          url: './getAllPolls',
+          url: '/getAllPolls',
           dataType: 'json',
           type: 'get',
           success: function(data) {
