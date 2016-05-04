@@ -1,0 +1,145 @@
+body {
+  background-color: #FFFBFB;
+}
+
+h1 {
+  margin-top: 3.5em;
+  font-family: 'Roboto Condensed';
+  font-size: 4em;
+  color: #AD1E1A;
+
+  text-align: center;
+}
+
+#my-logout {
+  font-size: 22px;
+  font-family: 'Roboto Condensed';
+  cursor: pointer;
+  cursor: hand;
+  color: #3369E8;
+  display: none;
+}
+
+#my-signin2 {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+}
+
+form {
+  min-width: 400px;
+  margin-top: 2.5em;
+  text-align: center;
+  font-family: 'Roboto Condensed';
+  font-size: 33px;
+}
+
+#search {
+  padding: 0;
+  padding-left: 0.6em;
+
+  font-family: inherit;
+  font-size: inherit;
+  border: 2px solid #340B0A;
+  border-radius: 1em 0 0 1em;
+  width: 9em;
+  height: 1.4em;
+}
+
+#submit {
+  font-family: inherit;
+  font-size: inherit;
+  border: none;
+  color: #FFFBFB;
+  background-color: #AD1E1A;
+  border-radius: 0 1em 1em 0;
+  border: 2px solid #AD1E1A;
+  height: 1.5em;
+  width: 2em;
+  margin-left: -0.5em;
+  padding: 0;
+}
+
+.results {
+  margin-top: 5em;
+}
+
+.wrapper {
+  width: 100%;
+  text-align: center;
+}
+
+.item {
+  text-align: left;
+  display: inline-block;
+  font-family: 'Roboto Condensed';
+  width: 400px;
+  height: 310px;
+  border: 4px solid #AD1E1A;
+  border-radius: 0.7em;
+  overflow: hidden;
+
+}
+
+.wrap {
+  bottom: 400px;
+  width: 400px;
+  height: 160px;
+  display: table;
+  vertical-align: bottom;
+}
+
+h4 {
+  font-family: 'Roboto Condensed';
+  display: inline-block;
+  margin: 0;
+  width: 25px;
+  font-size: 20px;
+  margin-right: -2px;
+  border-radius: 0.4em 0 0 0.4em;
+  border: 3px solid #AD1E1A;
+}
+
+h3 {
+  opacity: 0.9;
+  font-family: inherit;
+  font-size: 34px;
+  width: 385px;
+  position: absolute;
+  top: 80px;
+  z-index: 100;
+  color: #FFF;
+  margin-left: 15px;
+}
+
+p {
+  height: 55px;
+  font-size: 23px;
+  margin-left: 15px;
+  font-family: inherit;
+}
+
+.gothere {
+  float: right;
+  text-align: center;
+}
+input[type="button"] {
+  display: inline-block;
+  height: 50px;
+  width: 180px;
+  font-size: 24px;
+  font-family: inherit;
+  border: none;
+  border-radius: 0.5em 0 0 0;
+  color: white;
+  background-color: #AD1E1A;
+}
+
+img {
+  z-index: -1;
+  max-width: 400px;
+  position: absolute;
+  clip: rect(0px,400px,160px,0px);
+  -webkit-filter: blur(4px);
+  filter:blur(4px);
+}

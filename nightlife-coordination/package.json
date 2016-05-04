@@ -1,0 +1,19 @@
+{
+  "name": "nightlife-coordination",
+  "version": "1.0.0",
+  "description": "A nightlife coordination app",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "\u0016\u001b[2~\u001b[2~\u001by: https://github.com/bminixhofer/nightife-coordination.git"
+  },
+  "keywords": [
+    "nightlife",
+    "coordination"
+  ],
+  "author": "bminixhofer",
+  "license": "ISC"
+}
