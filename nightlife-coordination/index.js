@@ -22,7 +22,7 @@ app.get('/getLastSearch', function(req, res) {
 });
 
 app.post('/goThere', function(req, res) {
-  mongo.connect('mongodb://localhost:27017', function(err, db) {
+  mongo.connect(process.env.MONGOLAB_URI, function(err, db) {
     if(err) throw err;
 
     var visits = db.collection('visits');
@@ -60,7 +60,7 @@ app.get('/search', function(req, res) {
   var loc = req.query.location;
   res.cookie('lastSearch', req.query.location);
   yelp.search({ term: "bar", location: loc }).then(function(data) {
-    mongo.connect('mongodb://localhost:27017', function(err, db) {
+    mongo.connect(process.env.MONGOLAB_URI, function(err, db) {
       if(err) throw err;
 
       var mappedData = data.businesses.map(function(element) {
