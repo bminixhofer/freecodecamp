@@ -11,6 +11,10 @@ h1 {
   text-align: center;
 }
 
+input:focus {
+  outline: none;
+}
+
 #my-logout {
   font-size: 22px;
   font-family: 'Roboto Condensed';
