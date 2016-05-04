@@ -2,10 +2,10 @@ var express = require('express');
 var Yelp = require('yelp');
 var mongo = require('mongodb').MongoClient;
 var yelp = new Yelp({
-  consumer_key: 'kVR9scZxdE2gQr6iGPDPrA',
-  consumer_secret: 'Klkmy60rL90-wMSgpXctUsAB4Yo',
-  token: '4PUthIm3E94QH0mC8rwBP3W6SdgbvrRm',
-  token_secret: 'wuNn0mke7rFwC9RhFCCU3w0JWjQ',
+  consumer_key: process.env.CONSUMER_KEY,
+  consumer_secret: process.env.CONSUMER_SECRET,
+  token: process.env.TOKEN,
+  token_secret: process.env.TOKEN_SECRET,
 });
 var bodyParser = require('body-parser');
 var cookieParser = require('cookie-parser');
