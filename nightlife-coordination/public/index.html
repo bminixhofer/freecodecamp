@@ -15,6 +15,7 @@
 
     $(function() {
       var isCarousel = false;
+      var processing = false;
 
       $.ajax({
         url: '/getLastSearch',
@@ -79,9 +80,10 @@
             });
 
             $(".gothere").click(function() {
-              if(user) {
+              if(user && !processing) {
                 var num = $(this).parent().find('h4');
-
+                processing = true;
+                
                 $.ajax({
                   method: 'post',
                   url: '/goThere',
@@ -90,6 +92,9 @@
                     user: user,
                   },
                   dataType: 'json',
+                  error: function() {
+                    processing = false;
+                  },
                   success: function(response) {
                     var visiting = response.visiting;
                     var modifier = visiting ? 1 : -1;
@@ -97,6 +102,7 @@
 
                     num.text(Number(num.text()) + modifier);
                     num.data("willGo", !num.data("willGo"));
+                    processing = false;
                   }
                 });
               }
