@@ -1,0 +1,21 @@
+{
+  "name": "stockmarket-chart",
+  "version": "1.0.0",
+  "description": "a chart of the stock market",
+  "main": "index.js",
+  "dependencies": {},
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "\u001b[2~h\u001b[2~\u001b[6~\u001b[2~\u001b[2~\u001b[6~\u001b[2~\u001b[2~\u001b[2~\u001b[2~\u001b[2~\u001b[2~\u001b[6~\u001b[6~\u001b[6~ttps://github.com/bminixhofer/stockmarket-chart.git"
+  },
+  "keywords": [
+    "chart",
+    "stockmarket"
+  ],
+  "author": "bminixhofer",
+  "license": "ISC"
+}
