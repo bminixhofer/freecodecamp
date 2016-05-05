@@ -75,6 +75,7 @@
                   $.ajax({
                       url: '/vote',
                       dataType: 'json',
+                      method: 'post',
                       data: { token: token },
                       success: function(res) {
                         poll.voters[ip] = res.name;
