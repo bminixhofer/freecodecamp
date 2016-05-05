@@ -79,6 +79,7 @@
                       data: { token: token },
                       success: function(res) {
                         poll.voters[ip] = res.name;
+                        console.log(poll);
                         $.ajax({
                           url: '/setPoll',
                           method: 'post',
