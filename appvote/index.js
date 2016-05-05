@@ -99,7 +99,7 @@ app.post('/vote', function(req, res) {
       if(err) throw err;
 
       if(arr.length > 0) {
-        var key = Object.keys(req.body)[0];
+        var key = Object.keys(req.body) ? Object.keys(req.body)[0] : 0;
         var poll = arr[0];
         res.end(JSON.stringify( { name: poll[key].name }));
       } else {

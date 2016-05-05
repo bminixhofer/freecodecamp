@@ -63,23 +63,33 @@
                   );
                 }
 
-                $(".choices").ajaxForm({
-                  url : '/vote',
-                  dataType: 'json',
-                  data: { token: token },
-                  success: function(res) {
-                    poll.voters[ip] = res.name;
-                    $.ajax({
-                      url: '/setPoll',
-                      type: 'post',
-                      data: { poll: poll },
-                      success: function() {
-                        window.location.reload();
+                $(".choices").submit(function(e) {
+                  e.preventDefault();
+                  var valid = false;
+                  $("input[type=checkbox]").each(function() {
+                    if($(this).prop("checked") {
+                      valid = true;
+                    });
+                  });
+                  if(valid) {
+                  $.ajax({
+                      url: '/vote',
+                      dataType: 'json',
+                      data: { token: token },
+                      success: function(res) {
+                        poll.voters[ip] = res.name;
+                        $.ajax({
+                          url: '/setPoll',
+                          type: 'post',
+                          data: { poll: poll },
+                          success: function() {
+                            window.location.reload();
+                          }
+                        });
                       }
                     });
                   }
                 });
-
                 $("input[type=checkbox]").click(function() {
                   var id = $(this).prop("id");
                   var index = Number(id[id.length - 1] - 1);
