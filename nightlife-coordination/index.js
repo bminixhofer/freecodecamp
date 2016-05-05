@@ -90,8 +90,9 @@ app.get('/search', function(req, res) {
     });
   }).catch(function(err) {
     console.error(err);
+    res.status(500).send('Error!');
   });
 });
 
-app.listen(process.env.PORT);
+app.listen(process.env.PORT || '8080  ');
 console.log("Started..");

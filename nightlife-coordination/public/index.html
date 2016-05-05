@@ -35,11 +35,18 @@
       });
 
       function search(query) {
+        $("#loading").show().each(function() {
+            this.offsetHeight;
+        }).prop('src', '/resources/ajax-loader.gif');
         $.ajax({
           url: '/search?location=' + query,
           method: 'get',
           dataType: 'json',
+          error: function() {
+            $("#loading").fadeOut(200);
+          },
           success: function(data) {
+            $("#loading").fadeOut(200);
             if(isCarousel) {
               $("#carousel").trigger('destroy.owl.carousel').removeClass('owl-carousel owl-loaded');
               $("#carousel").find('.owl-stage-outer').children().unwrap();
@@ -83,7 +90,9 @@
               if(user && !processing) {
                 var num = $(this).parent().find('h4');
                 processing = true;
-                
+                $("#loading").show().each(function() {
+                    this.offsetHeight;
+                }).prop('src', '/resources/ajax-loader.gif');
                 $.ajax({
                   method: 'post',
                   url: '/goThere',
@@ -93,9 +102,11 @@
                   },
                   dataType: 'json',
                   error: function() {
+                    $("#loading").fadeOut(200);
                     processing = false;
                   },
                   success: function(response) {
+                    $("#loading").fadeOut(200);
                     var visiting = response.visiting;
                     var modifier = visiting ? 1 : -1;
                     num.data("willGo", !visiting);
@@ -153,6 +164,7 @@
     <script src="https://apis.google.com/js/platform.js?onload=renderButton" async defer></script>
 
     <!-- actual code -->
+    <div id="loading"></div>
     <h1>Nightlife Coordination</h1>
     <form method="none">
       <input name="location" placeholder="Enter a Location..." id="search" type="text">

@@ -50,6 +50,18 @@ form {
   height: 1.4em;
 }
 
+#loading {
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+  top: 47%;
+  height: 70px;
+  width: 400px;
+  background: url('../resources/ajax-loader.gif') no-repeat center;
+  background-size: contain;
+  display: none;
+}
+
 #submit {
   font-family: inherit;
   font-size: inherit;
