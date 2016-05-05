@@ -81,7 +81,7 @@
                         poll.voters[ip] = res.name;
                         $.ajax({
                           url: '/setPoll',
-                          type: 'post',
+                          method: 'post',
                           data: { poll: poll },
                           success: function() {
                             window.location.reload();
