@@ -120,7 +120,7 @@ app.post('/setPoll', function(req, res) {
 
     var polls = db.collection('polls');
     var poll = req.body.poll;
-
+    console.log(poll);
     delete poll._id;
 
     for(var k = 1; k <= poll.count; k++) {
