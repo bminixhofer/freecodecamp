@@ -16,6 +16,7 @@ h1 {
 }
 
 h2 {
+  margin-top: 10px;
   color: #082913;
   font-family: 'Open Sans', 'Arial';
 }
@@ -27,7 +28,7 @@ p {
 .companies {
   position: relative;
   left: 50px;
-  top: 32px;
+  top: -8px;
   display: inline-block;
 }
 
@@ -40,14 +41,14 @@ p {
   border: 3px solid #A3A4A9;
   border-left: 10px solid #A3A4A9;
   width: 250px;
-  height: 170px;
+  height: 140px;
 }
 
 i {
   transition: all 0.2s;
   position: absolute;
-  right: -60px;
-  top: 20px;
+  right: -70px;
+  top: 10px;
   width: 100px;
   height: 100px;
   color: #F08080;
@@ -80,7 +81,7 @@ input[type='submit'] {
   position: relative;
   left: -6px;
   height: 1.5em;
-  width: 40px;
+  width: 45px;
   background-color: #59C941;
   color: #FFF;
   font-family: inherit;
