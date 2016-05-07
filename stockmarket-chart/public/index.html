@@ -9,20 +9,54 @@
   <script type="text/javascript">
   window.onload = function () {
     var socket = io();
+    var time = 0;
+    var currentStocks = [];
 
     socket.on('stock change', function(stocks) {
+      stocks.forEach(function(stock) {
+        var alreadyDisplayed = false;
+
+        currentStocks.forEach(function(oldStock) {
+          if(stock.actualName === oldStock.actualName) {
+            alreadyDisplayed = true;
+          }
+        });
+
+        if(!alreadyDisplayed) {
+          //display stock
+        }
+      });
+
+      currentStocks.forEach(function(stock) {
+        var gotRemoved = true;
+
+        stocks.forEach(function(newStock) {
+          if(stock.actualName !== newStock.actualName) {
+            gotRemoved = false;
+          }
+        });
+
+        if(gotRemoved) {
+          //remove stock
+        }
+      });
       console.log(stocks);
     });
 
     socket.on('stock error', function(error) {
-      
+      document.querySelector(".error").style.opacity = 1;
+      document.querySelector(".error").textContent = error;
     });
 
     document.getElementById('addStock').addEventListener('submit', function(e) {
       e.preventDefault();
+      if(Date.now() > time + 2000) {
+        document.querySelector(".error").style.opacity = 0;
+        socket.emit('stock add', document.getElementById('stockCode').value);
+        time = Date.now();
 
-      socket.emit('stock add', document.getElementById('stockCode').value);
-      return false;
+        return false;
+      }
     });
 
 		var chart = new CanvasJS.Chart("chartContainer",
@@ -118,7 +152,7 @@
     <div class="comp">
       <h2>GOOG</h2>
       <i class="icon-cross_mark"></i>
-      <p>Data for   Alphabet Inc.</p>
+      <p>Data for Alphabet Inc.</p>
     </div>
     <div class="comp">
       <h2>Add New</h2>
@@ -126,6 +160,7 @@
         <input id='stockCode' name'code' type='text' placeholder='Stock Code'>
         <input type='submit' value='Add'>
       </form>
+      <p class="error">Error</p>
     </div>
   </div>
 </body>
