@@ -26,6 +26,7 @@ p {
 }
 
 .error {
+  display : none;
   color: #F08080;
   margin-top: 4px;
 }
