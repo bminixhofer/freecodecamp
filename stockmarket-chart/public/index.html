@@ -8,85 +8,13 @@
   <script src='scripts/socket.io.js' type='text/javascript'></script>
   <script type="text/javascript">
   window.onload = function () {
-    var socket = io();
-    var time = 0;
-    var currentStocks = [];
-
-    socket.on('stock change', function(stocks) {
-      stocks.forEach(function(stock) {
-        var alreadyDisplayed = false;
-
-        currentStocks.forEach(function(oldStock) {
-          if(stock.actualName === oldStock.actualName) {
-            alreadyDisplayed = true;
-          }
-        });
-
-        if(!alreadyDisplayed) {
-          chart.data.push({
-    				type: "line",
-    				showInLegend: true,
-    				lineThickness: 2,
-    				name: stock.Elements[0].Symbol,
-    				markerType: "square",
-    				color: "#F08080",
-    				dataPoints: [
-    				{ x: new Date(2010,0,3), y: 650 },
-    				{ x: new Date(2010,0,5), y: 700 },
-    				{ x: new Date(2010,0,7), y: 710 },
-    				{ x: new Date(2010,0,9), y: 658 },
-    				{ x: new Date(2010,0,11), y: 734 },
-    				{ x: new Date(2010,0,13), y: 963 },
-    				{ x: new Date(2010,0,15), y: 847 },
-    				{ x: new Date(2010,0,17), y: 853 },
-    				{ x: new Date(2010,0,19), y: 869 },
-    				{ x: new Date(2010,0,21), y: 943 },
-    				{ x: new Date(2010,0,23), y: 970 }
-    				]
-    			})
-        }
-      });
-
-      currentStocks.forEach(function(stock) {
-        var gotRemoved = true;
-
-        stocks.forEach(function(newStock) {
-          if(stock.actualName !== newStock.actualName) {
-            gotRemoved = false;
-          }
-        });
-
-        if(gotRemoved) {
-          //remove stock
-        }
-      });
-      console.log(stocks);
-    });
-
-    socket.on('stock error', function(error) {
-      document.querySelector(".error").style.opacity = 1;
-      document.querySelector(".error").textContent = error;
-    });
-
-    document.getElementById('addStock').addEventListener('submit', function(e) {
-      e.preventDefault();
-      if(Date.now() > time + 2000) {
-        document.querySelector(".error").style.opacity = 0;
-        socket.emit('stock add', document.getElementById('stockCode').value);
-        time = Date.now();
-
-        return false;
-      }
-    });
-
-		var chart = new CanvasJS.Chart("chartContainer",
+    var chart = new CanvasJS.Chart("chartContainer",
 		{
 			title:{
 				text: "Stocks",
 				fontSize: 30
 			},
-      animationEnabled: true,
-			axisX:{
+      axisX:{
 				gridColor: "silver",
 				tickColor: "silver",
 				valueFormatString: "DD/MMM"
@@ -117,29 +45,102 @@
         }
       }
 		});
-    chart.render();
-}
 
-function getRandomColor() {
-    var letters = '0123456789ABCDEF'.split('');
-    var color = '#';
-    for (var i = 0; i < 6; i++ ) {
-        color += letters[Math.floor(Math.random() * 16)];
-    }
-    return color;
-}
-</script>
-<script type="text/javascript" src="/scripts/canvasjs.min.js"></script>
+    var socket = io();
+    var time = 0;
+    var currentStocks = [];
+
+    socket.on('stock change', function(stocks) {
+      stocks.forEach(function(stock) {
+        var alreadyDisplayed = false;
+
+        currentStocks.forEach(function(oldStock) {
+          if(stock.companyName === oldStock.companyName) {
+            alreadyDisplayed = true;
+          }
+        });
+
+        if(!alreadyDisplayed) {
+          var obj = {
+    				type: "line",
+    				showInLegend: true,
+    				lineThickness: 2,
+    				name: stock.Elements[0].Symbol,
+    				markerType: "square",
+    				color: getRandomColor(),
+    				dataPoints: []
+    			};
+
+          var dataPoints = stock.Elements[0].DataSeries.close.values;
+          for(var i = 0; i < dataPoints.length; i++) {
+            obj.dataPoints.push( {
+              x: new Date(stock.Dates[i]),
+              y: dataPoints[i]
+            });
+          }
+          var companies = document.querySelector('.companies');
+          companies.innerHTML =
+          '<div class="comp">' +
+            '<h2>' +stock.Elements[0].Symbol + '</h2>' +
+            '<i class="icon-cross_mark"></i>' +
+            '<p>Data for' + stock.companyName+ '.</p>' +
+          '</div>' + companies.innerHTML;
+
+
+          chart.options.data.push(obj);
+          chart.render();
+        }
+      });
+
+      currentStocks.forEach(function(stock, index) {
+        var gotRemoved = true;
+
+        stocks.forEach(function(newStock) {
+          if(stock.companyName !== newStock.companyName) {
+            gotRemoved = false;
+          }
+        });
+
+        if(gotRemoved) {
+          chart.options.data.splice(index, 1);
+        }
+      });
+      currentStocks = JSON.parse(JSON.stringify(stocks));
+    });
+
+    socket.on('stock error', function(error) {
+      document.querySelector(".error").style.opacity = 1;
+      document.querySelector(".error").textContent = error;
+    });
+
+    document.getElementById('addStock').addEventListener('submit', function(e) {
+      e.preventDefault();
+      if(Date.now() > time + 2000) {
+        document.querySelector(".error").style.opacity = 0;
+        socket.emit('stock add', document.getElementById('stockCode').value);
+        time = Date.now();
+
+        return false;
+      }
+    });
+		chart.render();
+  }
+
+  function getRandomColor() {
+      var letters = '0123456789ABCDEF'.split('');
+      var color = '#';
+      for (var i = 0; i < 6; i++ ) {
+          color += letters[Math.floor(Math.random() * 16)];
+      }
+      return color;
+  }
+  </script>
+  <script type="text/javascript" src="/scripts/canvasjs.min.js"></script>
 </head>
 <body>
   <h1>StockMarket Chart</h1>
 	<div id="chartContainer"></div>
   <div class="companies">
-    <div class="comp">
-      <h2>GOOG</h2>
-      <i class="icon-cross_mark"></i>
-      <p>Data for Alphabet Inc.</p>
-    </div>
     <div class="comp">
       <h2>Add New</h2>
       <form id='addStock'>
