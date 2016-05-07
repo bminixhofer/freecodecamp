@@ -10,6 +10,11 @@ var stocks = [];
 
 app.use(express.static(__dirname + '/public'));
 
+app.get('/', function(req, res) {
+  io.emit('stock change', stocks);
+  res.end();
+});
+
 io.on('connection', function(socket) {
   socket.on('stock add', function(code) {
     var stock = {
@@ -18,20 +23,19 @@ io.on('connection', function(socket) {
     request('http://dev.markitondemand.com/MODApis/Api/v2/quote/json?symbol=' + code, function(err, res, body) {
       if(err) throw err;
 
-      var data = JSON.parse(body);
+      var info = JSON.parse(body);
       //check if stock exists
-      if(data.Name) {
+      if(info.Name) {
         //check if stock is already added
         var exists = false;
         stocks.forEach(function(element) {
-          if(element.Elements[0].Symbol === data.Name) {
+          if(element.Elements[0].Symbol.toLowerCase() === code.toLowerCase()) {
             exists = true;
             return;
           }
         });
 
         if(exists) {
-          console.log('Stock is already added');
           io.emit('stock error', 'Stock is already added');
         } else {
           var requestData = {
@@ -54,15 +58,13 @@ io.on('connection', function(socket) {
               io.emit('stock error', 'Internal Error');
               return;
             }
-
+            data.companyName = info.Name;
             stocks.push(data);
-            console.log(stocks);
             io.emit('stock change', stocks);
           });
         }
 
       } else {
-        console.log('No such Stock');
         io.emit('stock error', 'No such Stock');
       }
     });
