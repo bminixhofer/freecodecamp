@@ -25,6 +25,11 @@ p {
   font-family: 'Open Sans', 'Arial';
 }
 
+.error {
+  color: #F08080;
+  margin-top: 4px;
+}
+
 .companies {
   position: relative;
   left: 50px;
