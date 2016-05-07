@@ -50,6 +50,64 @@
     var time = 0;
     var currentStocks = [];
 
+    //function to show the passed stock
+    function showStock(stock) {
+      var obj = {
+        type: "line",
+        showInLegend: true,
+        lineThickness: 2,
+        name: stock.Elements[0].Symbol,
+        markerType: "square",
+        color: getRandomColor(),
+        dataPoints: []
+      };
+
+      var dataPoints = stock.Elements[0].DataSeries.close.values;
+      for(var i = 0; i < dataPoints.length; i++) {
+        obj.dataPoints.push( {
+          x: new Date(stock.Dates[i]),
+          y: dataPoints[i]
+        });
+      }
+      var companies = document.querySelector('.companies');
+      companies.innerHTML =
+      '<div class="comp">' +
+        '<h2>' +stock.Elements[0].Symbol + '</h2>' +
+        '<i class="icon-cross_mark"></i>' +
+        '<p>Data for ' + stock.companyName+ '.</p>' +
+      '</div>' + companies.innerHTML;
+
+      document.getElementById('addStock').addEventListener('submit', onStockAdd);
+      chart.options.data.push(obj);
+    }
+
+    function onStockAdd(e) {
+      console.log('test');
+      e.preventDefault();
+      if(Date.now() > time + 2000) {
+        document.querySelector(".error").style.opacity = 0;
+        socket.emit('stock add', document.getElementById('stockCode').value);
+        time = Date.now();
+      }
+      return false;
+    }
+
+    document.getElementById('addStock').addEventListener('submit', onStockAdd);
+
+    //make GET request to get stocks at the time of page load
+    var xmlHttp = new XMLHttpRequest();
+    xmlHttp.onreadystatechange = function() {
+      if (xmlHttp.readyState == 4 && xmlHttp.status == 200) {
+        var stocks = JSON.parse(xmlHttp.responseText);
+        stocks.forEach(function(stock) {
+          showStock(stock);
+        });
+        chart.render();
+      }
+    }
+    xmlHttp.open("GET", '/getStocks', true); // true for asynchronous
+    xmlHttp.send(null);
+
     socket.on('stock change', function(stocks) {
       stocks.forEach(function(stock) {
         var alreadyDisplayed = false;
@@ -61,33 +119,7 @@
         });
 
         if(!alreadyDisplayed) {
-          var obj = {
-    				type: "line",
-    				showInLegend: true,
-    				lineThickness: 2,
-    				name: stock.Elements[0].Symbol,
-    				markerType: "square",
-    				color: getRandomColor(),
-    				dataPoints: []
-    			};
-
-          var dataPoints = stock.Elements[0].DataSeries.close.values;
-          for(var i = 0; i < dataPoints.length; i++) {
-            obj.dataPoints.push( {
-              x: new Date(stock.Dates[i]),
-              y: dataPoints[i]
-            });
-          }
-          var companies = document.querySelector('.companies');
-          companies.innerHTML =
-          '<div class="comp">' +
-            '<h2>' +stock.Elements[0].Symbol + '</h2>' +
-            '<i class="icon-cross_mark"></i>' +
-            '<p>Data for' + stock.companyName+ '.</p>' +
-          '</div>' + companies.innerHTML;
-
-
-          chart.options.data.push(obj);
+          showStock(stock);
           chart.render();
         }
       });
@@ -113,16 +145,6 @@
       document.querySelector(".error").textContent = error;
     });
 
-    document.getElementById('addStock').addEventListener('submit', function(e) {
-      e.preventDefault();
-      if(Date.now() > time + 2000) {
-        document.querySelector(".error").style.opacity = 0;
-        socket.emit('stock add', document.getElementById('stockCode').value);
-        time = Date.now();
-
-        return false;
-      }
-    });
 		chart.render();
   }
 

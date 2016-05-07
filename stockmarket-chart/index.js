@@ -1,6 +1,8 @@
 var express = require('express');
 var http = require('http');
 var request = require('request');
+var bodyParser = require('body-parser');
+var path = require('path');
 
 var app = express();
 var server = app.listen('8080');
@@ -10,9 +12,8 @@ var stocks = [];
 
 app.use(express.static(__dirname + '/public'));
 
-app.get('/', function(req, res) {
-  io.emit('stock change', stocks);
-  res.end();
+app.get('/getStocks', function(req, res) {
+  res.end(JSON.stringify(stocks));
 });
 
 io.on('connection', function(socket) {
@@ -40,7 +41,7 @@ io.on('connection', function(socket) {
         } else {
           var requestData = {
             "Normalized": false,
-            "NumberOfDays": 31,
+            "NumberOfDays": 365,
             "DataPeriod": "Day",
             "Elements": [{
               "Symbol": code,
