@@ -5,7 +5,7 @@ var bodyParser = require('body-parser');
 var path = require('path');
 
 var app = express();
-var server = app.listen(process.env.PORT || '8080');
+var server = http.createServer(app);
 var io = require('socket.io').listen(server);
 
 var stocks = [];
@@ -84,4 +84,5 @@ io.on('connection', function(socket) {
   });
 });
 
+server.listen(process.env.PORT || '8080')
 console.log('Started..');
