@@ -5,7 +5,7 @@ var bodyParser = require('body-parser');
 var path = require('path');
 
 var app = express();
-var server = app.listen('8080');
+var server = app.listen(process.env.PORT || '8080');
 var io = require('socket.io').listen(server);
 
 var stocks = [];
