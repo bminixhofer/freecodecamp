@@ -1,7 +1,6 @@
 var express = require('express');
 var http = require('http');
 var request = require('request');
-var bodyParser = require('body-parser');
 var path = require('path');
 
 var app = express();
@@ -21,7 +20,7 @@ io.on('connection', function(socket) {
     stocks = stocks.filter(function(stock) {
       return stock.Elements[0].Symbol !== code;
     });
-    io.emit('stock change', stocks);
+    io.sockets.emit('stock change', stocks);
   });
   socket.on('stock add', function(code) {
     var stock = {
@@ -29,7 +28,7 @@ io.on('connection', function(socket) {
     }
     request('http://dev.markitondemand.com/MODApis/Api/v2/quote/json?symbol=' + code, function(err, res, body) {
       if(err) {
-        io.emit('stock error', 'Could not connect to API');
+        io.sockets.emit('stock error', 'Could not connect to API');
         return;
       }
 
@@ -46,7 +45,7 @@ io.on('connection', function(socket) {
         });
 
         if(exists) {
-          io.emit('stock error', 'Stock is already added');
+          io.sockets.emit('stock error', 'Stock is already added');
         } else {
           var requestData = {
             "Normalized": false,
@@ -61,24 +60,24 @@ io.on('connection', function(socket) {
 
           request('http://dev.markitondemand.com/MODApis/Api/v2/InteractiveChart/json?parameters=' + JSON.stringify(requestData), function(err, res, body) {
             if(err) {
-              io.emit('stock error', 'Could not connect to API');
+              io.sockets.emit('stock error', 'Could not connect to API');
               return;
             }
 
             try {
               var data = JSON.parse(body);
             } catch(err) {
-              io.emit('stock error', 'Internal Error');
+              io.sockets.emit('stock error', 'Internal Error');
               return;
             }
             data.companyName = info.Name;
             stocks.push(data);
-            io.emit('stock change', stocks);
+            io.sockets.emit('stock change', stocks);
           });
         }
 
       } else {
-        io.emit('stock error', 'No such Stock');
+        io.sockets.emit('stock error', 'No such Stock');
       }
     });
   });
