@@ -17,12 +17,21 @@ app.get('/getStocks', function(req, res) {
 });
 
 io.on('connection', function(socket) {
+  socket.on('stock remove', function(code) {
+    stocks = stocks.filter(function(stock) {
+      return stock.Elements[0].Symbol !== code;
+    });
+    io.emit('stock change', stocks);
+  });
   socket.on('stock add', function(code) {
     var stock = {
       code: code
     }
     request('http://dev.markitondemand.com/MODApis/Api/v2/quote/json?symbol=' + code, function(err, res, body) {
-      if(err) throw err;
+      if(err) {
+        io.emit('stock error', 'Could not connect to API');
+        return;
+      }
 
       var info = JSON.parse(body);
       //check if stock exists
@@ -51,7 +60,10 @@ io.on('connection', function(socket) {
           };
 
           request('http://dev.markitondemand.com/MODApis/Api/v2/InteractiveChart/json?parameters=' + JSON.stringify(requestData), function(err, res, body) {
-            if(err) throw err;
+            if(err) {
+              io.emit('stock error', 'Could not connect to API');
+              return;
+            }
 
             try {
               var data = JSON.parse(body);

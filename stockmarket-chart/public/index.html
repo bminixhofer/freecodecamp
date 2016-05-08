@@ -78,7 +78,7 @@
       '</div>' + companies.innerHTML;
 
       document.querySelector('i').addEventListener('click', removeStock);
-      document.getElementById('addStock').addEventListener('submit', stockAdd);
+      document.getElementById('addStock').addEventListener('submit', addStock);
       chart.options.data.push(obj);
     }
 
@@ -138,7 +138,9 @@
         });
 
         if(gotRemoved) {
+          document.querySelector('.companies').removeChild(document.querySelector('i[data-symbol=' + stock.Elements[0].Symbol + ']').parentElement);
           chart.options.data.splice(index, 1);
+          chart.render();
         }
       });
       currentStocks = JSON.parse(JSON.stringify(stocks));
