@@ -73,16 +73,20 @@
       companies.innerHTML =
       '<div class="comp">' +
         '<h2>' +stock.Elements[0].Symbol + '</h2>' +
-        '<i class="icon-cross_mark"></i>' +
+        '<i data-symbol=' + stock.Elements[0].Symbol + ' class="icon-cross_mark"></i>' +
         '<p>Data for ' + stock.companyName+ '.</p>' +
       '</div>' + companies.innerHTML;
 
+      document.querySelector('i').addEventListener('click', removeStock);
       document.getElementById('addStock').addEventListener('submit', onStockAdd);
       chart.options.data.push(obj);
     }
 
-    function onStockAdd(e) {
-      console.log('test');
+    function removeStock(e) {
+      socket.emit('stock remove', e.target.dataset.symbol);
+    }
+
+    function addStock(e) {
       e.preventDefault();
       if(Date.now() > time + 2000) {
         document.querySelector(".error").style.opacity = 0;
@@ -92,7 +96,7 @@
       return false;
     }
 
-    document.getElementById('addStock').addEventListener('submit', onStockAdd);
+    document.getElementById('addStock').addEventListener('submit', addStock);
 
     //make GET request to get stocks at the time of page load
     var xmlHttp = new XMLHttpRequest();
