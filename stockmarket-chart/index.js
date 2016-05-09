@@ -28,7 +28,7 @@ io.on('connection', function(socket) {
     }
     request('http://dev.markitondemand.com/MODApis/Api/v2/quote/json?symbol=' + code, function(err, res, body) {
       if(err) {
-        io.sockets.emit('stock error', 'Could not connect to API');
+        socket.emit('stock error', 'Could not connect to API');
         return;
       }
 
@@ -45,7 +45,7 @@ io.on('connection', function(socket) {
         });
 
         if(exists) {
-          io.sockets.emit('stock error', 'Stock is already added');
+          socket.emit('stock error', 'Stock is already added');
         } else {
           var requestData = {
             "Normalized": false,
@@ -60,14 +60,14 @@ io.on('connection', function(socket) {
 
           request('http://dev.markitondemand.com/MODApis/Api/v2/InteractiveChart/json?parameters=' + JSON.stringify(requestData), function(err, res, body) {
             if(err) {
-              io.sockets.emit('stock error', 'Could not connect to API');
+              socket.emit('stock error', 'Could not connect to API');
               return;
             }
 
             try {
               var data = JSON.parse(body);
             } catch(err) {
-              io.sockets.emit('stock error', 'Internal Error');
+              socket.emit('stock error', 'Internal Error');
               return;
             }
             data.companyName = info.Name;
