@@ -106,6 +106,7 @@
         stocks.forEach(function(stock) {
           showStock(stock);
         });
+        currentStocks = JSON.parse(JSON.stringify(stocks));
         chart.render();
       }
     }
@@ -132,18 +133,21 @@
         var gotRemoved = true;
 
         stocks.forEach(function(newStock) {
-          if(stock.companyName !== newStock.companyName) {
+          if(stock.Elements[0].Symbol === newStock.Elements[0].Symbol) {
             gotRemoved = false;
           }
         });
-
         if(gotRemoved) {
           document.querySelector('.companies').removeChild(document.querySelector('i[data-symbol=' + stock.Elements[0].Symbol + ']').parentElement);
+
           chart.options.data.splice(index, 1);
           chart.render();
         }
       });
       currentStocks = JSON.parse(JSON.stringify(stocks));
+      if(currentStocks.length > 0) {
+        document.querySelector('i').addEventListener('click', removeStock);
+      }
     });
 
     socket.on('stock error', function(error) {
