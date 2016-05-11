@@ -1,0 +1,24 @@
+{
+  "name": "trade-books",
+  "version": "1.0.0",
+  "description": "managing a book trading club",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/bminixhofer/trade-books.git"
+  },
+  "keywords": [
+    "book",
+    "trading",
+    "club"
+  ],
+  "author": "bminixhofer",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/bminixhofer/trade-books/issues"
+  },
+  "homepage": "https://github.com/bminixhofer/trade-books#readme"
+}
