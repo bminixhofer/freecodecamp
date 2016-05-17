@@ -41,6 +41,8 @@ nav div {
 }
 
 .book {
+  vertical-align: top;
+  height: 320px;
   margin: 20px;
   font-size: 20px;
   font-family: 'Raleway';
@@ -88,5 +90,6 @@ h4 {
 }
 
 img {
+  height: 220px;
   width: 150px;
 }
