@@ -40,6 +40,24 @@ nav div {
   color: #0C152A;
 }
 
+input[type='Button'].active, input[type='Button']:focus {
+  outline: 2.5px solid #F59E03;
+  -webkit-box-shadow: 0px 0px 17px 0px #F59E03;
+  box-shadow: 0px 0px 17px 0px #F59E03;
+}
+
+input[type='Button'] {
+  width: 180px;
+  color: #FFF;
+  font-family: 'Raleway';
+  font-size: 30px;
+  border: none;
+  outline: none;
+  margin: 0 10px;
+  padding: 10px;
+  background-color: #02779E;
+}
+
 .book {
   vertical-align: top;
   height: 320px;

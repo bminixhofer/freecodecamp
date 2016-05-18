@@ -1,20 +1,22 @@
+'use strict';
+
 var express = require('express');
 var mongo = require('mongodb').MongoClient;
 var app = express();
 var bodyParser = require('body-parser');
+var cookieParser = require('cookie-parser');
 var request = require('request');
 var Mark = require('markup-js');
 var fs = require('fs');
 
+app.use(cookieParser());
 app.use(bodyParser.urlencoded({
   extended: true
 }));
 
 app.post('/addBook', function(req, res) {
   mongo.connect(process.env.MONGODB_URI, function(err, db) {
-    //TODO: authenticate the user
-    var auth = true;
-    if(auth && req.body.book) {
+    if(req.body.book) {
       request('https://www.googleapis.com/books/v1/volumes?q=' + req.body.book, function(err, response, body) {
         if(response.statusCode !== 200 || err) throw err;
 
@@ -25,6 +27,7 @@ app.post('/addBook', function(req, res) {
         data = data.items[0];
 
         var mappedData = {
+          owner: req.cookies['username'],
           title: data.volumeInfo.title,
           cover: data.volumeInfo.imageLinks.thumbnail,
           id: data.id
@@ -51,8 +54,29 @@ app.get('/', function(req, res) {
       fs.readFile(__dirname + '/pages/index.html', 'utf8', function(err, file) {
         if(err) throw err;
 
-        res.send(Mark.up(file, { books: arr }));
+        var header = req.cookies['username'] ? 'header_auth' : 'header_noauth';
+
+        fs.readFile(__dirname + '/pages/' + header + '.html', 'utf8', function(err, content) {
+          if(err) throw err;
+
+          res.send(Mark.up(file, {
+            books: arr,
+            header: content
+          }));
+        });
       });
+    });
+  });
+});
+
+app.get('/mybooks', function(req, res) {
+  mongo.connect(process.env.MONGODB_URI, function(err, db) {
+    if(err) throw err;
+
+    var books = db.collection('books');
+
+    books.find({ owner: req.cookies['username'] }).toArray(function(err, arr) {
+      if(err) throw err;
     });
   });
 });
