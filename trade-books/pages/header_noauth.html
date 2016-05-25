@@ -1,10 +1,27 @@
+<script type="text/javascript">
+  function onSignIn(user) {
+    var profile = user.getBasicProfile();
+
+    request({
+      method: 'POST',
+      url: '/loginUser',
+      data: 'email=' + profile.getEmail() + '&name=' + profile.getName(),
+      callback: function(err) {
+        if(err) throw err;
+
+        location.reload();
+      }
+    });
+  }
+
+
+</script>
+
 <nav>
-  <div id="login">
-    <h3>Login</h3>
-  </div>
+  <div class="g-signin2" data-onsuccess="onSignIn" id="login" data-theme="dark"></div>
 </nav>
 <div class="title">
-  <h1>Trade Books.</h1>
+  <h1>Trade Books</h1>
   <div id="subtitle">
     <h2>Login with Google+ to trade Books and view your own Collection.</h2>
   </div>

@@ -1,14 +1,37 @@
+<script type="text/javascript">
+  window.addEventListener('load', function() {
+    gapi.load('auth2', function() {
+      gapi.auth2.init();
+    });
+
+    document.getElementById('logout').addEventListener('click', function() {
+      request({
+        method: 'GET',
+        url: '/logoutUser',
+        callback: function(err) {
+          if(err) throw err;
+
+          var auth2 = gapi.auth2.getAuthInstance();
+          auth2.signOut().then(function() {
+            location.reload();
+          });
+        }
+      });
+    });
+  });
+</script>
+
 <nav>
   <div id="logout">
     <h3>Logout</h3>
   </div>
   <div id="login">
-    <h3>User</h3>
+    <h3>{{user}}</h3>
     <img src='./resources/settings.svg' id="settings"></img>
   </div>
 </nav>
 <div class="title">
-  <h1>Trade Books.</h1>
+  <h1>Trade Books</h1>
   <div id="subtitle">
     <input type="button" value="My Books">
     <input type="button" value="All Books">
