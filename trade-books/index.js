@@ -14,6 +14,13 @@ app.use(bodyParser.urlencoded({
   extended: true
 }));
 
+app.use(function(req, res, next) {
+  if(req.url === '/') {
+    res.redirect('/all');
+  }
+  next();
+});
+
 //login / logout system
 
 app.post('/loginUser', function(req, res) {
@@ -62,12 +69,14 @@ app.post('/addBook', function(req, res) {
   })
 });
 
-app.get('/all', function(req, res) {
+app.get(/\/(all|my)/, function(req, res) {
   mongo.connect(process.env.MONGODB_URI, function(err, db) {
     if(err) throw err;
 
     var books = db.collection('books');
-    books.find().toArray(function(err, arr) {
+    var url = req.url.slice(1);
+
+    books.find(url === 'my' ? { owner: req.cookies['email'] } : null).toArray(function(err, arr) {
       if(err) throw err;
 
       fs.readFile(__dirname + '/pages/index.html', 'utf8', function(err, file) {
@@ -80,7 +89,10 @@ app.get('/all', function(req, res) {
 
           res.send(Mark.up(file, { //load books
             books: arr,
-            header: Mark.up(content, { user: req.cookies.username }) //Replace user in header
+            header: Mark.up(content, {
+              user: req.cookies.username,
+              active: url
+            })
           }));
         });
       });
@@ -94,7 +106,7 @@ app.get('/my', function(req, res) {
 
     var books = db.collection('books');
 
-    books.find({ owner: req.cookies['email'] }).toArray(function(err, arr) {
+    books.find().toArray(function(err, arr) {
       if(err) throw err;
     });
   });

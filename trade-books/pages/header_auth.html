@@ -33,8 +33,8 @@
 <div class="title">
   <h1>Trade Books</h1>
   <div id="subtitle">
-    <input type="button" value="My Books">
-    <input type="button" value="All Books">
-    <input type="button" value="My Trades">
+    <input {{if active|equals>my}}class="active"{{/if}} type="button" id="mybooks" value="My Books">
+    <input {{if active|equals>all}}class="active"{{/if}} type="button" id="allbooks" value="All Books">
+    <input type="button" id="mytrades" value="My Trades">
   </div>
 </div>
