@@ -14,6 +14,25 @@ app.use(bodyParser.urlencoded({
   extended: true
 }));
 
+//login / logout system
+
+app.post('/loginUser', function(req, res) {
+  var email = req.body.email;
+  var username = req.body.name;
+
+  if(email && username) {
+    res.cookie('email', email);
+    res.cookie('username', username);
+  }
+  res.end();
+});
+
+app.get('/logoutUser', function(req, res) {
+  res.clearCookie('email');
+  res.clearCookie('username');
+  res.end();
+});
+
 app.post('/addBook', function(req, res) {
   mongo.connect(process.env.MONGODB_URI, function(err, db) {
     if(req.body.book) {
@@ -54,14 +73,14 @@ app.get('/', function(req, res) {
       fs.readFile(__dirname + '/pages/index.html', 'utf8', function(err, file) {
         if(err) throw err;
 
-        var header = req.cookies['username'] ? 'header_auth' : 'header_noauth';
+        var header = req.cookies['email'] ? 'header_auth' : 'header_noauth';
 
         fs.readFile(__dirname + '/pages/' + header + '.html', 'utf8', function(err, content) {
           if(err) throw err;
 
-          res.send(Mark.up(file, {
+          res.send(Mark.up(file, { //load books
             books: arr,
-            header: content
+            header: Mark.up(content, { user: req.cookies.username }) //Replace user in header
           }));
         });
       });
@@ -69,13 +88,13 @@ app.get('/', function(req, res) {
   });
 });
 
-app.get('/mybooks', function(req, res) {
+app.get('/my', function(req, res) {
   mongo.connect(process.env.MONGODB_URI, function(err, db) {
     if(err) throw err;
 
     var books = db.collection('books');
 
-    books.find({ owner: req.cookies['username'] }).toArray(function(err, arr) {
+    books.find({ owner: req.cookies['email'] }).toArray(function(err, arr) {
       if(err) throw err;
     });
   });
