@@ -62,7 +62,7 @@ app.post('/addBook', function(req, res) {
   })
 });
 
-app.get('/', function(req, res) {
+app.get('/all', function(req, res) {
   mongo.connect(process.env.MONGODB_URI, function(err, db) {
     if(err) throw err;
 
