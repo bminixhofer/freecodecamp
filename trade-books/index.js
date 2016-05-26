@@ -69,45 +69,47 @@ app.post('/addBook', function(req, res) {
   })
 });
 
-app.get(/\/(all|my)/, function(req, res) {
-  mongo.connect(process.env.MONGODB_URI, function(err, db) {
-    if(err) throw err;
-
-    var books = db.collection('books');
-    var url = req.url.slice(1);
-
-    books.find(url === 'my' ? { owner: req.cookies['email'] } : null).toArray(function(err, arr) {
+app.get('/all', function(req, res) {
+  getBooks(null, function(books) {
+    fs.readFile(__dirname + '/pages/index.html', 'utf8', function(err, file) {
       if(err) throw err;
 
-      fs.readFile(__dirname + '/pages/index.html', 'utf8', function(err, file) {
+      var header = req.cookies['email'] ? 'header_auth' : 'header_noauth';
+
+      fs.readFile(__dirname + '/pages/' + header + '.html', 'utf8', function(err, content) {
         if(err) throw err;
 
-        var header = req.cookies['email'] ? 'header_auth' : 'header_noauth';
-
-        fs.readFile(__dirname + '/pages/' + header + '.html', 'utf8', function(err, content) {
-          if(err) throw err;
-
-          res.send(Mark.up(file, { //load books
-            books: arr,
-            header: Mark.up(content, {
-              user: req.cookies.username,
-              active: url
-            })
-          }));
-        });
+        res.send(Mark.up(file, { //load books
+          books: books,
+          header: Mark.up(content, {
+            user: req.cookies.username,
+            active: 'all'
+          })
+        }));
       });
     });
   });
 });
 
 app.get('/my', function(req, res) {
-  mongo.connect(process.env.MONGODB_URI, function(err, db) {
-    if(err) throw err;
-
-    var books = db.collection('books');
-
-    books.find().toArray(function(err, arr) {
+  getBooks(req.cookies['email'], function(books) {
+    fs.readFile(__dirname + '/pages/index.html', 'utf8', function(err, file) {
       if(err) throw err;
+
+      var header = req.cookies['email'] ? 'header_auth' : 'header_noauth';
+
+      fs.readFile(__dirname + '/pages/' + header + '.html', 'utf8', function(err, content) {
+        if(err) throw err;
+
+        res.send(Mark.up(file, { //load books
+          books: books,
+          canAddBooks: true,
+          header: Mark.up(content, {
+            user: req.cookies.username,
+            active: 'my'
+          })
+        }));
+      });
     });
   });
 });
@@ -117,3 +119,16 @@ app.use(express.static(__dirname + '/public'));
 
 app.listen(process.env.PORT || '8080');
 console.log('Started..');
+
+function getBooks(owner, cb) {
+  mongo.connect(process.env.MONGODB_URI, function(err, db) {
+    if(err) throw err;
+
+    var books = db.collection('books');
+    books.find(owner ? { owner: owner } : null).toArray(function(err, arr) {
+      if(err) throw err;
+
+      cb(arr);
+    });
+  });
+}
