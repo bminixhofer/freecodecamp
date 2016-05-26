@@ -4,6 +4,7 @@
       gapi.auth2.init();
     });
 
+
     document.getElementById('logout').addEventListener('click', function() {
       request({
         method: 'GET',
@@ -33,8 +34,8 @@
 <div class="title">
   <h1>Trade Books</h1>
   <div id="subtitle">
-    <input {{if active|equals>my}}class="active"{{/if}} type="button" id="mybooks" value="My Books">
-    <input {{if active|equals>all}}class="active"{{/if}} type="button" id="allbooks" value="All Books">
-    <input type="button" id="mytrades" value="My Trades">
+    <a href="/my" {{if active|equals>my}} class="active"{{/if}} type="button" id="mybooks">My Books</a>
+    <a href="/all" {{if active|equals>all}}class="active"{{/if}} type="button" id="allbooks">All Books</a>
+    <a href="/trades" type="button" id="mytrades">My Trades</a>
   </div>
 </div>
