@@ -1,15 +1,43 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <meta charset="utf-8">
-    <link type="text/css" href="style/main.css" rel="stylesheet">
     <link href='style/mfglabs_iconset.css' rel='stylesheet' type='text/css'>
+    <link type="text/css" href="style/main.css" rel="stylesheet">
+    <meta charset="utf-8">
     <link href='https://fonts.googleapis.com/css?family=Raleway' rel='stylesheet' type='text/css'>
     <meta name="google-signin-scope" content="profile email">
     <meta name="google-signin-client_id" content="378779712660-jepfnm77jij9qo7nogoa3ttnbrjsjc4t.apps.googleusercontent.com">
     <script src="https://apis.google.com/js/platform.js" async defer></script>
-    <script src='../scripts/request.js'></script>
+    <script src="../scripts/request.js"></script>
+    {{if canAddBooks}}
+    <script type="text/javascript">
+      window.addEventListener('load', function() {
+        document.querySelector('.submit').addEventListener('click', function() {
+          var bookName = document.querySelector('.search').value;
+          request({
+            method: 'post',
+            data: 'book=' + bookName,
+            url: '/addBook',
+            callback: function(err, book) {
+              if(err) throw err;
 
+              book = JSON.parse(book);
+
+              var bookElement = document.createElement('div');
+              bookElement.className = 'book';
+              bookElement.innerHTML =
+                '<img src=' + book.cover + '>' +
+                '<h4>' + book.title + '</h4>';
+
+              var books = document.getElementById('books');
+              books.insertBefore(bookElement, document.getElementById('addBooks'));
+              console.log(book);
+            }
+          });
+        });
+      });
+    </script>
+    {{/if}}
     <title>Trade Books</title>
   </head>
   <body>
@@ -23,10 +51,11 @@
         <h4>{{title}}</h4>
       </div>
       {{/books}}
+
       {{if canAddBooks}}
         <div id="addBooks">
-          <input type="text"></input>
-          <input type="button" value="Add to your collection.."></input>
+          <input class="search" type="text"></input>
+          <input class="submit" type="button" value="Add this Book.."></input>
         </div>
       {{/if}}
     </div>

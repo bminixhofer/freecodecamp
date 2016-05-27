@@ -41,6 +41,7 @@ app.get('/logoutUser', function(req, res) {
 });
 
 app.post('/addBook', function(req, res) {
+  console.log(req.body);
   mongo.connect(process.env.MONGODB_URI, function(err, db) {
     if(req.body.book) {
       request('https://www.googleapis.com/books/v1/volumes?q=' + req.body.book, function(err, response, body) {
@@ -53,15 +54,14 @@ app.post('/addBook', function(req, res) {
         data = data.items[0];
 
         var mappedData = {
-          owner: req.cookies['username'],
+          owner: req.cookies['email'],
           title: data.volumeInfo.title,
           cover: data.volumeInfo.imageLinks.thumbnail,
           id: data.id
         };
-
         db.collection('books').insert(mappedData, function(err) {
           if(err) throw err;
-
+          console.log(mappedData);
           res.end(JSON.stringify(mappedData));
         });
       });
@@ -127,7 +127,6 @@ function getBooks(owner, cb) {
     var books = db.collection('books');
     books.find(owner ? { owner: owner } : null).toArray(function(err, arr) {
       if(err) throw err;
-
       cb(arr);
     });
   });

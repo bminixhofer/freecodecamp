@@ -2,7 +2,7 @@
 function request(info) {
   var xhr = new XMLHttpRequest();
 
-  var method = info.method;
+  var method = info.method.toUpperCase();
   var callback = info.callback;
   var url = info.url;
   var data = info.data;
@@ -23,7 +23,7 @@ function request(info) {
     var OK = 200;
     if (xhr.readyState === DONE) {
       if (xhr.status === OK) {
-        callback();
+        callback(null, xhr.response);
       } else {
         callback(xhr.status);
       }
