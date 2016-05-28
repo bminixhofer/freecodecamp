@@ -21,8 +21,6 @@ app.use(function(req, res, next) {
   next();
 });
 
-//login / logout system
-
 app.post('/loginUser', function(req, res) {
   var email = req.body.email;
   var username = req.body.name;
@@ -61,12 +59,44 @@ app.post('/addBook', function(req, res) {
         };
         db.collection('books').insert(mappedData, function(err) {
           if(err) throw err;
-          console.log(mappedData);
           res.end(JSON.stringify(mappedData));
         });
       });
     }
   })
+});
+
+app.get('/trades', function(req, res) {
+  var email = req.cookies['email'];
+
+  if(!email) {
+    res.redirect('/all');
+  } else {
+    mongo.connect(process.env.MONGODB_URI, function(err, db) {
+      if(err) throw err;
+
+      fs.readFile(__dirname + '/pages/trades.html', 'utf8', function(err, file) {
+        if(err) throw err;
+
+        var trades = db.collection('trades');
+        trades.find( { $or: [ { receiver: email }, { requester: email } ] }).toArray(function(err, trades) {
+          if(err) throw err;
+
+          fs.readFile(__dirname + '/pages/header_auth.html', 'utf8', function(err, content) {
+            if(err) throw err;
+
+            res.send(Mark.up(file, {
+              title: 'Trade Books | My Trades',
+              header: Mark.up(content, {
+                user: req.cookies.username,
+                active: 'trades'
+              })
+            }));
+          });
+        });
+      });
+    });
+  }
 });
 
 app.get('/all', function(req, res) {
@@ -81,6 +111,7 @@ app.get('/all', function(req, res) {
 
         res.send(Mark.up(file, { //load books
           books: books,
+          title: 'Trade Books | All Books',
           header: Mark.up(content, {
             user: req.cookies.username,
             active: 'all'
@@ -92,26 +123,30 @@ app.get('/all', function(req, res) {
 });
 
 app.get('/my', function(req, res) {
-  getBooks(req.cookies['email'], function(books) {
-    fs.readFile(__dirname + '/pages/index.html', 'utf8', function(err, file) {
-      if(err) throw err;
-
-      var header = req.cookies['email'] ? 'header_auth' : 'header_noauth';
-
-      fs.readFile(__dirname + '/pages/' + header + '.html', 'utf8', function(err, content) {
+  if(!req.cookies['email']) {
+    res.redirect('/all');
+  } else {
+    getBooks(req.cookies['email'], function(books) {
+      fs.readFile(__dirname + '/pages/index.html', 'utf8', function(err, file) {
         if(err) throw err;
 
-        res.send(Mark.up(file, { //load books
-          books: books,
-          canAddBooks: true,
-          header: Mark.up(content, {
-            user: req.cookies.username,
-            active: 'my'
-          })
-        }));
+        var header = 'header_auth';
+        fs.readFile(__dirname + '/pages/' + header + '.html', 'utf8', function(err, content) {
+          if(err) throw err;
+
+          res.send(Mark.up(file, { //load books
+            books: books,
+            canAddBooks: true,
+            title: 'Trade Books | My Books',
+            header: Mark.up(content, {
+              user: req.cookies.username,
+              active: 'my'
+            })
+          }));
+        });
       });
     });
-  });
+  }
 });
 
 app.use(express.static(__dirname + '/public'));
