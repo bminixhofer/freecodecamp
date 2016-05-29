@@ -45,6 +45,8 @@ body {
 }
 
 nav {
+  top: 0;
+  position: fixed;
   width: 100%;
   height: 60px;
   background-color: #F59E03;
@@ -131,6 +133,7 @@ a.active, a:focus {
 }
 
 h1 {
+  margin-top: 0;
   font-family: inherit;
   font-size: 70px;
 }
