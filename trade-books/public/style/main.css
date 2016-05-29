@@ -2,6 +2,18 @@ body {
   margin: 0;
 }
 
+#trades {
+  font-family: 'Raleway';
+  font-size: 35px;
+  margin-left: 120px;
+}
+
+#trades > h2 {
+  margin-bottom: 10px;
+  margin-left: -65px;
+  color: #EB540A;
+}
+
 #addBooks {
   margin-top: 130px;
   text-align: center;
@@ -43,6 +55,7 @@ nav div {
   cursor: pointer;
   height: 100%;
   font-family: 'Raleway';
+  font-size: 30px;
   display: inline-block;
 }
 
@@ -124,7 +137,7 @@ h1 {
 
 h2 {
   font-family: inherit;
-  font-size: 30px;
+  font-size: inherit;
 }
 
 h3 {
@@ -138,6 +151,65 @@ h3 {
 
 h4 {
   width: 200px;
+}
+
+.trade {
+  margin-bottom: 20px;
+  width: 500px;
+  padding: 10px;
+  border: 3px solid #0C152A;
+  border-radius: 7px;
+}
+
+.trade > img {
+  cursor: pointer;
+  display: inline-block;
+  width: 60px;
+  margin-left: 80px;
+  vertical-align: middle;
+}
+
+.helper {
+  display: inline-block;
+  height: 100%;
+  vertical-align: middle;
+}
+
+.tradeTitle > h5 {
+  text-align: left;
+  display: inline-block;
+  margin: 0;
+  margin-left: 5px;
+  margin-right: 20px;
+  font-size: 25px;
+  width: 120px;
+  color: #02779E;
+}
+
+.tradeElement > h5 {
+  height: 50px;
+  overflow: hidden;
+  align-self: auto;
+  margin: 0;
+  font-size: 15px;
+}
+
+.tradeElement > img {
+  height: 160px;
+  width: 100%;
+  align-self: auto;
+}
+
+.tradeElement {
+  display: -webkit-inline-flex;
+  display: inline-flex;
+  flex-direction: column;
+  justify-content: space-between;
+  vertical-align: bottom;
+  height: 218px;
+  margin: 0;
+  margin-right: 20px;
+  width: 120px;
 }
 
 img {
