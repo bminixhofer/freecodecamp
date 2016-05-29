@@ -36,6 +36,6 @@
   <div id="subtitle">
     <a href="/my" {{if active|equals>my}} class="active"{{/if}} type="button" id="mybooks">My Books</a>
     <a href="/all" {{if active|equals>all}}class="active"{{/if}} type="button" id="allbooks">All Books</a>
-    <a href="/trades" type="button" id="mytrades">My Trades</a>
+    <a href="/trades" {{if active|equals>trades}}class="active"{{/if}} type="button" id="mytrades">My Trades</a>
   </div>
 </div>
