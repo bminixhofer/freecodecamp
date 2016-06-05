@@ -22,6 +22,12 @@ body {
   display: inline-block;
 }
 
+.add {
+  cursor: pointer;
+  width: 60px;
+  height: 60px;
+}
+
 .search {
   color: #F59E03;
   padding: 0;
