@@ -8,6 +8,13 @@
     <meta name="google-signin-scope" content="profile email">
     <meta name="google-signin-client_id" content="378779712660-jepfnm77jij9qo7nogoa3ttnbrjsjc4t.apps.googleusercontent.com">
     <script src="https://apis.google.com/js/platform.js" async defer></script>
+    <script type="text/javascript">
+      window.addEventListener("load", function() {
+        document.querySelector(".add").addEventListener("click", function() {
+          location.replace("/all?add=true");
+        });
+      });
+    </script>
     <title>Trade Books | My Trades</title>
   </head>
   <body>
