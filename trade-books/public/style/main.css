@@ -92,6 +92,28 @@ nav div {
   color: #0C152A;
 }
 
+.popup > p {
+  font-weight: bold;
+  font-size: 33px;
+  font-family: "Raleway";
+  margin: 0;
+  margin-top: 22px;
+}
+
+.popup {
+  margin-top: -330px;
+  width: 700px;
+  height: 80px;
+  color: #EB540A;
+  margin-left: 50%;
+  background-color: #FFF;
+  transform: translateX(-50%);
+  border-radius: 5px;
+  border: 5px solid #0C152A;
+  text-align: center;
+  position: fixed;
+}
+
 a.active, a:focus {
   background-color: #F59E03 !important;
   outline: 2.5px solid #F59E03;
