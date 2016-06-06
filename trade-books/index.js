@@ -4,11 +4,19 @@ var express = require('express');
 var mongo = require('mongodb').MongoClient;
 var app = express();
 var bodyParser = require('body-parser');
+var session = require('express-session');
 var cookieParser = require('cookie-parser');
 var request = require('request');
 var Mark = require('markup-js');
 var fs = require('fs');
 
+
+app.use(session({
+  secret: 'tree',
+  resave: true,
+  saveUninitialized: true,
+  unset: 'destroy'
+}));
 app.use(cookieParser());
 app.use(bodyParser.urlencoded({
   extended: true
@@ -66,6 +74,39 @@ app.post('/addBook', function(req, res) {
   })
 });
 
+app.post('/addTrade', function(req, res) {
+  var sess = req.session;
+  sess.requested = sess.requested || req.body.requested;
+  sess.offered = sess.offered || req.body.offered;
+
+  var offered = sess.offered;
+  var requested = sess.requested;
+
+  console.log(requested);
+
+  if(offered && requested) {
+    mongo.connect(process.env.MONGODB_URI, function(err, db) {
+      if(err) throw err;
+
+      var trades = db.collection('trades');
+      trades.insert({
+        offered: offered,
+        requested: requested
+      }, function(err) {
+        if(err) throw err;
+
+        req.session.destroy(function(err) {
+          if(err) throw err;
+
+          res.end(JSON.stringify({ status: 'done'}));
+        })
+      });
+    });
+  } else {
+    res.end(JSON.stringify({ status: 'waiting', waitingFor: offered ? 'all' : 'my' }));
+  }
+});
+
 app.get('/trades', function(req, res) {
   var email = req.cookies['email'];
 
@@ -75,7 +116,7 @@ app.get('/trades', function(req, res) {
     mongo.connect(process.env.MONGODB_URI, function(err, db) {
       if(err) throw err;
 
-      fs.readFile(__dirname + '/pages/trades.html', 'utf8', function(err, file) {
+        fs.readFile(__dirname + '/pages/trades.html', 'utf8', function(err, file) {
         if(err) throw err;
 
         var trades = db.collection('trades');
@@ -111,6 +152,7 @@ app.get('/all', function(req, res) {
 
         res.send(Mark.up(file, { //load books
           books: books,
+          addsTrade: req.query.add,
           title: 'Trade Books | All Books',
           header: Mark.up(content, {
             user: req.cookies.username,
@@ -136,7 +178,8 @@ app.get('/my', function(req, res) {
 
           res.send(Mark.up(file, { //load books
             books: books,
-            canAddBooks: true,
+            isOnMyScreen: true,
+            addsTrade: req.query.add,
             title: 'Trade Books | My Books',
             header: Mark.up(content, {
               user: req.cookies.username,
