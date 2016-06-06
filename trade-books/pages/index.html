@@ -8,9 +8,56 @@
     <meta name="google-signin-scope" content="profile email">
     <meta name="google-signin-client_id" content="378779712660-jepfnm77jij9qo7nogoa3ttnbrjsjc4t.apps.googleusercontent.com">
     <script src="https://apis.google.com/js/platform.js" async defer></script>
-    <title>{{title}}</title>
     <script src="../scripts/request.js"></script>
-    {{if canAddBooks}}
+    <title>{{title}}</title>
+    {{if addsTrade}}
+    <style type="text/css" rel="stylesheet">
+      * {
+        transition: all 0.1s;
+      }
+      .book > img:hover {
+        -webkit-box-shadow: 0px 0px 35px 6px #F59E03;
+        box-shadow: 0px 0px 35px 6px #F59E03;
+      }
+    </style>
+
+    <script type="text/javascript">
+      var type = {{if isOnMyScreen}}'offered'{{else}}'requested'{{/if}};
+
+      window.addEventListener("load", function() {
+        var books = document.querySelectorAll(".book > img");
+
+        for(var i = 0; i < books.length; i++) {
+          books[i].addEventListener("click", function(e) {
+            console.log('clicked');
+            var parentData = e.target.parentNode.dataset;
+
+            var book = parentData.book;
+            var owner = parentData.owner;
+
+            var data = type + '[book]=' + book + '&' + type + '[owner]=' + owner;
+
+            request({
+              method: 'post',
+              data: data,
+              url: '/addTrade',
+              callback: function(err, message) {
+                if(err) throw err;
+
+                message = JSON.parse(message);
+                if(message.waitingFor) {
+                  location.replace('/' + message.waitingFor + '?add=true');
+                } else {
+                  location.replace('/trades');
+                }
+              }
+            });
+          });
+        }
+      });
+    </script>
+    {{/if}}
+    {{if isOnMyScreen}}
     <script type="text/javascript">
       window.addEventListener('load', function() {
         document.querySelector('.submit').addEventListener('click', function() {
@@ -44,15 +91,27 @@
     {{header}}
     <div class="separator"></div>
 
+    {{if addsTrade}}
+        <div class="popup">
+          <p>
+            {{if isOnMyScreen}}
+              Select a Book you offer.
+            {{else}}
+              Select a Book you want.
+            {{/if}}
+          </p>
+        </div>
+    {{/if}}
+
     <div id="books">
       {{books}}
-      <div class="book">
+      <div data-book={{title}} data-owner={{owner}} class="book">
         <img src={{cover}}>
         <h4>{{title}}</h4>
       </div>
       {{/books}}
 
-      {{if canAddBooks}}
+      {{if isOnMyScreen}}
         <div id="addBooks">
           <input class="search" type="text"></input>
           <input class="submit" type="button" value="Add this Book.."></input>
