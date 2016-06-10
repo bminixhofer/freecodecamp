@@ -9,7 +9,7 @@ var cookieParser = require('cookie-parser');
 var request = require('request');
 var Mark = require('markup-js');
 var fs = require('fs');
-
+var sha1 = require('sha1');
 
 app.use(session({
   secret: 'tree',
@@ -47,7 +47,6 @@ app.get('/logoutUser', function(req, res) {
 });
 
 app.post('/addBook', function(req, res) {
-  console.log(req.body);
   mongo.connect(process.env.MONGODB_URI, function(err, db) {
     if(req.body.book) {
       request('https://www.googleapis.com/books/v1/volumes?q=' + req.body.book, function(err, response, body) {
@@ -59,11 +58,12 @@ app.post('/addBook', function(req, res) {
         }
         data = data.items[0];
 
+        var info = data.volumeInfo;
         var mappedData = {
           owner: req.cookies['email'],
-          title: data.volumeInfo.title,
-          cover: data.volumeInfo.imageLinks.thumbnail,
-          id: data.id
+          title: info.title,
+          cover: info.imageLinks.thumbnail,
+          id: sha1(Date.now() + info.title)
         };
         db.collection('books').insert(mappedData, function(err) {
           if(err) throw err;
@@ -75,35 +75,68 @@ app.post('/addBook', function(req, res) {
 });
 
 app.post('/addTrade', function(req, res) {
-  var sess = req.session;
-  sess.requested = sess.requested || req.body.requested;
-  sess.offered = sess.offered || req.body.offered;
+  mongo.connect(process.env.MONGODB_URI, function(err, db) {
+    var books = db.collection('books');
 
-  var offered = sess.offered;
-  var requested = sess.requested;
+    var type = req.body.requested ? 'requested' : 'offered';
+    var current = req.body[type];
+    if(current) {
+      books.find( { id: current }).toArray(function(err, book) {
+        if(err) throw err;
 
-  console.log(requested);
+        req.session[type] = book[0];
+        var offered = req.session.offered;
+        var requested = req.session.requested;
 
-  if(offered && requested) {
+        if(offered && requested) {
+          if(err) throw err;
+
+          var trades = db.collection('trades');
+          var trade = {
+            offer: offered,
+            request: requested,
+          };
+          trade.id = sha1(Date.now() + JSON.stringify(trade));
+          trades.insert(trade, function(err) {
+            if(err) throw err;
+
+            req.session.destroy(function(err) {
+              if(err) throw err;
+
+              res.end(JSON.stringify({ status: 'done'}));
+            });
+          });
+        } else {
+          res.end(JSON.stringify({ status: 'waiting', waitingFor: req.body.offered ? 'all' : 'my' }));
+        }
+      });
+    } else {
+      res.end(JSON.stringify({ status: 'invalid input' }));
+    }
+  });
+});
+
+app.post('/cancelTrade', function(req, res) {
+  var owner = req.cookies['email'];
+  var id = req.body.id;
+  if(owner && id) {
     mongo.connect(process.env.MONGODB_URI, function(err, db) {
       if(err) throw err;
 
       var trades = db.collection('trades');
-      trades.insert({
-        offered: offered,
-        requested: requested
-      }, function(err) {
+      trades.find( { id: id }).toArray(function(err, arr) {
         if(err) throw err;
 
-        req.session.destroy(function(err) {
-          if(err) throw err;
+        var trade = arr[0];
+        if(trade.request.owner == owner || trade.offer.owner == owner) {
+          trades.remove( { id: id }, false, function(err) {
+            if(err) throw err;
 
-          res.end(JSON.stringify({ status: 'done'}));
-        })
+            res.end();
+          });
+        }
       });
     });
-  } else {
-    res.end(JSON.stringify({ status: 'waiting', waitingFor: offered ? 'all' : 'my' }));
   }
 });
 
@@ -120,19 +153,31 @@ app.get('/trades', function(req, res) {
         if(err) throw err;
 
         var trades = db.collection('trades');
-        trades.find( { $or: [ { receiver: email }, { requester: email } ] }).toArray(function(err, trades) {
+        trades.find( { $or: [ { "offer.owner": email }, { "request.owner": email } ] }).toArray(function(err, trades) {
           if(err) throw err;
 
           fs.readFile(__dirname + '/pages/header_auth.html', 'utf8', function(err, content) {
             if(err) throw err;
 
-            res.send(Mark.up(file, {
+            var requested = trades.filter(function(trade) {
+              return trade.offer.owner === email;
+            });
+
+            var received = trades.filter(function(trade) {
+              return trade.request.owner === email;
+            });
+
+            var markup = {
               title: 'Trade Books | My Trades',
+              req: requested,
+              rec: received,
               header: Mark.up(content, {
                 user: req.cookies.username,
                 active: 'trades'
               })
-            }));
+            }
+
+            res.send(Mark.up(file, markup));
           });
         });
       });
@@ -141,7 +186,8 @@ app.get('/trades', function(req, res) {
 });
 
 app.get('/all', function(req, res) {
-  getBooks(null, function(books) {
+  var addsTrade = req.query.add;
+  getBooks(addsTrade ? req.cookies['email'] : null, addsTrade, function(books) {
     fs.readFile(__dirname + '/pages/index.html', 'utf8', function(err, file) {
       if(err) throw err;
 
@@ -152,7 +198,7 @@ app.get('/all', function(req, res) {
 
         res.send(Mark.up(file, { //load books
           books: books,
-          addsTrade: req.query.add,
+          addsTrade: addsTrade,
           title: 'Trade Books | All Books',
           header: Mark.up(content, {
             user: req.cookies.username,
@@ -168,7 +214,7 @@ app.get('/my', function(req, res) {
   if(!req.cookies['email']) {
     res.redirect('/all');
   } else {
-    getBooks(req.cookies['email'], function(books) {
+    getBooks(req.cookies['email'], false, function(books) {
       fs.readFile(__dirname + '/pages/index.html', 'utf8', function(err, file) {
         if(err) throw err;
 
@@ -198,12 +244,20 @@ app.use(express.static(__dirname + '/public'));
 app.listen(process.env.PORT || '8080');
 console.log('Started..');
 
-function getBooks(owner, cb) {
+function getBooks(owner, inverse, cb) {
   mongo.connect(process.env.MONGODB_URI, function(err, db) {
     if(err) throw err;
 
     var books = db.collection('books');
-    books.find(owner ? { owner: owner } : null).toArray(function(err, arr) {
+    var query = null;
+    if(owner) {
+      if(inverse) {
+        query = { owner: { $ne: owner } };
+      } else {
+        query = { owner:  owner };
+      }
+    }
+    books.find(query).toArray(function(err, arr) {
       if(err) throw err;
       cb(arr);
     });
