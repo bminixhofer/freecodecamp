@@ -219,7 +219,6 @@ app.get('/trades', function(req, res) {
                   if(err) throw err;
 
                   trade.partner = arr[0];
-                  console.log(trade);
                   index++;
                   if(index === trades.length) {
                     sendTrades();
