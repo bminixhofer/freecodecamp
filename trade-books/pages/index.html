@@ -32,32 +32,34 @@
     </style>
 
     <script type="text/javascript">
+    function sendBook(e) {
+      var parentData = e.target.parentNode.dataset;
+      var data = type + '=' + parentData.id;
+
+      request({
+        method: 'post',
+        data: data,
+        url: '/addTrade',
+        callback: function(err, message) {
+          if(err) throw err;
+
+          message = JSON.parse(message);
+          if(message.waitingFor) {
+            location.replace('/' + message.waitingFor + '?add=true');
+          } else {
+            location.replace('/trades');
+          }
+        }
+      });
+    }
+
       var type = {{if isOnMyScreen}}'offered'{{else}}'requested'{{/if}};
 
       window.addEventListener("load", function() {
         var books = document.querySelectorAll(".book > .bookImage");
 
         for(var i = 0; i < books.length; i++) {
-          books[i].addEventListener("click", function(e) {
-            var parentData = e.target.parentNode.dataset;
-            var data = type + '=' + parentData.id;
-
-            request({
-              method: 'post',
-              data: data,
-              url: '/addTrade',
-              callback: function(err, message) {
-                if(err) throw err;
-
-                message = JSON.parse(message);
-                if(message.waitingFor) {
-                  location.replace('/' + message.waitingFor + '?add=true');
-                } else {
-                  location.replace('/trades');
-                }
-              }
-            });
-          });
+          books[i].addEventListener("click", sendBook);
         }
       });
     </script>
@@ -77,11 +79,13 @@
               book = JSON.parse(book);
 
               var bookElement = document.createElement('div');
+              bookElement.dataset.id = book.id;
               bookElement.className = 'book';
               bookElement.innerHTML =
-                '<img src=' + book.cover + '>' +
+                '<img class="bookImage" src=' + book.cover + '>' +
                 '<h4>' + book.title + '</h4>';
 
+              bookElement.childNodes[0].addEventListener("click", sendBook);
               var books = document.getElementById('books');
               books.insertBefore(bookElement, document.getElementById('addBooks'));
             }
