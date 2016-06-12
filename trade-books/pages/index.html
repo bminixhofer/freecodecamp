@@ -8,14 +8,24 @@
     <meta name="google-signin-scope" content="profile email">
     <meta name="google-signin-client_id" content="378779712660-jepfnm77jij9qo7nogoa3ttnbrjsjc4t.apps.googleusercontent.com">
     <script src="https://apis.google.com/js/platform.js" async defer></script>
-    <script src="../scripts/request.js"></script>
     <title>{{title}}</title>
     {{if addsTrade}}
     <style type="text/css" rel="stylesheet">
       * {
         transition: all 0.1s;
       }
-      .book > img:hover {
+
+      .book img {
+        -webkit-filter: grayscale(70%) opacity(10%);
+        filter: grayscale(70%) opacity(10%);
+      }
+
+      .book > .bookImage {
+        -webkit-filter: none;
+        filter: none;
+      }
+
+      .book > .bookImage:hover {
         -webkit-box-shadow: 0px 0px 35px 6px #F59E03;
         box-shadow: 0px 0px 35px 6px #F59E03;
       }
@@ -25,7 +35,7 @@
       var type = {{if isOnMyScreen}}'offered'{{else}}'requested'{{/if}};
 
       window.addEventListener("load", function() {
-        var books = document.querySelectorAll(".book > img");
+        var books = document.querySelectorAll(".book > .bookImage");
 
         for(var i = 0; i < books.length; i++) {
           books[i].addEventListener("click", function(e) {
@@ -101,7 +111,7 @@
     <div id="books">
       {{books}}
       <div data-id={{id}} class="book">
-        <img src={{cover}}>
+        <img {{if locked}}{{else}}class="bookImage"{{/if}} src={{cover}}>
         <h4>{{title}}</h4>
       </div>
       {{/books}}

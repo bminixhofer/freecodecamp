@@ -8,7 +8,6 @@
     <meta name="google-signin-scope" content="profile email">
     <meta name="google-signin-client_id" content="378779712660-jepfnm77jij9qo7nogoa3ttnbrjsjc4t.apps.googleusercontent.com">
     <script src="https://apis.google.com/js/platform.js" async defer></script>
-    <script src="../scripts/request.js"></script>
     <script type="text/javascript">
       window.addEventListener("load", function() {
         document.querySelector(".add").addEventListener("click", function() {
@@ -17,10 +16,13 @@
 
         document.querySelectorAll(".imgWrapper > img").forEach(function(node) {
           node.addEventListener("click", function(e) {
+            var doesCancel = e.target.classList.contains('cancel');
             var tradeRoot = e.target.parentNode.parentNode;
+            var url = '/trade/' + (doesCancel ? 'cancel' : 'confirm');
+
             request({
               method: 'POST',
-              url: '/cancelTrade',
+              url: url,
               data: 'id=' + tradeRoot.dataset.id,
               callback: function() {
                 tradeRoot.parentNode.removeChild(tradeRoot);
@@ -54,7 +56,14 @@
         </div>
         <span class="helper"></span>
         <div class="imgWrapper">
-          <img src="resources/cancel.svg">
+          <img class="cancel" src="resources/cancel.svg">
+        </div>
+        <div class="partnerData">
+          <h3>Your Trade Partner</h3>
+          <h4>{{partner.username}}</h4>
+          <h4>{{if partner.state}}State: {{partner.state}}{{else}}State unknown{{/if}}</h4>
+          <h4>{{if partner.city}}City: {{partner.city}}{{else}}City unknown{{/if}}</h4>
+          <h4>{{if partner.street}}Street: {{partner.street}}{{else}}Street unknown{{/if}}</h4>
         </div>
       </div>
       {{/req}}
@@ -78,8 +87,15 @@
         </div>
         <span class="helper"></span>
         <div class="imgWrapper">
-          <img src="resources/accept.svg">
-          <img src="resources/cancel.svg">
+          <img class="accept" src="resources/accept.svg">
+          <img class="cancel" src="resources/cancel.svg">
+        </div>
+        <div class="partnerData">
+          <h3>Your Trade Partner</h3>
+          <h4>{{partner.username}}</h4>
+          <h4>{{if partner.state}}State: {{partner.state}}{{else}}State unknown{{/if}}</h4>
+          <h4>{{if partner.city}}City: {{partner.city}}{{else}}City unknown{{/if}}</h4>
+          <h4>{{if partner.street}}Street: {{partner.street}}{{else}}Street unknown{{/if}}</h4>
         </div>
       </div>
       {{/rec}}

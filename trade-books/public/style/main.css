@@ -4,7 +4,7 @@ body {
 
 #trades {
   font-family: 'Raleway';
-  font-size: 35px;
+  font-size: 40px;
   margin-left: 120px;
 }
 
@@ -12,6 +12,51 @@ body {
   margin-bottom: 10px;
   margin-left: -65px;
   color: #EB540A;
+}
+
+#settingsPrompt {
+  display: none;
+  margin-top: 100px;
+  background-color: #FFF;
+  margin-left: 50%;
+  transform: translateX(-50%);
+  position: fixed;
+  border-radius: 10px;
+  border: 5px solid #0C152A;
+  width: 600px;
+}
+
+#settingsPrompt > h2 {
+  font-size: 40px;
+  margin-bottom: 50px;
+}
+
+#settingsPrompt h3 {
+  display: block;
+  color: #F59E03;
+}
+
+.settingsInput > input {
+  border-radius: 4px;
+  padding-left: 10px;
+  border: 3px solid #0C152A;
+  font-size: 25px;
+  width: 250px;
+}
+
+.settingsInput {
+  margin-left: 50%;
+  transform: translateX(-50%);
+  width: 75%;
+  display: flex;
+  display: -webkit-flex;
+  justify-content: space-between;
+}
+
+
+#update {
+  margin-top: 50px;
+  margin-bottom: 30px;
 }
 
 #addBooks {
@@ -23,9 +68,10 @@ body {
 }
 
 .add {
+  margin-top: 10px;
   cursor: pointer;
-  width: 60px;
-  height: 60px;
+  width: 40px;
+  height: 40px;
 }
 
 .search {
@@ -114,14 +160,14 @@ nav div {
   position: fixed;
 }
 
-a.active, a:focus {
+a.active, a:focus, .btn:active {
   background-color: #F59E03 !important;
   outline: 2.5px solid #F59E03;
   -webkit-box-shadow: 0px 0px 17px 0px #F59E03;
   box-shadow: 0px 0px 17px 0px #F59E03;
 }
 
-#subtitle a {
+.btn {
   text-decoration: none;
   width: 180px;
   color: #FFF;
@@ -160,6 +206,20 @@ a.active, a:focus {
   text-align: center;
 }
 
+.abcRioButtonSvg {
+  position: relative;
+  top: -8px;  
+}
+
+.abcRioButtonContents > span {
+  position: relative;
+  top: -4px;
+}
+
+#subtitle {
+  font-size: 25px;
+}
+
 h1 {
   margin-top: 0;
   font-family: inherit;
@@ -184,11 +244,33 @@ h4 {
   width: 200px;
 }
 
+.partnerData {
+  margin-top: 30px;
+  margin-left: 40px;
+  vertical-align: top;
+  display: inline-block;
+  height: 100%;
+}
+
+.partnerData > h3 {
+  color: #02779E;
+  font-size: 28px;
+  margin-left: 0;
+  margin-bottom: 10px;
+}
+
+.partnerData > h4 {
+  font-weight: lighter;
+  margin: 0;
+  margin-left: 20px;
+  font-size: 20px;
+}
+
 .trade {
+  width: 770px;
   -webkit-box-shadow: 0px 0px 12px 0px #3C455A;
   box-shadow: 0px 0px 12px 0px #3C455A;
   margin-bottom: 30px;
-  width: 500px;
   padding: 10px;
   border: 3px solid #0C152A;
   border-radius: 7px;

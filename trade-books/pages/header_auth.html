@@ -1,10 +1,48 @@
+<script src="../scripts/request.js"></script>
 <script type="text/javascript">
+  var settingData = {};
+
   window.addEventListener('load', function() {
     gapi.load('auth2', function() {
       gapi.auth2.init();
     });
 
+    var settingsPrompt = document.getElementById('settingsPrompt');
+    var state = document.getElementById('state');
+    var city = document.getElementById('city');
+    var street = document.getElementById('street');
 
+    request({
+      url: '/settings/get',
+      method: 'GET',
+      callback: function(err, data) {
+        if(err) throw err;
+        settingData = JSON.parse(data);
+
+        state.value = settingData.state || '';
+        city.value = settingData.city || '';
+        street.value = settingData.street || '';
+      }
+    })
+
+    document.getElementById('update').addEventListener('click', function(e) {
+      request({
+        url: '/settings/set',
+        method: 'POST',
+        data: 'state=' + state.value +
+          '&city=' + city.value +
+          '&street=' + street.value,
+        callback: function(err) {
+          if(err) throw err;
+
+          settingsPrompt.style.display = 'none';
+        }
+      })
+    });
+
+    document.getElementById('settings').addEventListener('click', function(e) {
+      if(!settingsPrompt.style.display || settingsPrompt.style.display === 'none') settingsPrompt.style.display = 'block';
+    });
     document.getElementById('logout').addEventListener('click', function() {
       request({
         method: 'GET',
@@ -32,10 +70,17 @@
   </div>
 </nav>
 <div class="title">
+  <div id="settingsPrompt">
+    <h2>Personal Information</h2>
+    <div class="settingsInput"><h3>State</h3><input id="state" type="text"></div><br>
+    <div class="settingsInput"><h3>City</h3><input id="city" type="text"></div><br>
+    <div class="settingsInput"><h3>Street</h3><input id="street" type="text"></div><br>
+    <input type="button" class="btn" id="update" value="Update">
+  </div>
   <h1>Trade Books</h1>
   <div id="subtitle">
-    <a href="/my" {{if active|equals>my}} class="active"{{/if}} type="button" id="mybooks">My Books</a>
-    <a href="/all" {{if active|equals>all}}class="active"{{/if}} type="button" id="allbooks">All Books</a>
-    <a href="/trades" {{if active|equals>trades}}class="active"{{/if}} type="button" id="mytrades">My Trades</a>
+    <a href="/my" class="btn{{if active|equals>my}} active{{/if}}" id="mybooks">My Books</a>
+    <a href="/all" class="btn{{if active|equals>all}} active{{/if}}" id="allbooks">All Books</a>
+    <a href="/trades" class="btn{{if active|equals>trades}} active{{/if}}" id="mytrades">My Trades</a>
   </div>
 </div>

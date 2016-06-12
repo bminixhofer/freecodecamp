@@ -36,8 +36,25 @@ app.post('/loginUser', function(req, res) {
   if(email && username) {
     res.cookie('email', email);
     res.cookie('username', username);
+
+    mongo.connect(process.env.MONGODB_URI, function(err, db) {
+      var users = db.collection('users');
+      users.find( { email: email }).toArray(function(err, arr) {
+        if(err) throw err;
+
+        if(arr.length === 0) {
+          users.insert({ email: email, username: username }, function(err) {
+            if(err) throw err;
+            res.end();
+          });
+        } else {
+          res.end();
+        }
+      })
+    });
+  } else {
+    res.end();
   }
-  res.end();
 });
 
 app.get('/logoutUser', function(req, res) {
@@ -91,6 +108,12 @@ app.post('/addTrade', function(req, res) {
         if(offered && requested) {
           if(err) throw err;
 
+          books.update( { id: offered.id }, { $set: { locked: true }}, function(err) {
+            if(err) throw err;
+          });
+          books.update( { id: requested.id }, { $set: { locked: true }}, function(err) {
+            if(err) throw err;
+          });
           var trades = db.collection('trades');
           var trade = {
             offer: offered,
@@ -116,24 +139,50 @@ app.post('/addTrade', function(req, res) {
   });
 });
 
-app.post('/cancelTrade', function(req, res) {
+app.post('/trade/:type', function(req, res) {
+  var type = req.params.type;
   var owner = req.cookies['email'];
   var id = req.body.id;
+
   if(owner && id) {
     mongo.connect(process.env.MONGODB_URI, function(err, db) {
       if(err) throw err;
 
+      var books = db.collection('books');
       var trades = db.collection('trades');
       trades.find( { id: id }).toArray(function(err, arr) {
         if(err) throw err;
 
         var trade = arr[0];
-        if(trade.request.owner == owner || trade.offer.owner == owner) {
-          trades.remove( { id: id }, false, function(err) {
-            if(err) throw err;
+        if(type === 'cancel') {
+          if(trade.request.owner === owner || trade.offer.owner === owner) {
+            trades.remove( { id: id }, false, function(err) {
+              if(err) throw err;
 
-            res.end();
-          });
+              books.update( { id: trade.offer.id }, { $set: { locked: false }}, function(err) {
+                if(err) throw err;
+              });
+              books.update( { id: trade.request.id }, { $set: { locked: false }}, function(err) {
+                if(err) throw err;
+              });
+              res.end();
+            });
+          }
+        } else if(type === 'confirm') {
+          if(trade.request.owner === owner) {
+            trades.remove( { id: id }, function(err) {
+              if(err) throw err;
+              var books = db.collection('books');
+              books.update({ id: trade.request.id }, { $set: { locked: false, owner: trade.offer.owner } }, function(err) {
+                if(err) throw err;
+                books.update({ id: trade.offer.id }, { $set: { locked: false, owner: trade.request.owner } }, function(err) {
+                  if(err) throw err;
+
+                  res.end();
+                });
+              });
+            });
+          }
         }
       });
     });
@@ -159,30 +208,89 @@ app.get('/trades', function(req, res) {
           fs.readFile(__dirname + '/pages/header_auth.html', 'utf8', function(err, content) {
             if(err) throw err;
 
-            var requested = trades.filter(function(trade) {
-              return trade.offer.owner === email;
-            });
+            var index = 0;
+            var users = db.collection('users');
+            if(trades.length === 0) {
+              sendTrades();
+            } else {
+              trades.forEach(function(trade) {
+                var partner = trade.offer.owner === email ? trade.request.owner : trade.offer.owner;
+                users.find({ email: partner }).toArray(function(err, arr) {
+                  if(err) throw err;
 
-            var received = trades.filter(function(trade) {
-              return trade.request.owner === email;
-            });
-
-            var markup = {
-              title: 'Trade Books | My Trades',
-              req: requested,
-              rec: received,
-              header: Mark.up(content, {
-                user: req.cookies.username,
-                active: 'trades'
-              })
+                  trade.partner = arr[0];
+                  console.log(trade);
+                  index++;
+                  if(index === trades.length) {
+                    sendTrades();
+                  }
+                });
+              });
             }
+            function sendTrades() {
+              var requested = trades.filter(function(trade) {
+                return trade.offer.owner === email;
+              });
 
-            res.send(Mark.up(file, markup));
+              var received = trades.filter(function(trade) {
+                return trade.request.owner === email;
+              });
+
+              var markup = {
+                title: 'Trade Books | My Trades',
+                req: requested,
+                rec: received,
+                header: Mark.up(content, {
+                  user: req.cookies.username,
+                  active: 'trades'
+                })
+              }
+
+              res.send(Mark.up(file, markup));
+            }
           });
         });
       });
     });
   }
+});
+
+app.get('/settings/get', function(req, res) {
+  mongo.connect(process.env.MONGODB_URI, function(err, db) {
+    if(err) throw err;
+
+    var users = db.collection('users');
+    users.find( { email: req.cookies['email'] }).toArray(function(err, arr) {
+      if(err) throw err;
+
+      var user = arr[0];
+      res.end(JSON.stringify({
+        city: user.city,
+        state: user.state,
+        street: user.street
+      }));
+    });
+  });
+})
+
+app.post('/settings/set', function(req, res) {
+  mongo.connect(process.env.MONGODB_URI, function(err, db) {
+    if(err) throw err;
+
+    var settings = {
+      city: req.body.city,
+      state: req.body.state,
+      street: req.body.street
+    };
+
+    var users = db.collection('users');
+    users.update( { email: req.cookies['email'] }, {
+      $set: settings
+    }, function(err) {
+      if(err) throw err;
+      res.end();
+    });
+  });
 });
 
 app.get('/all', function(req, res) {
@@ -244,21 +352,21 @@ app.use(express.static(__dirname + '/public'));
 app.listen(process.env.PORT || '8080');
 console.log('Started..');
 
-function getBooks(owner, inverse, cb) {
+function getBooks(owner, lock, cb) {
   mongo.connect(process.env.MONGODB_URI, function(err, db) {
     if(err) throw err;
 
     var books = db.collection('books');
-    var query = null;
-    if(owner) {
-      if(inverse) {
-        query = { owner: { $ne: owner } };
-      } else {
-        query = { owner:  owner };
-      }
-    }
-    books.find(query).toArray(function(err, arr) {
+
+    books.find(owner && !lock ? { owner: owner } : null).toArray(function(err, arr) {
       if(err) throw err;
+      if(lock) {
+        arr.forEach(function(book) {
+          if(book.owner === owner) {
+            book.locked = true;
+          }
+        });
+      }
       cb(arr);
     });
   });
