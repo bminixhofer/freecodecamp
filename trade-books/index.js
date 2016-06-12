@@ -1,5 +1,3 @@
-'use strict';
-
 var express = require('express');
 var mongo = require('mongodb').MongoClient;
 var app = express();
@@ -37,7 +35,9 @@ app.post('/loginUser', function(req, res) {
     res.cookie('email', email);
     res.cookie('username', username);
 
-    mongo.connect(process.env.MONGODB_URI, function(err, db) {
+    mongo.connect('mongodb://admin:admin@ds013584.mlab.com:13584/trade-books', function(err, db) {
+      if(err) throw err;
+
       var users = db.collection('users');
       users.find( { email: email }).toArray(function(err, arr) {
         if(err) throw err;
@@ -64,7 +64,8 @@ app.get('/logoutUser', function(req, res) {
 });
 
 app.post('/addBook', function(req, res) {
-  mongo.connect(process.env.MONGODB_URI, function(err, db) {
+  mongo.connect('mongodb://admin:admin@ds013584.mlab.com:13584/trade-books', function(err, db) {
+    if(err) throw err;
     if(req.body.book) {
       request('https://www.googleapis.com/books/v1/volumes?q=' + req.body.book, function(err, response, body) {
         if(response.statusCode !== 200 || err) throw err;
@@ -72,27 +73,29 @@ app.post('/addBook', function(req, res) {
         var data = JSON.parse(body);
         if(data.totalItems === 0) {
           res.end(JSON.stringify({error: "Couldn't find any books with that title"}));
-        }
-        data = data.items[0];
+        } else {
+          data = data.items[0];
 
-        var info = data.volumeInfo;
-        var mappedData = {
-          owner: req.cookies['email'],
-          title: info.title,
-          cover: info.imageLinks.thumbnail,
-          id: sha1(Date.now() + info.title)
-        };
-        db.collection('books').insert(mappedData, function(err) {
-          if(err) throw err;
-          res.end(JSON.stringify(mappedData));
-        });
+          var info = data.volumeInfo;
+          var mappedData = {
+            owner: req.cookies['email'],
+            title: info.title,
+            cover: info.imageLinks.thumbnail,
+            id: sha1(Date.now() + info.title)
+          };
+          db.collection('books').insert(mappedData, function(err) {
+            if(err) throw err;
+            res.end(JSON.stringify(mappedData));
+          });
+        }
       });
     }
   })
 });
 
 app.post('/addTrade', function(req, res) {
-  mongo.connect(process.env.MONGODB_URI, function(err, db) {
+  mongo.connect('mongodb://admin:admin@ds013584.mlab.com:13584/trade-books', function(err, db) {
+    if(err) throw err;
     var books = db.collection('books');
 
     var type = req.body.requested ? 'requested' : 'offered';
@@ -145,7 +148,7 @@ app.post('/trade/:type', function(req, res) {
   var id = req.body.id;
 
   if(owner && id) {
-    mongo.connect(process.env.MONGODB_URI, function(err, db) {
+    mongo.connect('mongodb://admin:admin@ds013584.mlab.com:13584/trade-books', function(err, db) {
       if(err) throw err;
 
       var books = db.collection('books');
@@ -195,7 +198,7 @@ app.get('/trades', function(req, res) {
   if(!email) {
     res.redirect('/all');
   } else {
-    mongo.connect(process.env.MONGODB_URI, function(err, db) {
+    mongo.connect('mongodb://admin:admin@ds013584.mlab.com:13584/trade-books', function(err, db) {
       if(err) throw err;
 
         fs.readFile(__dirname + '/pages/trades.html', 'utf8', function(err, file) {
@@ -255,25 +258,29 @@ app.get('/trades', function(req, res) {
 });
 
 app.get('/settings/get', function(req, res) {
-  mongo.connect(process.env.MONGODB_URI, function(err, db) {
+  mongo.connect('mongodb://admin:admin@ds013584.mlab.com:13584/trade-books', function(err, db) {
     if(err) throw err;
 
     var users = db.collection('users');
     users.find( { email: req.cookies['email'] }).toArray(function(err, arr) {
       if(err) throw err;
 
-      var user = arr[0];
-      res.end(JSON.stringify({
-        city: user.city,
-        state: user.state,
-        street: user.street
-      }));
+      if(arr.length > 0) {
+        var user = arr[0];
+        res.end(JSON.stringify({
+          city: user.city,
+          state: user.state,
+          street: user.street
+        }));
+      } else {
+        res.end();
+      }
     });
   });
 })
 
 app.post('/settings/set', function(req, res) {
-  mongo.connect(process.env.MONGODB_URI, function(err, db) {
+  mongo.connect('mongodb://admin:admin@ds013584.mlab.com:13584/trade-books', function(err, db) {
     if(err) throw err;
 
     var settings = {
@@ -294,24 +301,27 @@ app.post('/settings/set', function(req, res) {
 
 app.get('/all', function(req, res) {
   var addsTrade = req.query.add;
-  getBooks(addsTrade ? req.cookies['email'] : null, addsTrade, function(books) {
-    fs.readFile(__dirname + '/pages/index.html', 'utf8', function(err, file) {
-      if(err) throw err;
-
-      var header = req.cookies['email'] ? 'header_auth' : 'header_noauth';
-
-      fs.readFile(__dirname + '/pages/' + header + '.html', 'utf8', function(err, content) {
+  mongo.connect('mongodb://admin:admin@ds013584.mlab.com:13584/trade-books', function(err, db) {
+    if(err) throw err;
+    getBooks(db.collection('books'), addsTrade ? req.cookies['email'] : null, addsTrade, function(books) {
+      fs.readFile(__dirname + '/pages/index.html', 'utf8', function(err, file) {
         if(err) throw err;
 
-        res.send(Mark.up(file, { //load books
-          books: books,
-          addsTrade: addsTrade,
-          title: 'Trade Books | All Books',
-          header: Mark.up(content, {
-            user: req.cookies.username,
-            active: 'all'
-          })
-        }));
+        var header = req.cookies['email'] ? 'header_auth' : 'header_noauth';
+
+        fs.readFile(__dirname + '/pages/' + header + '.html', 'utf8', function(err, content) {
+          if(err) throw err;
+
+          res.send(Mark.up(file, { //load books
+            books: books,
+            addsTrade: addsTrade,
+            title: 'Trade Books | All Books',
+            header: Mark.up(content, {
+              user: req.cookies.username,
+              active: 'all'
+            })
+          }));
+        });
       });
     });
   });
@@ -321,24 +331,27 @@ app.get('/my', function(req, res) {
   if(!req.cookies['email']) {
     res.redirect('/all');
   } else {
-    getBooks(req.cookies['email'], false, function(books) {
-      fs.readFile(__dirname + '/pages/index.html', 'utf8', function(err, file) {
-        if(err) throw err;
-
-        var header = 'header_auth';
-        fs.readFile(__dirname + '/pages/' + header + '.html', 'utf8', function(err, content) {
+    mongo.connect('mongodb://admin:admin@ds013584.mlab.com:13584/trade-books', function(err, db) {
+      if(err) throw err;
+      getBooks(db.collection('books'), req.cookies['email'], false, function(books) {
+        fs.readFile(__dirname + '/pages/index.html', 'utf8', function(err, file) {
           if(err) throw err;
 
-          res.send(Mark.up(file, { //load books
-            books: books,
-            isOnMyScreen: true,
-            addsTrade: req.query.add,
-            title: 'Trade Books | My Books',
-            header: Mark.up(content, {
-              user: req.cookies.username,
-              active: 'my'
-            })
-          }));
+          var header = 'header_auth';
+          fs.readFile(__dirname + '/pages/' + header + '.html', 'utf8', function(err, content) {
+            if(err) throw err;
+
+            res.send(Mark.up(file, { //load books
+              books: books,
+              isOnMyScreen: true,
+              addsTrade: req.query.add,
+              title: 'Trade Books | My Books',
+              header: Mark.up(content, {
+                user: req.cookies.username,
+                active: 'my'
+              })
+            }));
+          });
         });
       });
     });
@@ -351,22 +364,17 @@ app.use(express.static(__dirname + '/public'));
 app.listen(process.env.PORT || '8080');
 console.log('Started..');
 
-function getBooks(owner, lock, cb) {
-  mongo.connect(process.env.MONGODB_URI, function(err, db) {
+function getBooks(books, owner, lock, cb) {
+  books.find(owner && !lock ? { owner: owner } : null).toArray(function(err, arr) {
     if(err) throw err;
 
-    var books = db.collection('books');
-
-    books.find(owner && !lock ? { owner: owner } : null).toArray(function(err, arr) {
-      if(err) throw err;
-      if(lock) {
-        arr.forEach(function(book) {
-          if(book.owner === owner) {
-            book.locked = true;
-          }
-        });
-      }
-      cb(arr);
-    });
+    if(lock) {
+      arr.forEach(function(book) {
+        if(book.owner === owner) {
+          book.locked = true;
+        }
+      });
+    }
+    cb(arr);
   });
 }

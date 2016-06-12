@@ -9,6 +9,28 @@
     <meta name="google-signin-client_id" content="378779712660-jepfnm77jij9qo7nogoa3ttnbrjsjc4t.apps.googleusercontent.com">
     <script src="https://apis.google.com/js/platform.js" async defer></script>
     <title>{{title}}</title>
+    <script type="text/javascript">
+    function sendBook(e) {
+        var parentData = e.target.parentNode.dataset;
+        var data = type + '=' + parentData.id;
+
+        request({
+          method: 'post',
+          data: data,
+          url: '/addTrade',
+          callback: function(err, message) {
+            if(err) throw err;
+
+            message = JSON.parse(message);
+            if(message.waitingFor) {
+              location.replace('/' + message.waitingFor + '?add=true');
+            } else {
+              location.replace('/trades');
+            }
+          }
+        });
+      }
+    </script>
     {{if addsTrade}}
     <style type="text/css" rel="stylesheet">
       * {
@@ -32,27 +54,6 @@
     </style>
 
     <script type="text/javascript">
-    function sendBook(e) {
-      var parentData = e.target.parentNode.dataset;
-      var data = type + '=' + parentData.id;
-
-      request({
-        method: 'post',
-        data: data,
-        url: '/addTrade',
-        callback: function(err, message) {
-          if(err) throw err;
-
-          message = JSON.parse(message);
-          if(message.waitingFor) {
-            location.replace('/' + message.waitingFor + '?add=true');
-          } else {
-            location.replace('/trades');
-          }
-        }
-      });
-    }
-
       var type = {{if isOnMyScreen}}'offered'{{else}}'requested'{{/if}};
 
       window.addEventListener("load", function() {
