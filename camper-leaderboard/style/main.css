@@ -20,6 +20,8 @@
     width: inherit;
     text-align: left;
     padding: 0 10px; }
+    .leaderboard .entries th[data-selected='true'], .leaderboard .entries th[data-selected='false'] {
+      cursor: pointer; }
     .leaderboard .entries th[data-selected='true']:after {
       position: absolute;
       width: 15px;

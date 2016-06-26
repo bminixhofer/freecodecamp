@@ -30,6 +30,10 @@ $google-blue: #3369E8;
 
     padding: 0 10px;
 
+    th[data-selected='true'], th[data-selected='false'] {
+      cursor: pointer;
+    }
+
     th[data-selected='true']:after {
       position: absolute;
       width: 15px;
