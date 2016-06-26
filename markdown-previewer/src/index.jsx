@@ -11,21 +11,21 @@ var Input = React.createClass({
     return (
       <div className="input">
         <textarea type="text" onLoad={this.textChanged} onChange={this.textChanged} defaultValue="
-        Heading
-        =======
+        Heading\n
+        =======\n
         \n
-        Sub-heading
-        -----------
+        Sub-heading\n
+        -----------\n
         \n
-        ### Another deeper heading
+        ### Another deeper heading\n
         \n
-        Paragraphs are separated by a blank line.
+        Paragraphs are separated by a blank line.\n
         \n
-        Leave 2 spaces at the end of a line to do a
-        line break
+        Leave 2 spaces at the end of a line to do a\n
+        line break\n
         \n
-        Text attributes *italic*, **bold**,
-        `monospace`, ~~strikethrough~~ .
+        Text attributes *italic*, **bold**,\n
+        `monospace`, ~~strikethrough~~ .\n
         \n
         *[Benjamin Minixhofer](https://github.com/bminixhofer)*"/>
       </div>
