@@ -4,7 +4,9 @@
   "main": " ",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "node-sass --include-path scss style/main.scss style/main.css && node server.js"
+    "build-css": "node-sass --include-path scss style/main.scss style/main.css",
+    "watch-css": "nodemon -e scss -x \"npm run build-css\"",
+    "start": "node server.js && npm run watch-css"
   },
   "repository": {
     "type": "git",

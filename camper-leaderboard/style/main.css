@@ -1,0 +1,39 @@
+.leaderboard {
+  font-family: 'Open Sans';
+  display: inline-block;
+  margin-left: 50%;
+  transform: translateX(-50%);
+  width: 700px;
+  -webkit-box-shadow: 4px 4px 5px 0px rgba(0, 0, 0, 0.5);
+  -moz-box-shadow: 4px 4px 5px 0px rgba(0, 0, 0, 0.5);
+  box-shadow: 4px 4px 5px 0px rgba(0, 0, 0, 0.5); }
+  .leaderboard h1 {
+    font-weight: lighter;
+    color: #FFF;
+    text-align: center;
+    background-color: #3369E8;
+    margin: 0 auto;
+    padding-bottom: 10px;
+    padding-top: 5px; }
+  .leaderboard .entries {
+    border: 2px solid #3369E8;
+    width: inherit;
+    text-align: left;
+    padding: 0 10px; }
+    .leaderboard .entries th[data-selected='true']:after {
+      position: absolute;
+      width: 15px;
+      height: 15px;
+      margin-top: 3px;
+      margin-left: 10px;
+      content: " ";
+      background: url("../resources/expand-button.svg") no-repeat 0 0;
+      background-size: 100%; }
+    .leaderboard .entries .username {
+      position: relative;
+      vertical-align: top;
+      top: 6px;
+      left: 6px; }
+    .leaderboard .entries img {
+      width: 30px;
+      height: 30px; }

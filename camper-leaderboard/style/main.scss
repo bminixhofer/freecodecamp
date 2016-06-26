@@ -1,0 +1,56 @@
+$google-blue: #3369E8;
+
+@mixin box-shadow($opacity:0.5) {
+  -webkit-box-shadow: 4px 4px 5px 0px rgba(0,0,0,$opacity);
+  -moz-box-shadow: 4px 4px 5px 0px rgba(0,0,0,$opacity);
+  box-shadow: 4px 4px 5px 0px rgba(0,0,0,$opacity);
+}
+
+.leaderboard {
+  font-family: 'Open Sans';
+  display: inline-block;
+  margin-left: 50%;
+  transform: translateX(-50%);
+  width: 700px;
+  @include box-shadow();
+
+  h1 {
+    font-weight: lighter;
+    color: #FFF;
+    text-align: center;
+    background-color: $google-blue;
+    margin: 0 auto;
+    padding-bottom: 10px;
+    padding-top: 5px;
+  }
+  .entries {
+    border: 2px solid $google-blue;
+    width: inherit;
+    text-align: left;
+
+    padding: 0 10px;
+
+    th[data-selected='true']:after {
+      position: absolute;
+      width: 15px;
+      height: 15px;
+      margin-top: 3px;
+      margin-left: 10px;
+      content: " ";
+      background: url("../resources/expand-button.svg") no-repeat 0 0;
+      background-size: 100%;
+    }
+
+    .username {
+      position: relative;
+      vertical-align: top;
+      top: 6px;
+      left: 6px;
+    }
+
+    img {
+      width: 30px;
+      height: 30px;
+    }
+  }
+}
