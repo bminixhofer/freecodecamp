@@ -1,139 +1,79 @@
-$google-blue: #3369E8;
-$google-red: #D50F25;
-$default-font: 'Open Sans';
+@font-face {
+  font-family: "Science Fair";
+  src: url("../resources/Science Fair.otf");
+}
+@font-face {
+  font-family: "Science Fair Light";
+  src: url("../resources/Science Fair Light.otf");
+}
 
-@mixin box-shadow($opacity:0.5) {
-  -webkit-box-shadow: 4px 4px 5px 0px rgba(50, 50, 50, $opacity);
-  -moz-box-shadow:    4px 4px 5px 0px rgba(50, 50, 50, $opacity);
-  box-shadow:         4px 4px 5px 0px rgba(50, 50, 50, $opacity);
+.alive {
+  background-color: red;
+}
+
+.game {
+  font-family: "Science Fair";
+  .headline {
+    input {
+      width: 70px;
+      height: 30px;
+      font-size: 16px;
+      font-family: "Science Fair";
+      background-color: white;
+      border: 1px solid black;
+      margin: 0 5px;
+    }
+  }
+  .settings {
+    width: 100%;
+    text-align: center;
+    br {
+      margin: -10px 0;
+    }
+    div {
+      margin: 0 15%;
+      display: inline-block;
+      input[type="radio"] {
+        border-radius: 0;
+      }
+    }
+
+    .size {
+      text-align: left;
+    }
+    .speed {
+      text-align: right;
+    }
+  }
+
+  br {
+    display: block;
+    margin: -1px 0;
+  }
+}
+
+.field {
+  text-align: center;
+  margin-top: 20px;
+  margin-left: 50%;
+  width: 100%;
+  transform: translateX(-50%);
+  .cell {
+    display: inline-block;
+    width: 15px;
+    height: 15px;
+    border: 1px solid black;
+    margin: 0 1px;
+  }
+}
+
+.headline {
+  text-align: center;
 }
 
 h1 {
-  font-family: $default-font;
-  font-size: 50px;
+  color: red;
+  font-family: "Science Fair";
+  font-size: 35px;
   text-align: center;
-  color: $google-red;
-}
-
-.addButton {
-  background-color: $google-red;
-  font-size: 27px;
-  padding: 5px 10px;
-  margin-top: 30px;
-  margin-left: 50%;
-  transform: translateX(-300%);
-  color: #FFF;
-  border: none;
-  border-radius: 3px;
-  position: relative;
-  z-index: -1;
-}
-
-.container {
-  font-family: $default-font;
-  border: 2px solid $google-blue;
-  border-radius: 3px;
-  margin-left: 50%;
-  transform: translateX(-50%);
-  width: 400px;
-  @include box-shadow();
-
-  .recipe {
-    border: 2px solid $google-blue;
-
-    .popup {
-      transform: translateY(-137px);
-    }
-
-    h3 {
-      cursor: pointer;
-      font-weight: lighter;
-      margin: 0 20px;
-      font-size: 30px;
-    }
-  }
-}
-
-.info {
-  background-color: white;
-  width: 200px;
-  border: 4px solid $google-blue;
-  position: absolute;
-  left: 370px;
-  right: 0;
-  top: 0;
-  margin-top: 30px;
-  margin-left: auto;
-  margin-right: auto;
-  @include box-shadow();
-  padding: 5px;
-  padding-right: 20px;
-
-  h2 {
-    margin: 5px 15px;
-    font-size: 30px;
-  }
-
-  p {
-    margin: 3px 15px;
-  }
-
-  input[type="button"] {
-    border: none;
-    border-radius: 3px;
-    padding: 5px 10px;
-    margin: 5px;
-    margin-top: 20px;
-    font-size: 20px;
-    color: #FFF;
-  }
-  input[name="Edit"] {
-    background-color: $google-blue;
-  }
-  input[name="Delete"] {
-    background-color: $google-red;
-  }
-}
-
-.popup {
-  z-index: 100;
-  position: absolute;
-  left: 0;
-  right: 0;
-  top: 0;
-  margin: 0 auto;
-  margin-top: 130px;
-  width: 400px;
-  background-color: #FFF;
-  border: 3px solid $google-blue;
-  font-family: $default-font;
-  @include box-shadow();
-
-  input[type="text"]  {
-    padding-left: 5px;
-    font-size: 20px;
-    border: 2px solid #000;
-    margin-left: 30px;
-  }
-  input[type="button"] {
-    margin-top: 25px;
-    margin-bottom: 5px;
-    margin-left: 50%;
-    transform: translateX(-50%);
-    border: none;
-    border-radius: 3px;
-    background-color: $google-blue;
-    color: #FFF;
-    font-size: 20px;
-    padding: 5px 10px;
-  }
-  h2 {
-    color: $google-blue;
-    margin-left: 10px;
-    display: inline-block;
-  }
-  p {
-    margin-left: 5px;
-    display: inline-block;
-  }
 }
