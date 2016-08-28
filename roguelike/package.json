@@ -1,0 +1,27 @@
+{
+  "name": "camper-leaderboard",
+  "version": "1.0.0",
+  "main": " ",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build-css": "node-sass --include-path scss style/main.scss style/main.css",
+    "watch-css": "nodemon -e scss -x \"npm run build-css\"",
+    "start": "node server.js && npm run watch-css"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/bminixhofer/camper-leaderboard.git"
+  },
+  "author": "bminixhofer",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/bminixhofer/camper-leaderboard/issues"
+  },
+  "homepage": "https://github.com/bminixhofer/camper-leaderboard#readme",
+  "dependencies": {
+    "express": "^4.14.0",
+    "node-sass": "^3.8.0"
+  },
+  "devDependencies": {},
+  "description": ""
+}
