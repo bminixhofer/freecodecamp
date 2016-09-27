@@ -1,12 +1,13 @@
 var webpack = require('webpack');
+var ExtractTextPlugin = require('extract-text-webpack-plugin');
 
 module.exports = {
   entry: [
     'webpack-dev-server/client?http://localhost:8080',
     'webpack/hot/only-dev-server',
-    './src/index.jsx'
+    './src/app.js'
   ],
-  output: { path: __dirname, filename: 'bundle.js' },
+  output: { path: __dirname + '/dist', filename: 'bundle.js' },
   module: {
    loaders: [
      {
@@ -16,6 +17,11 @@ module.exports = {
        query: {
          presets: ['es2015', 'react']
        }
+     },
+     {
+       test: /.scss$/,
+       exclude: /node_modules/,
+       loader: ExtractTextPlugin('css!sass')
      }
    ]
   },
@@ -27,6 +33,9 @@ module.exports = {
     hot: true
   },
   plugins: [
-    new webpack.HotModuleReplacementPlugin()
+    new webpack.HotModuleReplacementPlugin(),
+    new ExtractTextPlugin('dist/main.css', {
+      allChunks: true
+    })
   ]
 };
