@@ -7,12 +7,31 @@ module.exports.Dungeon = class Dungeon {
         constructor(x, y) {
           this.x = x;
           this.y = y;
-          this.name = getWeaponName();
-          this.attack = Helpers.getRandom(10, 15);
+          _this.map[this.x][this.y] = 6;
         }
-        getTaken(player) {
+        getTaken() {
           _this.map[this.x][this.y] = 3;
           renderer.update();
+          _this.pickups = _this.pickups.filter(pickup => {
+            return pickup.x !== this.x || pickup.y !== this.y;
+          });
+          return Helpers.getRandom(15, 25);
+        }
+      },
+      this.Weapon = class Weapon {
+        constructor(x, y) {
+          this.x = x;
+          this.y = y;
+          this.name = getWeaponName();
+          this.attack = Helpers.getRandom(2, 5);
+          _this.map[this.x][this.y] = 5;
+        }
+        getTaken() {
+          _this.map[this.x][this.y] = 3;
+          renderer.update();
+          _this.weapons = _this.weapons.filter(weapon => {
+            return weapon.x !== this.x || weapon.y !== this.y;
+          });
           return {
             name: this.name,
             attack: this.attack
@@ -25,6 +44,7 @@ module.exports.Dungeon = class Dungeon {
           this.y = y;
           this.health = Helpers.getRandom(20, 30);
           this.attack = Helpers.getRandom(5, 10);
+          _this.map[this.x][this.y] = 4;
         }
         attackPlayer(player) {
           this.health -= player.weapon.attack;
@@ -35,15 +55,20 @@ module.exports.Dungeon = class Dungeon {
             _this.map[this.x][this.y] = 3;
             renderer.update();
           }
-          return player.health - this.attack;
+          return {
+            damage: this.attack,
+            dead: this.health <= 0
+          };
         }
       };
 
       this.map = null;
-      this.enemyCount = 5;
-      this.pickupCount = 2;
-      this.mapSize = 64;
+      this.enemyCount = Helpers.getRandom(7, 10);
+      this.pickupCount = Helpers.getRandom(5, 7);
+      this.weaponCount = 2;
+      this.mapSize = 70;
       this.enemies = [];
+      this.weapons = [];
       this.pickups = [];
       this.rooms = [];
     }
@@ -96,7 +121,7 @@ module.exports.Dungeon = class Dungeon {
           }
       }
 
-      let room_count = Helpers.getRandom(10, 20);
+      let room_count = Helpers.getRandom(25, 30);
       let min_size = 5;
       let max_size = 15;
 
@@ -238,12 +263,14 @@ module.exports.Dungeon = class Dungeon {
     addEnvironmentals() {
       for(let i = 0; i < this.enemyCount; i++) {
         let [x, y] = this.getRandomFreeSpace();
-        this.map[x][y] = 4;
         this.enemies.push(new this.Enemy(x, y));
+      }
+      for(let i = 0; i < this.weaponCount; i++) {
+        let [x, y] = this.getRandomFreeSpace();
+        this.weapons.push(new this.Weapon(x, y));
       }
       for(let i = 0; i < this.pickupCount; i++) {
         let [x, y] = this.getRandomFreeSpace();
-        this.map[x][y] = 5;
         this.pickups.push(new this.Pickup(x, y));
       }
     }
@@ -261,6 +288,8 @@ let renderer = {
     update: function() {
         if(!this.canvas) return;
         this.scale = Math.ceil(this.canvas.height / this.dungeon.mapSize);
+        let originX = Math.floor(this.canvas.width / 2 - (this.dungeon.mapSize - 1) * this.scale / 2);
+        let originY = Math.floor(this.canvas.height / 2 - (this.dungeon.mapSize - 1) * this.scale / 2);
         for (let y = 0; y < this.dungeon.mapSize; y++) {
             for (let x = 0; x < this.dungeon.mapSize; x++) {
                 let tile = this.dungeon.map[x][y];
@@ -268,10 +297,11 @@ let renderer = {
                   case 0: this.ctx.fillStyle = '#606084'; break;
                   case 2: this.ctx.fillStyle = '#46466C'; break;
                   case 3: this.ctx.fillStyle = 'white'; break;
-                  case 4: this.ctx.fillStyle = '#D1130E'; break;
-                  case 5: this.ctx.fillStyle = '#EEB033'; break;
+                  case 4: this.ctx.fillStyle = '#D30000'; break;
+                  case 5: this.ctx.fillStyle = '#FFDE00'; break;
+                  case 6: this.ctx.fillStyle = '#0131F4'; break;
                 }
-                this.ctx.fillRect(x * this.scale, y * this.scale, this.scale, this.scale);
+                this.ctx.fillRect(originX + x * this.scale,originY + y * this.scale, this.scale, this.scale);
             }
         }
     }
