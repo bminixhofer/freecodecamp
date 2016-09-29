@@ -42,12 +42,13 @@ module.exports.Dungeon = class Dungeon {
         constructor(x, y) {
           this.x = x;
           this.y = y;
-          this.health = Helpers.getRandom(20, 30);
-          this.attack = Helpers.getRandom(5, 10);
+          this.level = Helpers.getRandom(1, 4);
+          this.health = this.level * 12;
+          this.attack = this.level * 6;
           _this.map[this.x][this.y] = 4;
         }
         attackPlayer(player) {
-          this.health -= player.weapon.attack;
+          this.health -= player.weapon.attack * (1 + player.progress.level / 4);
           if(this.health <= 0) {
             _this.enemies = _this.enemies.filter(enemy => {
               return enemy.x !== this.x || enemy.y !== this.y;
@@ -55,9 +56,11 @@ module.exports.Dungeon = class Dungeon {
             _this.map[this.x][this.y] = 3;
             renderer.update();
           }
+          let isDead = this.health <= 0;
           return {
-            damage: this.attack,
-            dead: this.health <= 0
+            damage: this.attack / (1 + player.progress.level / 4),
+            isDead: isDead,
+            experienceGained: isDead ? this.level * 15 : 0
           };
         }
       };

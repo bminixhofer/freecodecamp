@@ -35,6 +35,10 @@ var Player = React.createClass({
         attack: 5,
         name: "Stick"
       },
+      progress: {
+        level: 1,
+        experience: 0
+      },
       x: x,
       y: y
     };
@@ -70,10 +74,21 @@ var Player = React.createClass({
           return enemy.x === x && enemy.y === y;
         })[0];
         let enemyData = enemy.attackPlayer(this.state);
+
+        let newExperience = this.state.progress.experience + enemyData.experienceGained;
+        let levelsGained = Math.floor(newExperience / 100);
         let newState = {
+          progress: {
+            level: this.state.progress.level + levelsGained,
+            experience: newExperience >= 100 ? newExperience % 100 : newExperience
+          },
           health: this.state.health - enemyData.damage
         };
-        if(enemyData.dead) {
+
+        if(levelsGained > 0) {
+          newState.health = 100;
+        }
+        if(enemyData.isDead) {
           newState.enemies = {
             killed: this.state.enemies.killed + 1,
             total: this.state.enemies.total
@@ -110,7 +125,7 @@ var Player = React.createClass({
     PlayerRenderer.update(this.state.x, this.state.y);
     return (
       <div>
-        <Info enemies={this.state.enemies} weapon={this.state.weapon} health={this.state.health}/>
+        <Info progress={this.state.progress} enemies={this.state.enemies} weapon={this.state.weapon} health={this.state.health}/>
         <br/>
         <canvas style={{zIndex: 1, position: "absolute"}} ref="canvas" width={this.props.width} height={this.props.height}/>
       </div>
@@ -123,14 +138,21 @@ var Info = React.createClass({
     return (
       <div className="info">
         <h2>Kill all enemies: {this.props.enemies.killed}/{this.props.enemies.total}</h2>
-        <div className="health">
-          <span ref="span" style={
+        <div className="bar health">
+          <span style={
             {
               width: this.props.health + "%"
             }
           }/>
         </div>
-        <p>{this.props.weapon.name} - {this.props.weapon.attack} Attack</p>
+        <p>{this.props.weapon.name} - {this.props.weapon.attack} Attack; Level {this.props.progress.level}</p>
+        <div className="bar experience">
+          <span style={
+            {
+              width: this.props.progress.experience + "%"
+            }
+          }/>
+        </div>
       </div>
     );
   }

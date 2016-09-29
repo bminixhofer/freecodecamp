@@ -65,7 +65,7 @@
 /******/ 	}
 /******/ 	
 /******/ 	var hotApplyOnUpdate = true;
-/******/ 	var hotCurrentHash = "aeed8dca631495360d7f"; // eslint-disable-line no-unused-vars
+/******/ 	var hotCurrentHash = "f018794fcb62c1c7f9fb"; // eslint-disable-line no-unused-vars
 /******/ 	var hotCurrentModuleData = {};
 /******/ 	var hotCurrentParents = []; // eslint-disable-line no-unused-vars
 /******/ 	
@@ -29580,6 +29580,10 @@
 	        attack: 5,
 	        name: "Stick"
 	      },
+	      progress: {
+	        level: 1,
+	        experience: 0
+	      },
 	      x: x,
 	      y: y
 	    };
@@ -29620,10 +29624,17 @@
 	          return enemy.x === x && enemy.y === y;
 	        })[0];
 	        var enemyData = enemy.attackPlayer(this.state);
+
+	        var progress = {};
+	        var newExperience = this.state.progress.experience + enemyData.gainedExperience;
+	        progress.experience = newExperience >= 100 ? newExperience % 100 : newExperience;
+	        progress.level = this.state.progress.level + Math.floor(newExperience / 100);
+
 	        var newState = {
+	          progress: progress,
 	          health: this.state.health - enemyData.damage
 	        };
-	        if (enemyData.dead) {
+	        if (enemyData.isDead) {
 	          newState.enemies = {
 	            killed: this.state.enemies.killed + 1,
 	            total: this.state.enemies.total
@@ -29649,6 +29660,8 @@
 	        })[0];
 	        var newHealth = this.state.health + pickup.getTaken();
 	        this.setState({
+	          x: x,
+	          y: y,
 	          health: Math.min(100, newHealth)
 	        });
 	        break;
@@ -29659,7 +29672,7 @@
 	    return React.createElement(
 	      'div',
 	      null,
-	      React.createElement(Info, { enemies: this.state.enemies, weapon: this.state.weapon, health: this.state.health }),
+	      React.createElement(Info, { progress: this.state.progress, enemies: this.state.enemies, weapon: this.state.weapon, health: this.state.health }),
 	      React.createElement('br', null),
 	      React.createElement('canvas', { style: { zIndex: 1, position: "absolute" }, ref: 'canvas', width: this.props.width, height: this.props.height })
 	    );
@@ -29683,8 +29696,8 @@
 	      ),
 	      React.createElement(
 	        'div',
-	        { className: 'health' },
-	        React.createElement('span', { ref: 'span', style: {
+	        { className: 'bar health' },
+	        React.createElement('span', { style: {
 	            width: this.props.health + "%"
 	          } })
 	      ),
@@ -29695,6 +29708,13 @@
 	        ' - ',
 	        this.props.weapon.attack,
 	        ' Attack'
+	      ),
+	      React.createElement(
+	        'div',
+	        { className: 'bar experience' },
+	        React.createElement('span', { style: {
+	            width: 50 + "%"
+	          } })
 	      )
 	    );
 	  }
@@ -29813,8 +29833,9 @@
 
 	                this.x = x;
 	                this.y = y;
-	                this.health = Helpers.getRandom(20, 30);
-	                this.attack = Helpers.getRandom(5, 10);
+	                this.level = Helpers.getRandom(1, 4);
+	                this.health = this.level * 12;
+	                this.attack = this.level * 6;
 	                _this.map[this.x][this.y] = 4;
 	            }
 
@@ -29823,7 +29844,7 @@
 	                value: function attackPlayer(player) {
 	                    var _this4 = this;
 
-	                    this.health -= player.weapon.attack;
+	                    this.health -= player.weapon.attack * (1 + player.progress.level / 4);
 	                    if (this.health <= 0) {
 	                        _this.enemies = _this.enemies.filter(function (enemy) {
 	                            return enemy.x !== _this4.x || enemy.y !== _this4.y;
@@ -29831,9 +29852,11 @@
 	                        _this.map[this.x][this.y] = 3;
 	                        renderer.update();
 	                    }
+	                    var isDead = this.health <= 0;
 	                    return {
-	                        damage: this.attack,
-	                        dead: this.health <= 0
+	                        damage: this.attack / (1 + player.progress.level / 4),
+	                        isDead: isDead,
+	                        experienceGained: isDead ? this.level * 15 : this.level * 3
 	                    };
 	                }
 	            }]);
@@ -29842,8 +29865,8 @@
 	        }();
 
 	        this.map = null;
-	        this.enemyCount = Helpers.getRandom(7, 12);
-	        this.pickupCount = Helpers.getRandom(4, 6);
+	        this.enemyCount = Helpers.getRandom(7, 10);
+	        this.pickupCount = Helpers.getRandom(5, 7);
 	        this.weaponCount = 2;
 	        this.mapSize = 70;
 	        this.enemies = [];
@@ -30103,6 +30126,8 @@
 	    update: function update() {
 	        if (!this.canvas) return;
 	        this.scale = Math.ceil(this.canvas.height / this.dungeon.mapSize);
+	        var originX = Math.floor(this.canvas.width / 2 - (this.dungeon.mapSize - 1) * this.scale / 2);
+	        var originY = Math.floor(this.canvas.height / 2 - (this.dungeon.mapSize - 1) * this.scale / 2);
 	        for (var y = 0; y < this.dungeon.mapSize; y++) {
 	            for (var x = 0; x < this.dungeon.mapSize; x++) {
 	                var tile = this.dungeon.map[x][y];
@@ -30120,7 +30145,7 @@
 	                    case 6:
 	                        this.ctx.fillStyle = '#0131F4';break;
 	                }
-	                this.ctx.fillRect(x * this.scale, y * this.scale, this.scale, this.scale);
+	                this.ctx.fillRect(originX + x * this.scale, originY + y * this.scale, this.scale, this.scale);
 	            }
 	        }
 	    }
@@ -30175,21 +30200,23 @@
 	  update: function update(x, y) {
 	    if (!this.canvas) return;
 	    this.ctx.fillStyle = 'black';
+	    var originX = Math.floor(this.canvas.width / 2 - (this.mapSize - 1) * this.scale / 2);
+	    var originY = Math.floor(this.canvas.height / 2 - (this.mapSize - 1) * this.scale / 2);
 	    for (var i = 0; i < this.mapSize; i++) {
 	      for (var j = 0; j < this.mapSize; j++) {
 	        var distance = Math.max(Math.abs(i - x), Math.abs(j - y));
 	        if (distance > this.vision) {
 	          this.ctx.fillStyle = 'black';
-	          this.ctx.fillRect(i * this.scale, j * this.scale, this.scale, this.scale);
+	          this.ctx.fillRect(originX + i * this.scale, originY + j * this.scale, this.scale, this.scale);
 	        } else {
-	          this.ctx.clearRect(i * this.scale, j * this.scale, this.scale, this.scale);
+	          this.ctx.clearRect(originX + i * this.scale, originY + j * this.scale, this.scale, this.scale);
 	          this.ctx.fillStyle = 'rgba(0, 0, 0, ' + (distance / this.vision + 0.2) + ')';
-	          this.ctx.fillRect(i * this.scale, j * this.scale, this.scale, this.scale);
+	          this.ctx.fillRect(originX + i * this.scale, originY + j * this.scale, this.scale, this.scale);
 	        }
 	      }
 	    }
 	    this.ctx.fillStyle = '#0BA70B';
-	    this.ctx.fillRect(x * this.scale, y * this.scale, this.scale, this.scale);
+	    this.ctx.fillRect(originX + x * this.scale, originY + y * this.scale, this.scale, this.scale);
 	  }
 	};
 
