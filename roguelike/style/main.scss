@@ -27,9 +27,16 @@ body {
 .info {
   position: relative;
   height: 50px;
-  margin-bottom: 100px;
+  margin-bottom: 150px;
   margin-left: 20px;
 
+  .bar {
+    span {
+      transition: all 0.1s;
+      display: block;
+      height: 100%;
+    }
+  }
   .health {
     vertical-align: bottom;
     width: 300px;
@@ -38,10 +45,20 @@ body {
     display: inline-block;
 
     span {
-      transition: all 0.1s;
-      display: block;
-      height: 100%;
       background-color: red;
+    }
+  }
+
+  .experience {
+    transform: translateX(-50%);
+    margin-top: 15px;
+    margin-left: 50%;
+    border: 3px solid white;
+    width: 50%;
+    height: 6px;
+
+    span {
+      background-color: white;
     }
   }
 
