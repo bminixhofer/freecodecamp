@@ -2,13 +2,15 @@ $default-font: 'Thin Pixel';
 
 @font-face {
   font-family: 'Thin Pixel';
-  src: url('../resources/thin_pixel-7.ttf');
+  src: url('./resources/thin_pixel-7.ttf');
 }
 
-body, html {
+body {
   background-color: black;
-  overflow-x: hidden;
-  overflow-y: auto;
+}
+
+html {
+  overflow-y: hidden;
 }
 
 .wrapper {

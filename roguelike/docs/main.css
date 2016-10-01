@@ -1,11 +1,12 @@
 @font-face {
   font-family: 'Thin Pixel';
-  src: url("../resources/thin_pixel-7.ttf"); }
+  src: url("./resources/thin_pixel-7.ttf"); }
 
-body, html {
-  background-color: black;
-  overflow-x: hidden;
-  overflow-y: auto; }
+body {
+  background-color: black; }
+
+html {
+  overflow-y: hidden; }
 
 .wrapper {
   text-align: center; }
