@@ -3,7 +3,7 @@ module.exports = {
   ctx: null,
   scale: 0,
   mapSize: 0,
-  vision: 6,
+  vision: 7,
   initialize: function(canvasNode, mapSize) {
     this.canvas = canvasNode;
     this.mapSize = mapSize;
@@ -19,11 +19,11 @@ module.exports = {
       for (var j = 0; j < this.mapSize; j++) {
         var distance = Math.max(Math.abs(i - x),  Math.abs(j - y));
         if (distance > this.vision) {
-          this.ctx.fillStyle = 'rgba(0, 0, 0, 0)';
+          this.ctx.fillStyle = 'black';
           this.ctx.fillRect(originX + i * this.scale, originY + j * this.scale, this.scale, this.scale);
         } else {
           this.ctx.clearRect(originX + i * this.scale, originY + j * this.scale, this.scale, this.scale);
-          this.ctx.fillStyle = //`rgba(0, 0, 0, ${(distance / this.vision) + 0.2})`;
+          this.ctx.fillStyle = `rgba(0, 0, 0, ${(distance / this.vision) + 0.2})`;
           this.ctx.fillRect(originX + i * this.scale,originY + j * this.scale, this.scale, this.scale);
         }
       }

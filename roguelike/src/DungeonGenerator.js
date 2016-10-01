@@ -102,7 +102,7 @@ module.exports.Dungeon = class Dungeon {
       };
 
       this.map = null;
-      this.enemyCount = Helpers.getRandom(1, 1);
+      this.enemyCount = Helpers.getRandom(6, 8);
       this.pickupCount = Helpers.getRandom(5, 7);
       this.weaponCount = 2;
       this.mapSize = 70;
