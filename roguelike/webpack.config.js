@@ -2,11 +2,7 @@ var webpack = require('webpack');
 var ExtractTextPlugin = require('extract-text-webpack-plugin');
 
 module.exports = {
-  entry: [
-    'webpack-dev-server/client?http://localhost:8080',
-    'webpack/hot/only-dev-server',
-    './src/app.js'
-  ],
+  entry: './src/app.js',
   output: { path: __dirname + '/dist', filename: 'bundle.js' },
   module: {
    loaders: [

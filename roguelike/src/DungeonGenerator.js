@@ -83,7 +83,7 @@ module.exports.Dungeon = class Dungeon {
         constructor(x, y) {
           this.x = x;
           this.y = y;
-          this.level = Helpers.getRandom(10, 40);
+          this.level = Helpers.getRandom(1, 4);
           this.health = this.level * 12;
           this.attack = this.level * 6;
           _this.map[this.x][this.y] = 4;
