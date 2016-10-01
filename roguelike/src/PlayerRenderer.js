@@ -10,9 +10,17 @@ module.exports = {
     this.ctx = this.canvas.getContext('2d');
     this.scale = Math.ceil(this.canvas.height / mapSize);
   },
-  update(x, y) {
+  blacken() {
     if (!this.canvas) return;
     this.ctx.fillStyle = 'black';
+    this.ctx.fillRect(0, 0, this.canvas.width, this.canvas.height);
+  },
+  update(x, y) {
+    if (!this.canvas) return;
+    console.log('update');
+    this.ctx.fillStyle = 'black';
+    this.ctx.fillRect(0, 0, this.canvas.width, this.canvas.height);
+  
     let originX = Math.floor(this.canvas.width / 2 - (this.mapSize - 1) * this.scale / 2);
     let originY = Math.floor(this.canvas.height / 2 - (this.mapSize - 1) * this.scale / 2);
     for (var i = 0; i < this.mapSize; i++) {

@@ -65,7 +65,7 @@
 /******/ 	}
 /******/ 	
 /******/ 	var hotApplyOnUpdate = true;
-/******/ 	var hotCurrentHash = "f018794fcb62c1c7f9fb"; // eslint-disable-line no-unused-vars
+/******/ 	var hotCurrentHash = "f30f53436adc797ed5a3"; // eslint-disable-line no-unused-vars
 /******/ 	var hotCurrentModuleData = {};
 /******/ 	var hotCurrentParents = []; // eslint-disable-line no-unused-vars
 /******/ 	
@@ -29573,7 +29573,8 @@
 	    return {
 	      enemies: {
 	        killed: 0,
-	        total: this.props.dungeon.enemyCount
+	        total: this.props.dungeon.enemyCount,
+	        bossHasSpawned: false
 	      },
 	      health: 100,
 	      weapon: {
@@ -29590,6 +29591,7 @@
 	  },
 	  componentDidMount: function componentDidMount() {
 	    PlayerRenderer.initialize(this.refs.canvas, this.props.dungeon.mapSize);
+	    PlayerRenderer.update(this.state.x, this.state.y);
 	    this.forceUpdate();
 	    window.addEventListener('keydown', this.movePlayer);
 	  },
@@ -29597,6 +29599,7 @@
 	    window.removeEventListener('keydown', this.movePlayer);
 	  },
 	  movePlayer: function movePlayer(e) {
+	    if (this.state.health <= 0) return;
 	    var x = this.state.x;
 	    var y = this.state.y;
 	    switch (e.code) {
@@ -29621,24 +29624,37 @@
 	        break;
 	      case 4:
 	        var enemy = this.props.dungeon.enemies.filter(function (enemy) {
-	          return enemy.x === x && enemy.y === y;
+	          return enemy.covers(x, y);
 	        })[0];
 	        var enemyData = enemy.attackPlayer(this.state);
 
-	        var progress = {};
-	        var newExperience = this.state.progress.experience + enemyData.gainedExperience;
-	        progress.experience = newExperience >= 100 ? newExperience % 100 : newExperience;
-	        progress.level = this.state.progress.level + Math.floor(newExperience / 100);
-
+	        var newExperience = this.state.progress.experience + enemyData.experienceGained;
+	        var levelsGained = Math.floor(newExperience / 100);
 	        var newState = {
-	          progress: progress,
+	          progress: {
+	            level: this.state.progress.level + levelsGained,
+	            experience: newExperience >= 100 ? newExperience % 100 : newExperience
+	          },
+	          enemies: this.state.enemies,
 	          health: this.state.health - enemyData.damage
 	        };
+	        if (newState.health <= 0) {
+	          newState.health = 0;
+	          PlayerRenderer.blacken();
+	        }
+	        if (levelsGained > 0) {
+	          newState.health = 100;
+	        }
 	        if (enemyData.isDead) {
-	          newState.enemies = {
-	            killed: this.state.enemies.killed + 1,
-	            total: this.state.enemies.total
-	          };
+	          if (this.state.enemies.bossHasSpawned) {
+	            newState.enemies.bossHasDied = true;
+	          } else {
+	            newState.enemies.killed++;
+	            if (this.state.enemies.killed === this.state.enemies.total) {
+	              this.props.dungeon.addBoss();
+	              newState.enemies.bossHasSpawned = true;
+	            }
+	          }
 	        }
 	        this.setState(newState);
 	        break;
@@ -29668,7 +29684,6 @@
 	    }
 	  },
 	  render: function render() {
-	    PlayerRenderer.update(this.state.x, this.state.y);
 	    return React.createElement(
 	      'div',
 	      null,
@@ -29683,16 +29698,23 @@
 	  displayName: 'Info',
 
 	  render: function render() {
+	    var subtitle = void 0;
+	    if (this.props.enemies.bossHasDied) {
+	      subtitle = 'You won!';
+	    } else if (this.props.enemies.bossHasSpawned) {
+	      subtitle = 'A boss has spawned!';
+	    } else if (this.props.health <= 0) {
+	      subtitle = 'You died! :(';
+	    } else {
+	      subtitle = 'Kill all enemies: ' + this.props.enemies.killed + '/' + this.props.enemies.total;
+	    }
 	    return React.createElement(
 	      'div',
 	      { className: 'info' },
 	      React.createElement(
 	        'h2',
 	        null,
-	        'Kill all enemies: ',
-	        this.props.enemies.killed,
-	        '/',
-	        this.props.enemies.total
+	        subtitle
 	      ),
 	      React.createElement(
 	        'div',
@@ -29707,13 +29729,14 @@
 	        this.props.weapon.name,
 	        ' - ',
 	        this.props.weapon.attack,
-	        ' Attack'
+	        ' Attack; Level ',
+	        this.props.progress.level
 	      ),
 	      React.createElement(
 	        'div',
 	        { className: 'bar experience' },
 	        React.createElement('span', { style: {
-	            width: 50 + "%"
+	            width: this.props.progress.experience + "%"
 	          } })
 	      )
 	    );
@@ -29725,7 +29748,7 @@
 
 	  getInitialState: function getInitialState() {
 	    return {
-	      map: []
+	      dungeon: {}
 	    };
 	  },
 	  componentWillMount: function componentWillMount() {
@@ -29767,402 +29790,486 @@
 	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 	var getWeaponName = __webpack_require__(250);
+	function _attackPlayer(player, dungeon) {
+	  var _this2 = this;
+
+	  this.health -= player.weapon.attack * (1 + player.progress.level / 4);
+	  var isDead = false;
+	  if (this.health <= 0) {
+	    isDead = true;
+	    dungeon.enemies = dungeon.enemies.filter(function (enemy) {
+	      return !enemy.covers(_this2.x, _this2.y);
+	    });
+	  }
+	  return {
+	    damage: this.attack / (1 + player.progress.level / 4),
+	    isDead: isDead,
+	    experienceGained: isDead ? this.level * 15 : 0
+	  };
+	}
 
 	module.exports.Dungeon = function () {
-	    function Dungeon() {
-	        _classCallCheck(this, Dungeon);
+	  function Dungeon() {
+	    _classCallCheck(this, Dungeon);
 
-	        var _this = this;
-	        this.Pickup = function () {
-	            function Pickup(x, y) {
-	                _classCallCheck(this, Pickup);
+	    var _this = this;
+	    this.Pickup = function () {
+	      function Pickup(x, y) {
+	        _classCallCheck(this, Pickup);
 
-	                this.x = x;
-	                this.y = y;
-	                _this.map[this.x][this.y] = 6;
-	            }
+	        this.x = x;
+	        this.y = y;
+	        _this.map[this.x][this.y] = 6;
+	      }
 
-	            _createClass(Pickup, [{
-	                key: 'getTaken',
-	                value: function getTaken() {
-	                    var _this2 = this;
+	      _createClass(Pickup, [{
+	        key: 'getTaken',
+	        value: function getTaken() {
+	          var _this3 = this;
 
-	                    _this.map[this.x][this.y] = 3;
-	                    renderer.update();
-	                    _this.pickups = _this.pickups.filter(function (pickup) {
-	                        return pickup.x !== _this2.x || pickup.y !== _this2.y;
-	                    });
-	                    return Helpers.getRandom(15, 25);
-	                }
-	            }]);
-
-	            return Pickup;
-	        }(), this.Weapon = function () {
-	            function Weapon(x, y) {
-	                _classCallCheck(this, Weapon);
-
-	                this.x = x;
-	                this.y = y;
-	                this.name = getWeaponName();
-	                this.attack = Helpers.getRandom(2, 5);
-	                _this.map[this.x][this.y] = 5;
-	            }
-
-	            _createClass(Weapon, [{
-	                key: 'getTaken',
-	                value: function getTaken() {
-	                    var _this3 = this;
-
-	                    _this.map[this.x][this.y] = 3;
-	                    renderer.update();
-	                    _this.weapons = _this.weapons.filter(function (weapon) {
-	                        return weapon.x !== _this3.x || weapon.y !== _this3.y;
-	                    });
-	                    return {
-	                        name: this.name,
-	                        attack: this.attack
-	                    };
-	                }
-	            }]);
-
-	            return Weapon;
-	        }();
-	        this.Enemy = function () {
-	            function Enemy(x, y) {
-	                _classCallCheck(this, Enemy);
-
-	                this.x = x;
-	                this.y = y;
-	                this.level = Helpers.getRandom(1, 4);
-	                this.health = this.level * 12;
-	                this.attack = this.level * 6;
-	                _this.map[this.x][this.y] = 4;
-	            }
-
-	            _createClass(Enemy, [{
-	                key: 'attackPlayer',
-	                value: function attackPlayer(player) {
-	                    var _this4 = this;
-
-	                    this.health -= player.weapon.attack * (1 + player.progress.level / 4);
-	                    if (this.health <= 0) {
-	                        _this.enemies = _this.enemies.filter(function (enemy) {
-	                            return enemy.x !== _this4.x || enemy.y !== _this4.y;
-	                        });
-	                        _this.map[this.x][this.y] = 3;
-	                        renderer.update();
-	                    }
-	                    var isDead = this.health <= 0;
-	                    return {
-	                        damage: this.attack / (1 + player.progress.level / 4),
-	                        isDead: isDead,
-	                        experienceGained: isDead ? this.level * 15 : this.level * 3
-	                    };
-	                }
-	            }]);
-
-	            return Enemy;
-	        }();
-
-	        this.map = null;
-	        this.enemyCount = Helpers.getRandom(7, 10);
-	        this.pickupCount = Helpers.getRandom(5, 7);
-	        this.weaponCount = 2;
-	        this.mapSize = 70;
-	        this.enemies = [];
-	        this.weapons = [];
-	        this.pickups = [];
-	        this.rooms = [];
-	    }
-
-	    _createClass(Dungeon, [{
-	        key: 'checkAccess',
-	        value: function checkAccess() {
-	            var firstTilePos = {};
-	            for (var i = 0; i < this.map.length; i++) {
-	                for (var j = 0; j < this.map[i].length; j++) {
-	                    if (this.map[i][j] === 1) {
-	                        firstTilePos.x = j;
-	                        firstTilePos.y = i;
-	                        break;
-	                    }
-	                }
-	                if (j < this.map[i].length - 1) {
-	                    break;
-	                }
-	            }
-	            this.floodFloor(firstTilePos.x, firstTilePos.y);
-
-	            for (var _i = 0; _i < this.map.length; _i++) {
-	                for (var _j = 0; _j < this.map[_i].length; _j++) {
-	                    if (this.map[_i][_j] === 1) {
-	                        return false;
-	                    }
-	                }
-	            }
-	            return true;
+	          _this.map[this.x][this.y] = 3;
+	          renderer.update();
+	          _this.pickups = _this.pickups.filter(function (pickup) {
+	            return pickup.x !== _this3.x || pickup.y !== _this3.y;
+	          });
+	          return Helpers.getRandom(15, 25);
 	        }
-	    }, {
-	        key: 'floodFloor',
-	        value: function floodFloor(x, y) {
-	            this.map[y][x] = 3;
-	            if (Helpers.isFloor(x + 1, y, this.map)) {
-	                this.floodFloor(x + 1, y);
-	            }
-	            if (Helpers.isFloor(x - 1, y, this.map)) {
-	                this.floodFloor(x - 1, y);
-	            }
-	            if (Helpers.isFloor(x, y + 1, this.map)) {
-	                this.floodFloor(x, y + 1);
-	            }
-	            if (Helpers.isFloor(x, y - 1, this.map)) {
-	                this.floodFloor(x, y - 1);
-	            }
+	      }]);
+
+	      return Pickup;
+	    }(), this.Weapon = function () {
+	      function Weapon(x, y) {
+	        _classCallCheck(this, Weapon);
+
+	        this.x = x;
+	        this.y = y;
+	        this.name = getWeaponName();
+	        this.attack = Helpers.getRandom(2, 5);
+	        _this.map[this.x][this.y] = 5;
+	      }
+
+	      _createClass(Weapon, [{
+	        key: 'getTaken',
+	        value: function getTaken() {
+	          var _this4 = this;
+
+	          _this.map[this.x][this.y] = 3;
+	          renderer.update();
+	          _this.weapons = _this.weapons.filter(function (weapon) {
+	            return weapon.x !== _this4.x || weapon.y !== _this4.y;
+	          });
+	          return {
+	            name: this.name,
+	            attack: this.attack
+	          };
 	        }
-	    }, {
-	        key: 'generate',
-	        value: function generate() {
-	            this.map = [];
-	            for (var x = 0; x < this.mapSize; x++) {
-	                this.map[x] = [];
-	                for (var y = 0; y < this.mapSize; y++) {
-	                    this.map[x][y] = 0;
-	                }
-	            }
+	      }]);
 
-	            var room_count = Helpers.getRandom(25, 30);
-	            var min_size = 5;
-	            var max_size = 15;
+	      return Weapon;
+	    }();
+	    this.Boss = function () {
+	      function Boss(pos) {
+	        _classCallCheck(this, Boss);
 
-	            this.rooms = [];
-	            for (var i = 0; i < room_count; i++) {
-	                var room = {};
+	        this.pos = pos;
+	        this.level = 10;
+	        this.health = 100;
+	        this.attack = 10;
+	        this.pos.forEach(function (point) {
+	          _this.map[point.x][point.y] = 4;
+	        });
+	      }
 
-	                room.x = Helpers.getRandom(1, this.mapSize - max_size - 1);
-	                room.y = Helpers.getRandom(1, this.mapSize - max_size - 1);
-	                room.w = Helpers.getRandom(min_size, max_size);
-	                room.h = Helpers.getRandom(min_size, max_size);
-
-	                if (this.doesCollide(room)) {
-	                    i--;
-	                    continue;
-	                }
-	                room.w--;
-	                room.h--;
-
-	                this.rooms.push(room);
-	            }
-
-	            this.squashRooms();
-
-	            for (var _i2 = 0; _i2 < room_count; _i2++) {
-	                var roomA = this.rooms[_i2];
-	                var roomB = this.findClosestRoom(roomA);
-
-	                var pointA = {
-	                    x: Helpers.getRandom(roomA.x, roomA.x + roomA.w),
-	                    y: Helpers.getRandom(roomA.y, roomA.y + roomA.h)
-	                };
-	                var pointB = {
-	                    x: Helpers.getRandom(roomB.x, roomB.x + roomB.w),
-	                    y: Helpers.getRandom(roomB.y, roomB.y + roomB.h)
-	                };
-
-	                while (pointB.x != pointA.x || pointB.y != pointA.y) {
-	                    if (pointB.x != pointA.x) {
-	                        if (pointB.x > pointA.x) pointB.x--;else pointB.x++;
-	                    } else if (pointB.y != pointA.y) {
-	                        if (pointB.y > pointA.y) pointB.y--;else pointB.y++;
-	                    }
-
-	                    this.map[pointB.x][pointB.y] = 1;
-	                }
-	            }
-
-	            for (var _i3 = 0; _i3 < room_count; _i3++) {
-	                var _room = this.rooms[_i3];
-	                for (var _x = _room.x; _x < _room.x + _room.w; _x++) {
-	                    for (var _y = _room.y; _y < _room.y + _room.h; _y++) {
-	                        this.map[_x][_y] = 1;
-	                    }
-	                }
-	            }
-
-	            for (var _x2 = 0; _x2 < this.mapSize; _x2++) {
-	                for (var _y2 = 0; _y2 < this.mapSize; _y2++) {
-	                    if (this.map[_x2][_y2] == 1) {
-	                        for (var xx = _x2 - 1; xx <= _x2 + 1; xx++) {
-	                            for (var yy = _y2 - 1; yy <= _y2 + 1; yy++) {
-	                                if (this.map[xx][yy] == 0) this.map[xx][yy] = 2;
-	                            }
-	                        }
-	                    }
-	                }
-	            }
-
-	            if (this.checkAccess()) {
-	                this.addEnvironmentals();
-	                return this.map;
-	            }
-	            this.generate();
+	      _createClass(Boss, [{
+	        key: 'covers',
+	        value: function covers(x, y) {
+	          return this.pos.filter(function (point) {
+	            return point.x === x && point.y === y;
+	          }).length > 0;
 	        }
-	    }, {
-	        key: 'findClosestRoom',
-	        value: function findClosestRoom(room) {
-	            var mid = {
-	                x: room.x + room.w / 2,
-	                y: room.y + room.h / 2
-	            };
-	            var closest = null;
-	            var closest_distance = 1000;
-	            for (var i = 0; i < this.rooms.length; i++) {
-	                var check = this.rooms[i];
-	                if (check == room) continue;
-	                var check_mid = {
-	                    x: check.x + check.w / 2,
-	                    y: check.y + check.h / 2
-	                };
-	                var distance = Math.min(Math.abs(mid.x - check_mid.x) - room.w / 2 - check.w / 2, Math.abs(mid.y - check_mid.y) - room.h / 2 - check.h / 2);
-	                if (distance < closest_distance) {
-	                    closest_distance = distance;
-	                    closest = check;
-	                }
-	            }
-	            return closest;
+	      }, {
+	        key: 'attackPlayer',
+	        value: function attackPlayer(player) {
+	          var data = _attackPlayer.call(this, player, _this);
+	          if (data.isDead) {
+	            this.pos.forEach(function (point) {
+	              _this.map[point.x][point.y] = 3;
+	            });
+	            renderer.update();
+	          }
+	          return data;
 	        }
-	    }, {
-	        key: 'squashRooms',
-	        value: function squashRooms() {
-	            for (var i = 0; i < 10; i++) {
-	                for (var j = 0; j < this.rooms.length; j++) {
-	                    var room = this.rooms[j];
-	                    while (true) {
-	                        var old_position = {
-	                            x: room.x,
-	                            y: room.y
-	                        };
-	                        if (room.x > 1) room.x--;
-	                        if (room.y > 1) room.y--;
-	                        if (room.x == 1 && room.y == 1) break;
-	                        if (this.doesCollide(room, j)) {
-	                            room.x = old_position.x;
-	                            room.y = old_position.y;
-	                            break;
-	                        }
-	                    }
-	                }
-	            }
-	        }
-	    }, {
-	        key: 'doesCollide',
-	        value: function doesCollide(room, ignore) {
-	            for (var i = 0; i < this.rooms.length; i++) {
-	                if (i == ignore) continue;
-	                var check = this.rooms[i];
-	                if (!(room.x + room.w < check.x || room.x > check.x + check.w || room.y + room.h < check.y || room.y > check.y + check.h)) return true;
-	            }
+	      }]);
 
+	      return Boss;
+	    }();
+	    this.Enemy = function () {
+	      function Enemy(x, y) {
+	        _classCallCheck(this, Enemy);
+
+	        this.x = x;
+	        this.y = y;
+	        this.level = Helpers.getRandom(10, 40);
+	        this.health = this.level * 12;
+	        this.attack = this.level * 6;
+	        _this.map[this.x][this.y] = 4;
+	      }
+
+	      _createClass(Enemy, [{
+	        key: 'covers',
+	        value: function covers(x, y) {
+	          return this.x === x && this.y === y;
+	        }
+	      }, {
+	        key: 'attackPlayer',
+	        value: function attackPlayer(player) {
+	          var data = _attackPlayer.call(this, player, _this);
+	          if (data.isDead) {
+	            _this.map[this.x][this.y] = 3;
+	            renderer.update();
+	          }
+	          return data;
+	        }
+	      }]);
+
+	      return Enemy;
+	    }();
+
+	    this.map = null;
+	    this.enemyCount = Helpers.getRandom(6, 8);
+	    this.pickupCount = Helpers.getRandom(5, 7);
+	    this.weaponCount = 2;
+	    this.mapSize = 70;
+	    this.enemies = [];
+	    this.weapons = [];
+	    this.pickups = [];
+	    this.boss = [];
+	    this.rooms = [];
+	  }
+
+	  _createClass(Dungeon, [{
+	    key: 'checkAccess',
+	    value: function checkAccess() {
+	      var firstTilePos = {};
+	      for (var i = 0; i < this.map.length; i++) {
+	        for (var j = 0; j < this.map[i].length; j++) {
+	          if (this.map[i][j] === 1) {
+	            firstTilePos.x = j;
+	            firstTilePos.y = i;
+	            break;
+	          }
+	        }
+	        if (j < this.map[i].length - 1) {
+	          break;
+	        }
+	      }
+	      this.floodFloor(firstTilePos.x, firstTilePos.y);
+
+	      for (var _i = 0; _i < this.map.length; _i++) {
+	        for (var _j = 0; _j < this.map[_i].length; _j++) {
+	          if (this.map[_i][_j] === 1) {
 	            return false;
+	          }
 	        }
-	    }, {
-	        key: 'getRandomFreeSpace',
-	        value: function getRandomFreeSpace() {
-	            var x = Math.floor(Math.random() * this.mapSize);
-	            var y = Math.floor(Math.random() * this.mapSize);
-
-	            if (this.map[x][y] !== 3) {
-	                return this.getRandomFreeSpace();
-	            }
-	            return [x, y];
+	      }
+	      return true;
+	    }
+	  }, {
+	    key: 'floodFloor',
+	    value: function floodFloor(x, y) {
+	      this.map[y][x] = 3;
+	      if (Helpers.isFloor(x + 1, y, this.map)) {
+	        this.floodFloor(x + 1, y);
+	      }
+	      if (Helpers.isFloor(x - 1, y, this.map)) {
+	        this.floodFloor(x - 1, y);
+	      }
+	      if (Helpers.isFloor(x, y + 1, this.map)) {
+	        this.floodFloor(x, y + 1);
+	      }
+	      if (Helpers.isFloor(x, y - 1, this.map)) {
+	        this.floodFloor(x, y - 1);
+	      }
+	    }
+	  }, {
+	    key: 'generate',
+	    value: function generate() {
+	      this.map = [];
+	      for (var x = 0; x < this.mapSize; x++) {
+	        this.map[x] = [];
+	        for (var y = 0; y < this.mapSize; y++) {
+	          this.map[x][y] = 0;
 	        }
-	    }, {
-	        key: 'addEnvironmentals',
-	        value: function addEnvironmentals() {
-	            for (var i = 0; i < this.enemyCount; i++) {
-	                var _getRandomFreeSpace = this.getRandomFreeSpace();
+	      }
 
-	                var _getRandomFreeSpace2 = _slicedToArray(_getRandomFreeSpace, 2);
+	      var room_count = Helpers.getRandom(25, 30);
+	      var min_size = 5;
+	      var max_size = 15;
 
-	                var x = _getRandomFreeSpace2[0];
-	                var y = _getRandomFreeSpace2[1];
+	      this.rooms = [];
+	      for (var i = 0; i < room_count; i++) {
+	        var room = {};
 
-	                this.enemies.push(new this.Enemy(x, y));
-	            }
-	            for (var _i4 = 0; _i4 < this.weaponCount; _i4++) {
-	                var _getRandomFreeSpace3 = this.getRandomFreeSpace();
+	        room.x = Helpers.getRandom(1, this.mapSize - max_size - 1);
+	        room.y = Helpers.getRandom(1, this.mapSize - max_size - 1);
+	        room.w = Helpers.getRandom(min_size, max_size);
+	        room.h = Helpers.getRandom(min_size, max_size);
 
-	                var _getRandomFreeSpace4 = _slicedToArray(_getRandomFreeSpace3, 2);
-
-	                var x = _getRandomFreeSpace4[0];
-	                var y = _getRandomFreeSpace4[1];
-
-	                this.weapons.push(new this.Weapon(x, y));
-	            }
-	            for (var _i5 = 0; _i5 < this.pickupCount; _i5++) {
-	                var _getRandomFreeSpace5 = this.getRandomFreeSpace();
-
-	                var _getRandomFreeSpace6 = _slicedToArray(_getRandomFreeSpace5, 2);
-
-	                var x = _getRandomFreeSpace6[0];
-	                var y = _getRandomFreeSpace6[1];
-
-	                this.pickups.push(new this.Pickup(x, y));
-	            }
+	        if (this.doesCollide(room)) {
+	          i--;
+	          continue;
 	        }
-	    }]);
+	        room.w--;
+	        room.h--;
 
-	    return Dungeon;
+	        this.rooms.push(room);
+	      }
+
+	      this.squashRooms();
+
+	      for (var _i2 = 0; _i2 < room_count; _i2++) {
+	        var roomA = this.rooms[_i2];
+	        var roomB = this.findClosestRoom(roomA);
+
+	        var pointA = {
+	          x: Helpers.getRandom(roomA.x, roomA.x + roomA.w),
+	          y: Helpers.getRandom(roomA.y, roomA.y + roomA.h)
+	        };
+	        var pointB = {
+	          x: Helpers.getRandom(roomB.x, roomB.x + roomB.w),
+	          y: Helpers.getRandom(roomB.y, roomB.y + roomB.h)
+	        };
+
+	        while (pointB.x != pointA.x || pointB.y != pointA.y) {
+	          if (pointB.x != pointA.x) {
+	            if (pointB.x > pointA.x) pointB.x--;else pointB.x++;
+	          } else if (pointB.y != pointA.y) {
+	            if (pointB.y > pointA.y) pointB.y--;else pointB.y++;
+	          }
+
+	          this.map[pointB.x][pointB.y] = 1;
+	        }
+	      }
+
+	      for (var _i3 = 0; _i3 < room_count; _i3++) {
+	        var _room = this.rooms[_i3];
+	        for (var _x = _room.x; _x < _room.x + _room.w; _x++) {
+	          for (var _y = _room.y; _y < _room.y + _room.h; _y++) {
+	            this.map[_x][_y] = 1;
+	          }
+	        }
+	      }
+
+	      for (var _x2 = 0; _x2 < this.mapSize; _x2++) {
+	        for (var _y2 = 0; _y2 < this.mapSize; _y2++) {
+	          if (this.map[_x2][_y2] == 1) {
+	            for (var xx = _x2 - 1; xx <= _x2 + 1; xx++) {
+	              for (var yy = _y2 - 1; yy <= _y2 + 1; yy++) {
+	                if (this.map[xx][yy] == 0) this.map[xx][yy] = 2;
+	              }
+	            }
+	          }
+	        }
+	      }
+
+	      if (this.checkAccess()) {
+	        this.addEnvironmentals();
+	        return this.map;
+	      }
+	      this.generate();
+	    }
+	  }, {
+	    key: 'findClosestRoom',
+	    value: function findClosestRoom(room) {
+	      var mid = {
+	        x: room.x + room.w / 2,
+	        y: room.y + room.h / 2
+	      };
+	      var closest = null;
+	      var closest_distance = 1000;
+	      for (var i = 0; i < this.rooms.length; i++) {
+	        var check = this.rooms[i];
+	        if (check == room) continue;
+	        var check_mid = {
+	          x: check.x + check.w / 2,
+	          y: check.y + check.h / 2
+	        };
+	        var distance = Math.min(Math.abs(mid.x - check_mid.x) - room.w / 2 - check.w / 2, Math.abs(mid.y - check_mid.y) - room.h / 2 - check.h / 2);
+	        if (distance < closest_distance) {
+	          closest_distance = distance;
+	          closest = check;
+	        }
+	      }
+	      return closest;
+	    }
+	  }, {
+	    key: 'squashRooms',
+	    value: function squashRooms() {
+	      for (var i = 0; i < 10; i++) {
+	        for (var j = 0; j < this.rooms.length; j++) {
+	          var room = this.rooms[j];
+	          while (true) {
+	            var old_position = {
+	              x: room.x,
+	              y: room.y
+	            };
+	            if (room.x > 1) room.x--;
+	            if (room.y > 1) room.y--;
+	            if (room.x == 1 && room.y == 1) break;
+	            if (this.doesCollide(room, j)) {
+	              room.x = old_position.x;
+	              room.y = old_position.y;
+	              break;
+	            }
+	          }
+	        }
+	      }
+	    }
+	  }, {
+	    key: 'doesCollide',
+	    value: function doesCollide(room, ignore) {
+	      for (var i = 0; i < this.rooms.length; i++) {
+	        if (i == ignore) continue;
+	        var check = this.rooms[i];
+	        if (!(room.x + room.w < check.x || room.x > check.x + check.w || room.y + room.h < check.y || room.y > check.y + check.h)) return true;
+	      }
+
+	      return false;
+	    }
+	  }, {
+	    key: 'getRandomFreeSpace',
+	    value: function getRandomFreeSpace() {
+	      var x = Math.floor(Math.random() * this.mapSize);
+	      var y = Math.floor(Math.random() * this.mapSize);
+
+	      if (this.map[x][y] !== 3) {
+	        return this.getRandomFreeSpace();
+	      }
+	      return [x, y];
+	    }
+	  }, {
+	    key: 'addBoss',
+	    value: function addBoss() {
+	      var foundSpace = false;
+	      var x = void 0,
+	          y = void 0;
+	      var pos = [];
+	      while (!foundSpace) {
+	        var _getRandomFreeSpace = this.getRandomFreeSpace();
+
+	        var _getRandomFreeSpace2 = _slicedToArray(_getRandomFreeSpace, 2);
+
+	        x = _getRandomFreeSpace2[0];
+	        y = _getRandomFreeSpace2[1];
+
+	        foundSpace = true;
+	        pos = [];
+
+	        for (var i = x; i <= x + 1; i++) {
+	          for (var j = y; j <= y + 1; j++) {
+	            if (this.map[i][j] !== 3) {
+	              foundSpace = false;
+	            } else {
+	              pos.push({
+	                x: i,
+	                y: j
+	              });
+	            }
+	          }
+	        }
+	      }
+
+	      this.enemies.push(new this.Boss(pos));
+	      renderer.update();
+	    }
+	  }, {
+	    key: 'addEnvironmentals',
+	    value: function addEnvironmentals() {
+	      for (var i = 0; i < this.enemyCount; i++) {
+	        var _getRandomFreeSpace3 = this.getRandomFreeSpace();
+
+	        var _getRandomFreeSpace4 = _slicedToArray(_getRandomFreeSpace3, 2);
+
+	        var x = _getRandomFreeSpace4[0];
+	        var y = _getRandomFreeSpace4[1];
+
+	        this.enemies.push(new this.Enemy(x, y));
+	      }
+	      for (var _i4 = 0; _i4 < this.weaponCount; _i4++) {
+	        var _getRandomFreeSpace5 = this.getRandomFreeSpace();
+
+	        var _getRandomFreeSpace6 = _slicedToArray(_getRandomFreeSpace5, 2);
+
+	        var x = _getRandomFreeSpace6[0];
+	        var y = _getRandomFreeSpace6[1];
+
+	        this.weapons.push(new this.Weapon(x, y));
+	      }
+	      for (var _i5 = 0; _i5 < this.pickupCount; _i5++) {
+	        var _getRandomFreeSpace7 = this.getRandomFreeSpace();
+
+	        var _getRandomFreeSpace8 = _slicedToArray(_getRandomFreeSpace7, 2);
+
+	        var x = _getRandomFreeSpace8[0];
+	        var y = _getRandomFreeSpace8[1];
+
+	        this.pickups.push(new this.Pickup(x, y));
+	      }
+	    }
+	  }]);
+
+	  return Dungeon;
 	}();
 
 	var renderer = {
-	    canvas: null,
-	    ctx: null,
-	    scale: 0,
-	    initialize: function initialize(dungeon, canvasNode) {
-	        this.canvas = canvasNode;
-	        this.dungeon = dungeon;
-	        this.ctx = this.canvas.getContext('2d');
-	    },
-	    update: function update() {
-	        if (!this.canvas) return;
-	        this.scale = Math.ceil(this.canvas.height / this.dungeon.mapSize);
-	        var originX = Math.floor(this.canvas.width / 2 - (this.dungeon.mapSize - 1) * this.scale / 2);
-	        var originY = Math.floor(this.canvas.height / 2 - (this.dungeon.mapSize - 1) * this.scale / 2);
-	        for (var y = 0; y < this.dungeon.mapSize; y++) {
-	            for (var x = 0; x < this.dungeon.mapSize; x++) {
-	                var tile = this.dungeon.map[x][y];
-	                switch (tile) {
-	                    case 0:
-	                        this.ctx.fillStyle = '#606084';break;
-	                    case 2:
-	                        this.ctx.fillStyle = '#46466C';break;
-	                    case 3:
-	                        this.ctx.fillStyle = 'white';break;
-	                    case 4:
-	                        this.ctx.fillStyle = '#D30000';break;
-	                    case 5:
-	                        this.ctx.fillStyle = '#FFDE00';break;
-	                    case 6:
-	                        this.ctx.fillStyle = '#0131F4';break;
-	                }
-	                this.ctx.fillRect(originX + x * this.scale, originY + y * this.scale, this.scale, this.scale);
-	            }
+	  canvas: null,
+	  ctx: null,
+	  scale: 0,
+	  initialize: function initialize(dungeon, canvasNode) {
+	    this.canvas = canvasNode;
+	    this.dungeon = dungeon;
+	    this.ctx = this.canvas.getContext('2d');
+	  },
+	  update: function update() {
+	    if (!this.canvas) return;
+	    this.scale = Math.ceil(this.canvas.height / this.dungeon.mapSize);
+	    var originX = Math.floor(this.canvas.width / 2 - (this.dungeon.mapSize - 1) * this.scale / 2);
+	    var originY = Math.floor(this.canvas.height / 2 - (this.dungeon.mapSize - 1) * this.scale / 2);
+	    for (var y = 0; y < this.dungeon.mapSize; y++) {
+	      for (var x = 0; x < this.dungeon.mapSize; x++) {
+	        var tile = this.dungeon.map[x][y];
+	        switch (tile) {
+	          case 0:
+	            this.ctx.fillStyle = '#606084';break;
+	          case 2:
+	            this.ctx.fillStyle = '#46466C';break;
+	          case 3:
+	            this.ctx.fillStyle = 'white';break;
+	          case 4:
+	            this.ctx.fillStyle = '#D30000';break;
+	          case 5:
+	            this.ctx.fillStyle = '#FFDE00';break;
+	          case 6:
+	            this.ctx.fillStyle = '#0131F4';break;
 	        }
+	        this.ctx.fillRect(originX + x * this.scale, originY + y * this.scale, this.scale, this.scale);
+	      }
 	    }
+	  }
 	};
 
 	var Helpers = {
-	    getRandom: function getRandom(low, high) {
-	        return ~~(Math.random() * (high - low)) + low;
-	    },
-	    isFloor: function isFloor(x, y, map) {
-	        if (map[y] ? !isNaN(map[y][x]) : false) {
-	            if (map[y][x] === 1) {
-	                return true;
-	            }
-	        }
-	        return false;
+	  getRandom: function getRandom(low, high) {
+	    return ~~(Math.random() * (high - low)) + low;
+	  },
+	  isFloor: function isFloor(x, y, map) {
+	    if (map[y] ? !isNaN(map[y][x]) : false) {
+	      if (map[y][x] === 1) {
+	        return true;
+	      }
 	    }
+	    return false;
+	  }
 	};
 
 	module.exports.renderer = renderer;
@@ -30190,16 +30297,24 @@
 	  ctx: null,
 	  scale: 0,
 	  mapSize: 0,
-	  vision: 6,
+	  vision: 7,
 	  initialize: function initialize(canvasNode, mapSize) {
 	    this.canvas = canvasNode;
 	    this.mapSize = mapSize;
 	    this.ctx = this.canvas.getContext('2d');
 	    this.scale = Math.ceil(this.canvas.height / mapSize);
 	  },
-	  update: function update(x, y) {
+	  blacken: function blacken() {
 	    if (!this.canvas) return;
 	    this.ctx.fillStyle = 'black';
+	    this.ctx.fillRect(0, 0, this.canvas.width, this.canvas.height);
+	  },
+	  update: function update(x, y) {
+	    if (!this.canvas) return;
+	    console.log('update');
+	    this.ctx.fillStyle = 'black';
+	    this.ctx.fillRect(0, 0, this.canvas.width, this.canvas.height);
+
 	    var originX = Math.floor(this.canvas.width / 2 - (this.mapSize - 1) * this.scale / 2);
 	    var originY = Math.floor(this.canvas.height / 2 - (this.mapSize - 1) * this.scale / 2);
 	    for (var i = 0; i < this.mapSize; i++) {

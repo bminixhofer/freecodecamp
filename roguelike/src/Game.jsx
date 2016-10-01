@@ -46,6 +46,7 @@ var Player = React.createClass({
   },
   componentDidMount: function() {
     PlayerRenderer.initialize(this.refs.canvas, this.props.dungeon.mapSize);
+    PlayerRenderer.update(this.state.x, this.state.y);
     this.forceUpdate();
     window.addEventListener('keydown', this.movePlayer);
   },
@@ -53,6 +54,7 @@ var Player = React.createClass({
     window.removeEventListener('keydown', this.movePlayer);
   },
   movePlayer: function(e) {
+    if(this.state.health <= 0) return;
     var x = this.state.x;
     var y = this.state.y;
     switch (e.code) {
@@ -86,6 +88,10 @@ var Player = React.createClass({
           enemies: this.state.enemies,
           health: this.state.health - enemyData.damage
         };
+        if(newState.health <= 0) {
+          newState.health = 0;
+          PlayerRenderer.blacken();
+        }
         if (levelsGained > 0) {
           newState.health = 100;
         }
@@ -128,7 +134,6 @@ var Player = React.createClass({
     }
   },
   render: function() {
-    PlayerRenderer.update(this.state.x, this.state.y);
     return (
       <div>
         <Info progress={this.state.progress} enemies={this.state.enemies} weapon={this.state.weapon} health={this.state.health}/>
@@ -146,6 +151,8 @@ var Info = React.createClass({
       subtitle = 'You won!';
     } else if(this.props.enemies.bossHasSpawned) {
       subtitle = 'A boss has spawned!';
+    } else if(this.props.health <= 0) {
+      subtitle = 'You died! :('
     } else {
       subtitle = `Kill all enemies: ${this.props.enemies.killed}/${this.props.enemies.total}`;
     }
