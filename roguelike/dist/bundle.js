@@ -65,7 +65,7 @@
 /******/ 	}
 /******/ 	
 /******/ 	var hotApplyOnUpdate = true;
-/******/ 	var hotCurrentHash = "d97ee2ec0869e025b0bf"; // eslint-disable-line no-unused-vars
+/******/ 	var hotCurrentHash = "602b60c41e295f2ee65e"; // eslint-disable-line no-unused-vars
 /******/ 	var hotCurrentModuleData = {};
 /******/ 	var hotCurrentParents = []; // eslint-disable-line no-unused-vars
 /******/ 	
@@ -22341,7 +22341,7 @@
 
 	        this.x = x;
 	        this.y = y;
-	        this.level = Helpers.getRandom(10, 40);
+	        this.level = Helpers.getRandom(1, 4);
 	        this.health = this.level * 12;
 	        this.attack = this.level * 6;
 	        _this.map[this.x][this.y] = 4;
@@ -22743,7 +22743,6 @@
 	  },
 	  update: function update(x, y) {
 	    if (!this.canvas) return;
-	    console.log('update');
 	    this.ctx.fillStyle = 'black';
 	    this.ctx.fillRect(0, 0, this.canvas.width, this.canvas.height);
 
