@@ -5,6 +5,12 @@ $default-font: 'Thin Pixel';
   src: url('../resources/thin_pixel-7.ttf');
 }
 
+body, html {
+  background-color: black;
+  overflow-x: hidden;
+  overflow-y: auto;
+}
+
 .wrapper {
   text-align: center;
 
@@ -18,10 +24,6 @@ $default-font: 'Thin Pixel';
     left: 50%;
     transform: translateX(-50%);
   }
-}
-
-body {
-  background-color: black;
 }
 
 .info {
