@@ -4,5 +4,5 @@ var Game = require('./Game.jsx');
 
 ReactDOM.render(
   <Game size={64}/>
-  ,document.getElementById('app')
+  , document.getElementById('app')
 );

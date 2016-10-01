@@ -1,4 +1,19 @@
 let getWeaponName = require('./WeaponNames.js');
+function _attackPlayer(player, dungeon) {
+  this.health -= player.weapon.attack * (1 + player.progress.level / 4);
+  let isDead = false;
+  if (this.health <= 0) {
+    isDead = true;
+    dungeon.enemies = dungeon.enemies.filter(enemy => {
+      return !enemy.covers(this.x, this.y);
+    });
+  }
+  return {
+    damage: this.attack / (1 + player.progress.level / 4),
+    isDead: isDead,
+    experienceGained: isDead ? this.level * 15 : 0
+  };
+}
 
 module.exports.Dungeon = class Dungeon {
   	constructor() {
@@ -38,6 +53,33 @@ module.exports.Dungeon = class Dungeon {
           }
         }
       };
+      this.Boss = class Boss {
+        constructor(pos) {
+          this.pos = pos;
+          this.level = 10;
+          this.health = 100;
+          this.attack = 10;
+          this.pos.forEach(point => {
+            _this.map[point.x][point.y] = 4;
+          });
+        }
+        covers(x, y) {
+          return this.pos.filter(point => {
+            return point.x === x && point.y === y;
+          }).length > 0;
+        }
+        attackPlayer(player) {
+          let data = _attackPlayer.call(this, player, _this);
+          if (data.isDead) {
+            this.pos.forEach(point => {
+              console.log(point);
+              _this.map[point.x][point.y] = 3;
+            });
+            renderer.update();
+          }
+          return data;
+        }
+      };
       this.Enemy = class Enemy {
         constructor(x, y) {
           this.x = x;
@@ -47,32 +89,28 @@ module.exports.Dungeon = class Dungeon {
           this.attack = this.level * 6;
           _this.map[this.x][this.y] = 4;
         }
+        covers(x, y) {
+          return this.x === x && this.y === y;
+        }
         attackPlayer(player) {
-          this.health -= player.weapon.attack * (1 + player.progress.level / 4);
-          if(this.health <= 0) {
-            _this.enemies = _this.enemies.filter(enemy => {
-              return enemy.x !== this.x || enemy.y !== this.y;
-            });
+          let data = _attackPlayer.call(this, player, _this);
+          if (data.isDead) {
             _this.map[this.x][this.y] = 3;
             renderer.update();
           }
-          let isDead = this.health <= 0;
-          return {
-            damage: this.attack / (1 + player.progress.level / 4),
-            isDead: isDead,
-            experienceGained: isDead ? this.level * 15 : 0
-          };
+          return data;
         }
       };
 
       this.map = null;
-      this.enemyCount = Helpers.getRandom(7, 10);
+      this.enemyCount = Helpers.getRandom(1, 1);
       this.pickupCount = Helpers.getRandom(5, 7);
       this.weaponCount = 2;
       this.mapSize = 70;
       this.enemies = [];
       this.weapons = [];
       this.pickups = [];
+      this.boss = [];
       this.rooms = [];
     }
     checkAccess() {
@@ -262,6 +300,34 @@ module.exports.Dungeon = class Dungeon {
         return this.getRandomFreeSpace();
       }
       return [x, y];
+    }
+    addBoss() {
+      let foundSpace = false;
+      let x, y;
+      let pos = [];
+      while (!foundSpace) {
+        [x, y] = this.getRandomFreeSpace();
+        foundSpace = true;
+        pos = [];
+
+        for (let i = x; i <= x + 1; i++) {
+          for (let j = y; j <= y + 1; j++) {
+            if(this.map[i][j] !== 3) {
+              foundSpace = false;
+            } else {
+              pos.push({
+                x: i,
+                y: j
+              });
+            }
+          }
+        }
+      }
+
+      console.log(pos);
+      this.enemies.push(new this.Boss(pos));
+      renderer.update();
+
     }
     addEnvironmentals() {
       for(let i = 0; i < this.enemyCount; i++) {

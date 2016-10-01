@@ -28,7 +28,8 @@ var Player = React.createClass({
     return {
       enemies: {
         killed: 0,
-        total: this.props.dungeon.enemyCount
+        total: this.props.dungeon.enemyCount,
+        bossHasSpawned: false
       },
       health: 100,
       weapon: {
@@ -71,7 +72,7 @@ var Player = React.createClass({
         break;
       case 4:
         let enemy = this.props.dungeon.enemies.filter(function(enemy) {
-          return enemy.x === x && enemy.y === y;
+          return enemy.covers(x, y);
         })[0];
         let enemyData = enemy.attackPlayer(this.state);
 
@@ -82,17 +83,23 @@ var Player = React.createClass({
             level: this.state.progress.level + levelsGained,
             experience: newExperience >= 100 ? newExperience % 100 : newExperience
           },
+          enemies: this.state.enemies,
           health: this.state.health - enemyData.damage
         };
-
-        if(levelsGained > 0) {
+        console.log(newState);
+        if (levelsGained > 0) {
           newState.health = 100;
         }
-        if(enemyData.isDead) {
-          newState.enemies = {
-            killed: this.state.enemies.killed + 1,
-            total: this.state.enemies.total
-          };
+        if (enemyData.isDead) {
+          if (this.state.enemies.bossHasSpawned) {
+            newState.enemies.bossHasDied = true;
+          } else {
+            newState.enemies.killed++;
+            if (this.state.enemies.killed === this.state.enemies.total) {
+              this.props.dungeon.addBoss();
+              newState.enemies.bossHasSpawned = true;
+            }
+          }
         }
         this.setState(newState);
         break;
@@ -135,9 +142,13 @@ var Player = React.createClass({
 
 var Info = React.createClass({
   render: function() {
+    let subtitle = this.props.enemies.bossHasSpawned ?
+      'A boss has spawned!' :
+      `Kill all enemies: ${this.props.enemies.killed}/${this.props.enemies.total}`;
+
     return (
       <div className="info">
-        <h2>Kill all enemies: {this.props.enemies.killed}/{this.props.enemies.total}</h2>
+        <h2>{subtitle}</h2>
         <div className="bar health">
           <span style={
             {
@@ -161,7 +172,7 @@ var Info = React.createClass({
 var Game = React.createClass({
   getInitialState: function() {
     return {
-      map: [],
+      dungeon: {},
     }
   },
   componentWillMount: function() {
