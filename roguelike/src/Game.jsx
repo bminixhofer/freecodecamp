@@ -86,7 +86,6 @@ var Player = React.createClass({
           enemies: this.state.enemies,
           health: this.state.health - enemyData.damage
         };
-        console.log(newState);
         if (levelsGained > 0) {
           newState.health = 100;
         }
@@ -142,10 +141,14 @@ var Player = React.createClass({
 
 var Info = React.createClass({
   render: function() {
-    let subtitle = this.props.enemies.bossHasSpawned ?
-      'A boss has spawned!' :
-      `Kill all enemies: ${this.props.enemies.killed}/${this.props.enemies.total}`;
-
+    let subtitle;
+    if(this.props.enemies.bossHasDied) {
+      subtitle = 'You won!';
+    } else if(this.props.enemies.bossHasSpawned) {
+      subtitle = 'A boss has spawned!';
+    } else {
+      subtitle = `Kill all enemies: ${this.props.enemies.killed}/${this.props.enemies.total}`;
+    }
     return (
       <div className="info">
         <h2>{subtitle}</h2>
