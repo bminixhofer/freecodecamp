@@ -3,7 +3,7 @@ var ExtractTextPlugin = require('extract-text-webpack-plugin');
 
 module.exports = {
   entry: './src/app.js',
-  output: { path: __dirname + '/dist', filename: 'bundle.js' },
+  output: { path: __dirname + '/docs', filename: 'bundle.js' },
   module: {
    loaders: [
      {
@@ -30,7 +30,7 @@ module.exports = {
   },
   plugins: [
     new webpack.HotModuleReplacementPlugin(),
-    new ExtractTextPlugin('dist/main.css', {
+    new ExtractTextPlugin('docs/main.css', {
       allChunks: true
     })
   ]
