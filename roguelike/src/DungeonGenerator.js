@@ -72,7 +72,6 @@ module.exports.Dungeon = class Dungeon {
           let data = _attackPlayer.call(this, player, _this);
           if (data.isDead) {
             this.pos.forEach(point => {
-              console.log(point);
               _this.map[point.x][point.y] = 3;
             });
             renderer.update();
@@ -324,7 +323,6 @@ module.exports.Dungeon = class Dungeon {
         }
       }
 
-      console.log(pos);
       this.enemies.push(new this.Boss(pos));
       renderer.update();
 
