@@ -77,6 +77,15 @@ chart.call(tip);
 d3.json(dataSource, (err, json) => {
   if(err) throw err;
 
+  let tip = d3.tip()
+    .attr('class', 'd3-tip')
+    .offset([-10, 0])
+    .html(d => `
+        <strong>${d.year} - ${months[d.month - 1]}</strong><br/>
+        ${Math.round((json.baseTemperature + d.variance) * 1000) / 1000}<br/>
+        ${d.variance} Variance<br/>
+      `);
+  chart.call(tip);
   let data = json.monthlyVariance;
 
   let variance = data.map(d => d.variance);
@@ -104,6 +113,8 @@ d3.json(dataSource, (err, json) => {
   bar.append("rect")
     .attr("height", barHeight)
     .attr("width", Math.ceil(width / (data.length / 12)))
-    .attr("fill", (d, i) => color(d.variance));
+    .attr("fill", (d, i) => color(d.variance))
+    .on('mouseover', tip.show)
+    .on('mouseout', tip.hide);
 
 });
