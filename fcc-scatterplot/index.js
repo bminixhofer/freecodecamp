@@ -1,6 +1,9 @@
 const dataSource = "https://raw.githubusercontent.com/FreeCodeCamp/ProjectReferenceData/master/cyclist-data.json";
 const height = 600,
-  width = 1400;
+  width = 1400,
+  textMargin = 3;
+  heightMargin = -1,
+  pointSize = 10;
 
 let y = d3.scaleLinear()
   .range([0, height]);
@@ -28,4 +31,19 @@ d3.json(dataSource, (err, data) => {
       let val = max - d;
       this.childNodes[1].textContent = `${Math.floor(val/60)}:${val % 60}`;
     });
+
+  let bar = chart.append("g").selectAll("g")
+    .data(data)
+    .enter().append("g")
+    .attr("transform", (d, i) => `translate(${width - x(d.Seconds)}, ${y(d.Place) - pointSize})`);
+
+  bar.append('rect')
+    .attr("width", pointSize)
+    .attr("height", pointSize);
+  bar.append('text')
+    .text(d => d.Name)
+    .attr("x", pointSize + textMargin)
+    .attr("y", pointSize + heightMargin)
+    .attr("font-family", "sans-serif")
+    .attr("font-size", `${pointSize}px`);
 });
