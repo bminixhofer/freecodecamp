@@ -1,6 +1,9 @@
 const dataSource = "https://raw.githubusercontent.com/FreeCodeCamp/ProjectReferenceData/master/GDP-data.json";
 const height = 600,
-  width = 1400;
+  width = 1400,
+  color = "#3A7113",
+  hoverColor = "#85BC5E";
+
 
 var parseTime = d3.timeParse('%Y-%m-%d');
 var y = d3.scaleLinear()
@@ -9,7 +12,17 @@ var x = d3.scaleTime();
 var chart = d3.select(".chart")
     .attr("height", height)
     .attr("width", width);
-
+let tip = d3.tip()
+  .attr('class', 'd3-tip')
+  .offset([-10, 10])
+  .html(function(d) {
+    let date = new Date(d[0]);
+    return `
+      <strong>${d[1]} Billion</strong><br/>
+      ${date.getFullYear()} - ${date.toLocaleString("en-us", { month: "long" })}
+    `;
+  });
+chart.call(tip);
 d3.json(dataSource, (err, json) => {
   if(err) throw err;
 
@@ -48,5 +61,14 @@ d3.json(dataSource, (err, json) => {
   bar.append("rect")
     .attr("transform", (d, i) => `translate(0, ${y(d[1])})`)
     .attr("width", Math.ceil(width / data.length))
-    .attr("height", (d, i) => height - y(d[1]));
+    .attr("height", (d, i) => height - y(d[1]))
+    .attr("fill", color)
+    .on('mouseover', function(d) {
+      this.setAttribute("fill", hoverColor);
+      tip.show(d);
+    })
+    .on('mouseout', function(d) {
+      this.setAttribute("fill", color);
+      tip.hide();
+    });
 });
