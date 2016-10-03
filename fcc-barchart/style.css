@@ -8,13 +8,18 @@ p {
   font-size: 20px;
 }
 
+.d3-tip {
+  line-height: 1;
+  font-family: 'Open Sans';
+  padding: 12px;
+  background: rgba(0, 0, 0, 0.8);
+  color: #fff;
+  border-radius: 2px;
+}
+
 body {
   text-align: center;
   padding-top: 20px;
-}
-
-.chart rect {
-  fill: #7F0000;
 }
 
 .chart text {
