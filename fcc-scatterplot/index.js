@@ -12,7 +12,17 @@ let x = d3.scaleLinear()
 let chart = d3.select(".chart")
   .attr("height", height)
   .attr("width", width);
-
+let tip = d3.tip()
+  .attr('class', 'd3-tip')
+  .offset([-10, 0])
+  .html(function(d) {
+    return `
+      ${d.Name} - ${d.Nationality}<br/>
+      <strong>Year: </strong>${d.Year}<br/>
+      <strong>Time: </strong>${d.Time}<br/>
+    `;
+  });
+chart.call(tip);
 d3.json(dataSource, (err, data) => {
   if(err) throw err;
 
@@ -32,18 +42,51 @@ d3.json(dataSource, (err, data) => {
       this.childNodes[1].textContent = `${Math.floor(val/60)}:${val % 60}`;
     });
 
+  chart.append("text")
+    .attr("x", width - 210)
+    .attr("y", height - 10)
+    .text("Minutes Behind Fastest Time");
+
+  chart.append("text")
+    .attr("x", -60)
+    .attr("y", 20)
+    .attr("transform", "rotate(-90)")
+    .text("Ranking");
+
+  let legend = chart.append("g")
+    .attr("transform", `translate(${width - 200}, ${height / 2})`);
+
+  addLegendPart(legend.append("g"), "black", "No doping allegations");
+  addLegendPart(legend.append("g")
+    .attr("transform", "translate(0, 30)"),
+    "red", "Riders with doping allegations");
+
   let bar = chart.append("g").selectAll("g")
     .data(data)
     .enter().append("g")
     .attr("transform", (d, i) => `translate(${width - x(d.Seconds)}, ${y(d.Place) - pointSize})`);
 
   bar.append('rect')
+    .attr("fill", (d, i) => d.Doping.length > 0 ? "red" : "black")
     .attr("width", pointSize)
-    .attr("height", pointSize);
+    .attr("height", pointSize)
+    .on('mouseover', tip.show)
+    .on('mouseout', tip.hide);
   bar.append('text')
     .text(d => d.Name)
     .attr("x", pointSize + textMargin)
     .attr("y", pointSize + heightMargin)
-    .attr("font-family", "sans-serif")
-    .attr("font-size", `${pointSize}px`);
+    .attr("font-size", pointSize);
 });
+
+function addLegendPart(group, color, text, offset) {
+  let _pointSize = pointSize * 1.5;
+  group.append("rect")
+    .attr("fill", color)
+    .attr("width", _pointSize)
+    .attr("height", _pointSize);
+  group.append("text")
+    .text(text)
+    .attr("x", _pointSize + textMargin)
+    .attr("y", _pointSize + heightMargin);
+}
