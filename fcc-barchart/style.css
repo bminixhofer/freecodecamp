@@ -1,0 +1,25 @@
+h1 {
+  font-family: 'Open Sans';
+  font-size: 40px;
+}
+
+p {
+  font-family: 'Open Sans';
+  font-size: 20px;
+}
+
+body {
+  text-align: center;
+  padding-top: 20px;
+}
+
+.chart rect {
+  fill: #7F0000;
+}
+
+.chart text {
+  fill: black;
+  font-family: 'Open Sans';
+  font-size: 20px;
+  text-anchor: end;
+}
