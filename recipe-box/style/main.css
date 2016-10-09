@@ -8,14 +8,13 @@ h1 {
   background-color: #D50F25;
   font-size: 27px;
   padding: 5px 10px;
-  margin-top: 30px;
+  margin-top: 100px;
   margin-left: 50%;
-  transform: translateX(-300%);
+  transform: translateX(-50%);
   color: #FFF;
   border: none;
   border-radius: 3px;
-  position: relative;
-  z-index: -1; }
+  position: relative; }
 
 .container {
   font-family: "Open Sans";
