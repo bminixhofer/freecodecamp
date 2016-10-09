@@ -6,3 +6,13 @@
   color: #fff;
   border-radius: 2px;
 }
+
+.chart {
+  position: absolute;
+  left: 0;
+  top: 0;
+}
+
+.chart {
+  background: url('resources/world.svg') no-repeat;
+}
