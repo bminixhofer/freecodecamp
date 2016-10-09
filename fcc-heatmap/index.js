@@ -66,14 +66,6 @@ chart.append("g")
     this.childNodes[1].textContent = months[d - 1];
   });
 
-let tip = d3.tip()
-  .attr('class', 'd3-tip')
-  .offset([-10, 0])
-  .html(function(d) {
-    return ``;
-  });
-chart.call(tip);
-
 d3.json(dataSource, (err, json) => {
   if(err) throw err;
 
