@@ -1,5 +1,5 @@
-$("document").load(function() {
-  $("sign").on("click", function() {
-    window.location.href = "<some domain>/request-token";
+$(document).ready(function() {
+  $("#signin").on("click", function() {
+    window.location.href = "/start-login";
   });
 });
