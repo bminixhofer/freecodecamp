@@ -12,9 +12,13 @@
     "url": "\u001b[2~\u001b[2~\u001b[2~\u001b[2~\u001b[2~\u001b[6~\u001b[2~\u001b[2~\u001b[6~\u001b[2~\u001b[2~\u001b[2~\u001b[2~https://github.com/bminixhofer/simplerest.git"
   },
   "author": "bminixhofer",
+<<<<<<< HEAD
   "license": "ISC",
   "dependencies": {
     "express": "^4.14.0",
     "node-twitter-api": "^1.8.0"
   }
+=======
+  "license": "ISC"
+>>>>>>> 085bbab8c8705ac468a4b2acfded5b065e196c88
 }
