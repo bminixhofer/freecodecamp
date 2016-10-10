@@ -1,0 +1,20 @@
+{
+  "name": "simplerest",
+  "version": "1.0.0",
+  "description": "a pinterest clone",
+  "main": "server.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node server.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "\u001b[2~\u001b[2~\u001b[2~\u001b[2~\u001b[2~\u001b[6~\u001b[2~\u001b[2~\u001b[6~\u001b[2~\u001b[2~\u001b[2~\u001b[2~https://github.com/bminixhofer/simplerest.git"
+  },
+  "author": "bminixhofer",
+  "license": "ISC",
+  "dependencies": {
+    "express": "^4.14.0",
+    "node-twitter-api": "^1.8.0"
+  }
+}
