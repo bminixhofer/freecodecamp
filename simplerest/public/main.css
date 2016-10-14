@@ -1,0 +1,97 @@
+@font-face {
+  font-family: 'Freight Text';
+  src: url("../resources/porceleina DEMO.otf"); }
+
+#add {
+  transition: all 0.1s;
+  margin: 0;
+  margin-top: -13vw;
+  vertical-align: top;
+  font-size: 40vw;
+  height: 28vw; }
+
+#add:hover {
+  color: #94B053; }
+
+.header {
+  background-color: #E0E0E0;
+  z-index: 100;
+  top: 0;
+  position: fixed;
+  width: 100%; }
+  .header div {
+    display: inline-block;
+    font-family: "Freight Text";
+    font-size: 2.5vw;
+    color: #94B053;
+    margin: 0.2vw 2vw; }
+  .header #logout {
+    float: left; }
+  .header #name {
+    float: right; }
+
+.grid {
+  margin-top: 70px; }
+  .grid .grid-sizer,
+  .grid .grid-item {
+    width: 25%; }
+  .grid .grid-item {
+    box-sizing: border-box;
+    float: left;
+    font-family: "Freight Text";
+    border: 3px solid #E0E0E0; }
+    .grid .grid-item img {
+      display: block;
+      width: 100%; }
+    .grid .grid-item .description {
+      font-weight: lighter;
+      margin-top: 1vw;
+      margin-bottom: 0.5vw;
+      font-size: 2.5vw;
+      color: #94B053; }
+    .grid .grid-item div {
+      font-size: 1.7vw;
+      margin: 0 2.5vw; }
+      .grid .grid-item div p {
+        color: #82837E;
+        margin-top: 0;
+        margin-bottom: 0.2vw; }
+    .grid .grid-item .author {
+      float: left; }
+    .grid .grid-item .upvotes {
+      float: right; }
+
+body {
+  margin: 0;
+  padding: 0;
+  background-color: #E0E0E0;
+  text-align: center; }
+
+#signin {
+  cursor: pointer;
+  border: none;
+  border-radius: 5px;
+  background-color: #55ACEE;
+  font-size: 3em;
+  font-family: "Freight Text";
+  width: 5em;
+  height: 1.5em; }
+  #signin p {
+    vertical-align: middle;
+    font-weight: bold;
+    color: #E0E0E0;
+    vertical-align: top;
+    display: inline; }
+  #signin img {
+    transform: translateY(-5px);
+    vertical-align: middle;
+    width: 1em;
+    height: 1em; }
+
+h1 {
+  margin-top: 10%;
+  margin-bottom: 1em;
+  color: #BFFA37;
+  font-size: 7em;
+  font-weight: lighter;
+  font-family: "Freight Text"; }
