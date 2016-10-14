@@ -1,0 +1,136 @@
+$highlight: #BFFA37;
+$background: #E0E0E0;
+$text: #94B053;
+$twitter-blue: #55ACEE;
+$main-font: 'Freight Text';
+
+@font-face {
+  font-family: 'Freight Text';
+  src: url('../resources/porceleina.otf');
+}
+
+#add {
+  transition: all 0.1s;
+  margin: 0;
+  margin-top: -13vw;
+  vertical-align: top;
+  font-size: 40vw;
+  height: 28vw;
+}
+
+#add:hover {
+  color: $text;
+}
+
+.header {
+  background-color: $background;
+  z-index: 100;
+  top: 0;
+  position: fixed;
+  width: 100%;
+
+  div {
+    display: inline-block;
+    font-family: $main-font;
+    font-size: 2.5vw;
+    color: $text;
+    margin: 0.2vw 2vw;
+  }
+
+  #logout {
+    float: left;
+  }
+
+  #name {
+    float: right;
+  }
+}
+
+.grid {
+  margin-top: 70px;
+
+  .grid-sizer,
+  .grid-item {
+    width: 25%;
+  }
+
+  .grid-item {
+    box-sizing: border-box;
+    float: left;
+    font-family: $main-font;
+    border: 3px solid $background;
+
+    img {
+      display: block;
+      width: 100%;
+    }
+
+    .description {
+      font-weight: lighter;
+      margin-top: 1vw;
+      margin-bottom: 0.5vw;
+      font-size: 2.5vw;
+      color: $text;
+    }
+
+    div {
+      font-size: 1.7vw;
+      margin: 0 2.5vw;
+
+      p {
+        color: #82837E;
+        margin-top: 0;
+        margin-bottom: 0.2vw;
+      }
+    }
+
+    .author {
+      float: left;
+    }
+    .upvotes {
+      float: right;
+    }
+  }
+}
+
+body {
+  margin: 0;
+  padding: 0;
+  background-color: $background;
+  text-align: center;
+}
+
+#signin {
+  cursor: pointer;
+  border: none;
+  border-radius: 5px;
+  background-color: $twitter-blue;
+  font-size: 3em;
+  font-family: $main-font;
+  width: 5em;
+  height: 1.5em;
+
+  p {
+    vertical-align: middle;
+    font-weight: bold;
+    color: $background;
+    vertical-align: top;
+    display: inline;
+  }
+
+  img {
+    transform: translateY(-5px);
+    vertical-align: middle;
+    width: 1em;
+    height: 1em;
+  }
+}
+
+h1 {
+  margin-top: 10%;
+  margin-bottom: 1em;
+  color: $highlight;
+  font-size: 7em;
+  font-weight: lighter;
+  font-family: $main-font;
+}
