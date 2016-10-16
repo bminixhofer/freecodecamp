@@ -27,7 +27,7 @@ module.exports = function login(app) {
             console.log(err);
           } else {
             res.cookie('name', data.screen_name);
-            res.redirect('/');
+            res.redirect('/entries');
           }
       });
       }
