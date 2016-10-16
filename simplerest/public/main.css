@@ -23,11 +23,11 @@
     font-size: 2.5vw;
     color: #4E3F30;
     margin: 0.2vw 2vw; }
-  .header #logout {
-    float: left; }
-    .header #logout a {
+    .header div a {
       color: #4E3F30;
       text-decoration: none; }
+  .header #logout {
+    float: left; }
   .header #name {
     float: right; }
 

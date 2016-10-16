@@ -35,15 +35,15 @@ $main-font: 'Freight Text';
     font-size: 2.5vw;
     color: $highlight;
     margin: 0.2vw 2vw;
-  }
-
-  #logout {
-    float: left;
 
     a {
       color: $highlight;
       text-decoration: none;
     }
+  }
+
+  #logout {
+    float: left;
   }
 
   #name {
