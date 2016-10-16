@@ -1,4 +1,4 @@
-$highlight: #BFFA37;
+$highlight: #4E3F30;
 $background: #E0E0E0;
 $text: #94B053;
 $twitter-blue: #55ACEE;
@@ -6,20 +6,20 @@ $main-font: 'Freight Text';
 
 @font-face {
   font-family: 'Freight Text';
-  src: url('../resources/porceleina.otf');
+  src: url('resources/porceleina.otf');
 }
 
-#add {
-  transition: all 0.1s;
-  margin: 0;
-  margin-top: -13vw;
-  vertical-align: top;
-  font-size: 40vw;
-  height: 28vw;
-}
+.add-entry {
+  input {
+    color: $highlight;
+    padding: 0.3vw;
+    font-size: 2vw;
+    font-family: $main-font;
+  }
 
-#add:hover {
-  color: $text;
+  .description {
+    cursor: pointer;
+  }
 }
 
 .header {
@@ -33,7 +33,7 @@ $main-font: 'Freight Text';
     display: inline-block;
     font-family: $main-font;
     font-size: 2.5vw;
-    color: $text;
+    color: $highlight;
     margin: 0.2vw 2vw;
   }
 
@@ -59,6 +59,16 @@ $main-font: 'Freight Text';
     float: left;
     font-family: $main-font;
     border: 3px solid $background;
+
+    .delete-icon {
+      cursor: pointer;
+      margin: 0.5vw;
+      position: absolute;
+      right: 0;
+      top: 0;
+      width: 1.5vw;
+      height: 1.5vw;
+    }
 
     img {
       display: block;
@@ -119,7 +129,6 @@ body {
   }
 
   img {
-    transform: translateY(-5px);
     vertical-align: middle;
     width: 1em;
     height: 1em;
@@ -129,7 +138,7 @@ body {
 h1 {
   margin-top: 10%;
   margin-bottom: 1em;
-  color: $highlight;
+  color: $text;
   font-size: 7em;
   font-weight: lighter;
   font-family: $main-font;
