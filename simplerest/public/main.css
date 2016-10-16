@@ -1,17 +1,15 @@
 @font-face {
   font-family: 'Freight Text';
-  src: url("../resources/porceleina DEMO.otf"); }
+  src: url("resources/porceleina.otf"); }
 
-#add {
-  transition: all 0.1s;
-  margin: 0;
-  margin-top: -13vw;
-  vertical-align: top;
-  font-size: 40vw;
-  height: 28vw; }
+.add-entry input {
+  color: #4E3F30;
+  padding: 0.3vw;
+  font-size: 2vw;
+  font-family: "Freight Text"; }
 
-#add:hover {
-  color: #94B053; }
+.add-entry .description {
+  cursor: pointer; }
 
 .header {
   background-color: #E0E0E0;
@@ -23,7 +21,7 @@
     display: inline-block;
     font-family: "Freight Text";
     font-size: 2.5vw;
-    color: #94B053;
+    color: #4E3F30;
     margin: 0.2vw 2vw; }
   .header #logout {
     float: left; }
@@ -40,6 +38,14 @@
     float: left;
     font-family: "Freight Text";
     border: 3px solid #E0E0E0; }
+    .grid .grid-item .delete-icon {
+      cursor: pointer;
+      margin: 0.5vw;
+      position: absolute;
+      right: 0;
+      top: 0;
+      width: 1.5vw;
+      height: 1.5vw; }
     .grid .grid-item img {
       display: block;
       width: 100%; }
@@ -83,7 +89,6 @@ body {
     vertical-align: top;
     display: inline; }
   #signin img {
-    transform: translateY(-5px);
     vertical-align: middle;
     width: 1em;
     height: 1em; }
@@ -91,7 +96,7 @@ body {
 h1 {
   margin-top: 10%;
   margin-bottom: 1em;
-  color: #BFFA37;
+  color: #94B053;
   font-size: 7em;
   font-weight: lighter;
   font-family: "Freight Text"; }

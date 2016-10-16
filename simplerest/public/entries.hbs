@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>Entries | Simplerest</title>
+    <script src="https://code.jquery.com/jquery-3.1.1.min.js" integrity="sha256-hVVnYaiADRTO2PzUGmuLJr8BLUSjGIZsDYGmIJLv2b8=" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/masonry/4.1.1/masonry.pkgd.min.js"></script>
+    <script src="http://imagesloaded.desandro.com/imagesloaded.pkgd.js" type="text/javascript"></script>
+    <link rel="stylesheet" type="text/css" href="main.css"></link>
+  </head>
+  <body>
+  <div class="header">
+    <div id="logout">Logout</div>
+    <div id="yourentries">Your Entries</div>
+    <div id="name">Hello, {{user}}</div>
+  </div>
+  <div class="grid">
+    <div class="grid-item add-entry">
+      <input id="source-input" type="text" placeholder="Source.."/><br />
+      <input maxlength="40" id="description-input" type="text" placeholder="Description.."/>
+      <p id="add-entry" class="description">Add Entry</p>
+    </div>
+    <div class="grid-sizer"></div>
+    {{#entries}}
+    <div class="grid-item">
+      {{#if userIsOwner}}
+        <img class="delete-icon" src="resources/cross.svg" data-id="{{_id}}">
+      {{/if}}
+      <img src="{{image}}" />
+      <p class="description">{{description}}</p>
+      <div class="author">
+        <p>{{author}}</p>
+      </div>
+      <div class="upvotes">
+        <p>{{votes}} Votes</p>
+      </div>
+    </div>
+    {{/entries}}
+  </div>
+  </body>
+  <script src="entries.js" type="text/javascript"></script>
+</html>
