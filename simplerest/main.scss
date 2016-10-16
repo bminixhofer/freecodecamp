@@ -39,6 +39,11 @@ $main-font: 'Freight Text';
 
   #logout {
     float: left;
+
+    a {
+      color: $highlight;
+      text-decoration: none;
+    }
   }
 
   #name {
