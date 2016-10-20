@@ -123,15 +123,15 @@ app.delete('/api/entry', (req, res) => {
 });
 
 const getGridItem = entry => `
-  <div class="grid-item">
-    ${entry.userIsOwner ? `<img class="delete-icon" src="/resources/cross.svg" data-id="${entry._id}">` : ""}
+  <div class="grid-item" data-id="${entry._id}">
+    ${entry.userIsOwner ? `<img class="delete-icon" src="/resources/cross.svg">` : ""}
     <img class="entry" src="${entry.image}" />
     <p class="description">${entry.description}</p>
     <div class="author">
       <a href="/entries/${entry.author}">${entry.author}</a>
     </div>
     <div class="upvotes">
-      <span>${entry.votes}</span>
+      <span class="vote-counter">${entry.votes}</span>
       <img src="/resources/heart.svg" class="svg vote empty">
     </div>
   </div>
