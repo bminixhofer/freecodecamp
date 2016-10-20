@@ -32,7 +32,30 @@ $(document).ready(function() {
 });
 
 function vote(e) {
-  console.log(e);
+  var target = $(e.target).closest("svg").get(0);
+  target = $(target);
+  var voteCounter = target.prev();
+  var id = target.closest(".grid-item").get(0).dataset.id;
+  var original = voteCounter.text();
+
+  voteCounter.text(Number(voteCounter.text()) + 1);
+  target.toggleClass('full empty');
+
+  $.ajax({
+    url: '/api/vote',
+    dataType: 'json',
+    type: 'PATCH',
+    data: {
+      id: id
+    },
+    success: function(response) {
+      console.log(response);
+    },
+    error: function(response) {
+      voteCounter.text(original);
+      target.toggleClass('full empty');
+    }
+  });
 }
 
 function remove() {
@@ -41,7 +64,7 @@ function remove() {
     url: '/api/entry',
     type: 'DELETE',
     data: {
-      id: this.dataset.id
+      id: $(this).closest(".grid-item").get(0).dataset.id
     },
     success: function(response) {
       grid.masonry('remove', element).masonry('layout');

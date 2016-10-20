@@ -39,6 +39,8 @@
   display: inline-block;
   vertical-align: middle;
   margin: 0 0.5vw; }
+  .vote path {
+    transition: fill 0.2s; }
   .vote.full path {
     fill: red; }
 
