@@ -31,6 +31,17 @@
   .header #name {
     float: right; }
 
+.vote {
+  cursor: pointer;
+  width: 2vw;
+  height: 2vw;
+  background-size: 2vw 2vw;
+  display: inline-block;
+  vertical-align: middle;
+  margin: 0 0.5vw; }
+  .vote.full path {
+    fill: red; }
+
 .grid {
   margin-top: 70px; }
   .grid .grid-sizer,
@@ -49,7 +60,7 @@
       top: 0;
       width: 1.5vw;
       height: 1.5vw; }
-    .grid .grid-item img {
+    .grid .grid-item .entry {
       display: block;
       width: 100%; }
     .grid .grid-item .description {
@@ -61,7 +72,8 @@
     .grid .grid-item div {
       font-size: 1.7vw;
       margin: 0 2.5vw; }
-      .grid .grid-item div p {
+      .grid .grid-item div span, .grid .grid-item div a {
+        text-decoration: none;
         color: #82837E;
         margin-top: 0;
         margin-bottom: 0.2vw; }

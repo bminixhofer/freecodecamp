@@ -51,6 +51,22 @@ $main-font: 'Freight Text';
   }
 }
 
+.vote {
+  cursor: pointer;
+  width: 2vw;
+  height: 2vw;
+  background-size: 2vw 2vw;
+  display: inline-block;
+  vertical-align: middle;
+  margin: 0 0.5vw;
+
+  &.full {
+    path {
+      fill: red;
+    }
+  }
+}
+
 .grid {
   margin-top: 70px;
 
@@ -75,7 +91,7 @@ $main-font: 'Freight Text';
       height: 1.5vw;
     }
 
-    img {
+    .entry {
       display: block;
       width: 100%;
     }
@@ -92,7 +108,8 @@ $main-font: 'Freight Text';
       font-size: 1.7vw;
       margin: 0 2.5vw;
 
-      p {
+      span,a {
+        text-decoration: none;
         color: #82837E;
         margin-top: 0;
         margin-bottom: 0.2vw;
