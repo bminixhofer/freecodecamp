@@ -99,16 +99,23 @@ app.delete('/api/entry', (req, res) => {
   if(req.cookies['name']) {
     mongo.connect(mongodbURI, (err, db) => {
       if(err) throw err;
-
       let posts = db.collection('posts');
       let id = new ObjectId(req.body.id);
       posts.findOne({ _id: id}).then(entry => {
+        console.log(entry);
         if(req.cookies['name'] === entry.autor) {
           posts.remove({_id: id}, err => {
+            if(err) throw err;
+
             res.end(JSON.stringify({
               success: true
             }));
           });
+        } else {
+          res.end(JSON.stringify({
+            success: false,
+            error: 'Not logged in.'
+          }));
         }
       });
     });
@@ -118,13 +125,14 @@ app.delete('/api/entry', (req, res) => {
 const getGridItem = entry => `
   <div class="grid-item">
     ${entry.userIsOwner ? `<img class="delete-icon" src="/resources/cross.svg" data-id="${entry._id}">` : ""}
-    <img src="${entry.image}" />
+    <img class="entry" src="${entry.image}" />
     <p class="description">${entry.description}</p>
     <div class="author">
-      <p>${entry.author}</p>
+      <a href="/entries/${entry.author}">${entry.author}</a>
     </div>
     <div class="upvotes">
-      <p>${entry.votes} Votes</p>
+      <span>${entry.votes}</span>
+      <img src="/resources/heart.svg" class="svg vote empty">
     </div>
   </div>
 `;
