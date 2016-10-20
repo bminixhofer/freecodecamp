@@ -22,14 +22,18 @@ $(document).ready(function() {
         var item = $(response.html);
         grid.append(item).masonry('appended', item);
         $(".delete-icon[data-id=" + response.id + "]").click(remove);
-        replaceInvalid('img:last');
+        replaceInvalid('img');
       }
     });
   });
-
   replaceInvalid('img');
   $(".delete-icon").click(remove);
+  $(".vote").click(vote);
 });
+
+function vote(e) {
+  console.log(e);
+}
 
 function remove() {
   var element = this.parentNode;
