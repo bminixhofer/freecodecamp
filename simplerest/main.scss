@@ -60,6 +60,10 @@ $main-font: 'Freight Text';
   vertical-align: middle;
   margin: 0 0.5vw;
 
+  path {
+    transition: fill 0.2s;
+  }
+
   &.full {
     path {
       fill: red;
