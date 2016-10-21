@@ -40,14 +40,14 @@ app.get('/entries/:user?', (req, res) => {
       db.collection('posts').find(query).toArray((err, posts) => {
         if(err) throw err;
 
+        let user = req.cookies['name'];
         posts = posts.map(post => {
-          post.userIsOwner = req.cookies['name'] === post.author;
           return {
-            html: getGridItem(post)
+            html: getGridItem(post, user)
           };
         });
         res.send(template({
-          user: req.cookies['name'],
+          user: user,
           entries: posts
         }));
       });
@@ -65,7 +65,8 @@ app.get('/api/entry', (req, res) => {
 });
 
 app.put('/api/entry', (req, res) => {
-  if(req.cookies['name']) {
+  let user = req.cookies['name'];
+  if(user) {
     mongo.connect(mongodbURI, (err, db) => {
       if(err) throw err;
 
@@ -73,16 +74,15 @@ app.put('/api/entry', (req, res) => {
       posts.insert({
         image: req.body.image,
         description: req.body.description,
-        author: req.cookies['name'],
-        votes: 0
+        author: user,
+        voters: []
       }, (err, post) => {
         if(err) throw err;
 
         let entry = post.ops[0];
-        entry.userIsOwner = req.cookies['name'] === entry.author;
         res.end(JSON.stringify({
           success: true,
-          html: getGridItem(entry),
+          html: getGridItem(entry, user),
           id: entry._id
         }));
       });
@@ -92,6 +92,37 @@ app.put('/api/entry', (req, res) => {
       success: false,
       error: 'Not logged in.'
     }));
+  }
+});
+
+app.patch('/api/vote', (req, res) => {
+  if(req.cookies['name']) {
+    mongo.connect(mongodbURI, (err, db) => {
+      if(err) throw err;
+
+      let id = ObjectId(req.body.id);
+      let name = req.cookies['name'];
+      let posts = db.collection('posts');
+
+      posts.findOne({ _id: id}).then(entry => {
+        let voters = entry.voters;
+        let index = voters.indexOf(name);
+        if(index !== -1) {
+          voters.splice(index, 1);
+        } else {
+          voters.push(name);
+        }
+        delete voters._id;
+
+        posts.update({
+          _id: id
+        }, entry).then(() => {
+          res.end(JSON.stringify({
+            success: true
+          }));
+        });
+      });
+    });
   }
 });
 
@@ -122,21 +153,20 @@ app.delete('/api/entry', (req, res) => {
   }
 });
 
-const getGridItem = entry => `
-  <div class="grid-item" data-id="${entry._id}">
-    ${entry.userIsOwner ? `<img class="delete-icon" src="/resources/cross.svg">` : ""}
-    <img class="entry" src="${entry.image}" />
-    <p class="description">${entry.description}</p>
-    <div class="author">
-      <a href="/entries/${entry.author}">${entry.author}</a>
+const getGridItem = (entry, user) => `
+    <div class="grid-item" data-id="${entry._id}">
+      ${user === entry.author ? `<img class="delete-icon" src="/resources/cross.svg">` : ""}
+      <img class="entry" src="${entry.image}" />
+      <p class="description">${entry.description}</p>
+      <div class="author">
+        <a href="/entries/${entry.author}">${entry.author}</a>
+      </div>
+      <div class="upvotes">
+        <span class="vote-counter">${entry.voters.length}</span>
+        <img src="/resources/heart.svg" class="svg vote ${entry.voters.includes(user) ? "full" : "empty"}">
+      </div>
     </div>
-    <div class="upvotes">
-      <span class="vote-counter">${entry.votes}</span>
-      <img src="/resources/heart.svg" class="svg vote empty">
-    </div>
-  </div>
 `;
-
 app.use(express.static(__dirname + '/public'));
 app.listen(8080);
 console.log('started');

@@ -36,9 +36,15 @@ function vote(e) {
   target = $(target);
   var voteCounter = target.prev();
   var id = target.closest(".grid-item").get(0).dataset.id;
-  var original = voteCounter.text();
+  var original = Number(voteCounter.text());
 
-  voteCounter.text(Number(voteCounter.text()) + 1);
+  var text;
+  if(target.hasClass('empty')) {
+    text = original + 1;
+  } else {
+    text = original - 1;
+  }
+  voteCounter.text(text);
   target.toggleClass('full empty');
 
   $.ajax({
@@ -47,9 +53,6 @@ function vote(e) {
     type: 'PATCH',
     data: {
       id: id
-    },
-    success: function(response) {
-      console.log(response);
     },
     error: function(response) {
       voteCounter.text(original);
