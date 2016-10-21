@@ -7,7 +7,10 @@ const cookieParser = require('cookie-parser');
 const bodyParser = require('body-parser');
 const fs = require('then-fs');
 const handlebars = require('handlebars');
+const request = require('request');
+const isImageURL = require('is-image-url');
 
+const placeholderURL = '/resources/placeholder.png';
 const mongodbURI = 'mongodb://localhost:27017';
 const app = express();
 
@@ -71,21 +74,35 @@ app.put('/api/entry', (req, res) => {
       if(err) throw err;
 
       let posts = db.collection('posts');
-      posts.insert({
-        image: req.body.image,
-        description: req.body.description,
-        author: user,
-        voters: []
-      }, (err, post) => {
-        if(err) throw err;
+      let image = req.body.image;
+      if(!isImageURL(image)) {
+        insertImage(placeholderURL);
+      } else {
+        request(image, (err, response) => {
+          if(err || response.statusCode !== 200) {
+            insertImage(placeholderURL);
+          } else {
+            insertImage(image);
+          }
+        });
+      }
+      function insertImage(img) {
+        posts.insert({
+          image: img,
+          description: req.body.description,
+          author: user,
+          voters: []
+        }, (err, post) => {
+          if(err) throw err;
 
-        let entry = post.ops[0];
-        res.end(JSON.stringify({
-          success: true,
-          html: getGridItem(entry, user),
-          id: entry._id
-        }));
-      });
+          let entry = post.ops[0];
+          res.end(JSON.stringify({
+            success: true,
+            html: getGridItem(entry, user),
+            id: entry._id
+          }));
+        });
+      }
     });
   } else {
     res.end(JSON.stringify({
@@ -127,14 +144,14 @@ app.patch('/api/vote', (req, res) => {
 });
 
 app.delete('/api/entry', (req, res) => {
-  if(req.cookies['name']) {
+  let user = req.cookies['name'];
+  if(user) {
     mongo.connect(mongodbURI, (err, db) => {
       if(err) throw err;
       let posts = db.collection('posts');
       let id = new ObjectId(req.body.id);
       posts.findOne({ _id: id}).then(entry => {
-        console.log(entry);
-        if(req.cookies['name'] === entry.autor) {
+        if(entry.author === user) {
           posts.remove({_id: id}, err => {
             if(err) throw err;
 

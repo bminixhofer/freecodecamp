@@ -1,8 +1,12 @@
 /*
 * Replace all SVG images with inline SVG
 */
-jQuery('img.svg').each(function(){
-    var $img = jQuery(this);
+jQuery('img.svg').each(function() {
+  inline(this);
+});
+
+function inline(element, callback){
+    var $img = jQuery(element);
     var imgID = $img.attr('id');
     var imgClass = $img.attr('class');
     var imgURL = $img.attr('src');
@@ -26,5 +30,7 @@ jQuery('img.svg').each(function(){
         // Replace image with new SVG
         $img.replaceWith($svg);
 
+        // Execute an optional callback
+        callback();
     }, 'xml');
-});
+}

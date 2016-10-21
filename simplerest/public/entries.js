@@ -21,12 +21,16 @@ $(document).ready(function() {
       success: function(response) {
         var item = $(response.html);
         grid.append(item).masonry('appended', item);
-        $(".delete-icon[data-id=" + response.id + "]").click(remove);
-        replaceInvalid('img');
+        var gridSelector = ".grid-item[data-id=" + response.id + "] ";
+        $(gridSelector + ".delete-icon").click(remove);
+
+        //inline is declared in inline_svg.js
+        inline($(gridSelector + ".vote").get(0), function() {
+          $(gridSelector + ".vote").click(vote);
+        });
       }
     });
   });
-  replaceInvalid('img');
   $(".delete-icon").click(remove);
   $(".vote").click(vote);
 });
@@ -73,8 +77,4 @@ function remove() {
       grid.masonry('remove', element).masonry('layout');
     }
   });
-}
-
-function replaceInvalid(query) {
-  $(query).one('error', function() { this.src = '/resources/placeholder.png'; });
 }
