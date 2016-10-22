@@ -13,7 +13,7 @@ const request = require('request');
 const isImageURL = require('is-image-url');
 
 const placeholderURL = '/resources/placeholder.png';
-const mongodbURI = process.env.mongodbURI;
+const mongodbURI = process.env.MONGODB_URI;
 const app = express();
 
 app.use(bodyParser.urlencoded({ extended: false }));
