@@ -13,7 +13,7 @@ const request = require('request');
 const isImageURL = require('is-image-url');
 
 const placeholderURL = '/resources/placeholder.png';
-const mongodbURI = 'mongodb://localhost:27017';
+const mongodbURI = process.env.mongodbURI;
 const app = express();
 
 app.use(bodyParser.urlencoded({ extended: false }));
@@ -187,5 +187,5 @@ const getGridItem = (entry, user) => `
     </div>
 `;
 app.use(express.static(__dirname + '/public'));
-app.listen(8080);
+app.listen(process.env.PORT || 8080);
 console.log('started');
