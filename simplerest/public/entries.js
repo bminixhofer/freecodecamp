@@ -9,31 +9,41 @@ grid.imagesLoaded().progress(function() {
 });
 
 $(document).ready(function() {
-  $("#add-entry").click(function() {
-    $.ajax({
-      url: '/api/entry',
-      dataType: 'json',
-      type: 'PUT',
-      data: {
-        image: $("#source-input").val(),
-        description: $("#description-input").val()
-      },
-      success: function(response) {
-        var item = $(response.html);
-        grid.append(item).masonry('appended', item);
-        var gridSelector = ".grid-item[data-id=" + response.id + "] ";
-        $(gridSelector + ".delete-icon").click(remove);
-
-        //inline is declared in inline_svg.js
-        inline($(gridSelector + ".vote").get(0), function() {
-          $(gridSelector + ".vote").click(vote);
-        });
-      }
-    });
-  });
+  $("#add-entry").click(add);
   $(".delete-icon").click(remove);
   $(".vote").click(vote);
 });
+
+function add() {
+  var source = $("#source-input").val();
+  var description = $("#description-input").val();
+  if (!source || !description) {
+    return;
+  }
+  $("#source-input").val('');
+  $("#description-input").val('');
+  $.ajax({
+    url: '/api/entry',
+    dataType: 'json',
+    type: 'PUT',
+    data: {
+      image: source,
+      description: description
+    },
+    success: function(response) {
+      var item = $(response.html);
+      grid.append(item).masonry('appended', item);
+      grid.masonry('layout');
+      var gridSelector = ".grid-item[data-id=" + response.id + "] ";
+      $(gridSelector + ".delete-icon").click(remove);
+
+      //inline is declared in inline_svg.js
+      inline($(gridSelector + ".vote").get(0), function() {
+        $(gridSelector + ".vote").click(vote);
+      });
+    }
+  });
+}
 
 function vote(e) {
   var target = $(e.target).closest("svg").get(0);
