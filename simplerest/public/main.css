@@ -91,6 +91,8 @@ body {
   text-align: center; }
 
 #signin {
+  margin-left: 50%;
+  transform: translateX(-50%);
   cursor: pointer;
   border: none;
   border-radius: 5px;
@@ -99,14 +101,16 @@ body {
   font-family: "Freight Text";
   width: 5em;
   height: 1.5em; }
+  #signin a {
+    text-decoration: none; }
   #signin p {
-    vertical-align: middle;
+    position: relative;
+    top: -0.35vw;
     font-weight: bold;
     color: #E0E0E0;
-    vertical-align: top;
     display: inline; }
   #signin img {
-    vertical-align: middle;
+    margin-top: 0.7vw;
     width: 1em;
     height: 1em; }
 

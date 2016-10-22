@@ -10,16 +10,23 @@
   </head>
   <body>
   <div class="header">
-    <div id="logout"><a href="/logout">Logout</a></div>
-    <div id="yourentries"><a href="/entries/{{user}}">Your Entries</a></div>
-    <div id="name">{{user}}</div>
+    {{#if user}}
+      <div id="logout"><a href="/logout">Logout</a></div>
+      <div id="yourentries"><a href="/entries/{{user}}">Your Entries</a></div>
+      <div id="name">{{user}}</div>
+    {{else}}
+      <div id="logout"><a href="/">Sign in</a></div>
+      <div id="name">Not logged in.</div>
+    {{/if}}
   </div>
   <div class="grid">
-    <div class="grid-item add-entry">
-      <input id="source-input" type="text" placeholder="Source.."/><br />
-      <input maxlength="40" id="description-input" type="text" placeholder="Description.."/>
-      <p id="add-entry" class="description">Add Entry</p>
-    </div>
+    {{#if user}}
+      <div class="grid-item add-entry">
+        <input id="source-input" type="text" placeholder="Source.."/><br />
+        <input maxlength="40" id="description-input" type="text" placeholder="Description.."/>
+        <p id="add-entry" class="description">Add Entry</p>
+      </div>
+    {{/if}}
     <div class="grid-sizer"></div>
     {{#entries}}
       {{{html}}}
