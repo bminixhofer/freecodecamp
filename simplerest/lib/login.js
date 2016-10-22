@@ -37,6 +37,6 @@ module.exports = function login(app) {
   const twitter = new Twitter({
     consumerKey: process.env.CONSUMER_KEY,
     consumerSecret: process.env.CONSUMER_SECRET,
-    callback: 'http://127.0.0.1:8080/confirm-login'
+    callback: 'fcc-simplerest.herokuapp.com/confirm-login'
   });
 };
