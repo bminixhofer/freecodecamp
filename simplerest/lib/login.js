@@ -1,4 +1,4 @@
-"use strict";
+'use strict';
 
 const Twitter = require('node-twitter-api');
 const secret = require('../twitter-api.js');

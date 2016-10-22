@@ -1,3 +1,5 @@
+'use strict';
+
 const express = require('express');
 const login = require('./lib/login.js');
 const mongodb = require('mongodb');
