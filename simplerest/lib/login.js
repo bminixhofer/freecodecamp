@@ -1,7 +1,6 @@
 'use strict';
 
 const Twitter = require('node-twitter-api');
-const secret = require('../twitter-api.js');
 
 module.exports = function login(app) {
   let _requestSecret;
@@ -36,8 +35,8 @@ module.exports = function login(app) {
   console.log(process.env.CONSUMER_SECRET);
   console.log(process.env.CONSUMER_KEY);
   const twitter = new Twitter({
-    consumerKey: process.env.CONSUMER_KEY || secret.consumerKey,
-    consumerSecret: process.env.CONSUMER_SECRET || secret.consumerSecret,
+    consumerKey: process.env.CONSUMER_KEY,
+    consumerSecret: process.env.CONSUMER_SECRET,
     callback: 'http://127.0.0.1:8080/confirm-login'
   });
 };
