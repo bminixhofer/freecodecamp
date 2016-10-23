@@ -31,6 +31,6 @@ function inline(element, callback){
         $img.replaceWith($svg);
 
         // Execute an optional callback
-        callback();
+        if(typeof callback === 'function') callback();
     }, 'xml');
 }
