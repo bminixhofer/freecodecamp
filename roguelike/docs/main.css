@@ -17,6 +17,7 @@ html {
     color: white; }
   .wrapper canvas {
     left: 50%;
+    -webkit-transform: translateX(-50%);
     transform: translateX(-50%); }
 
 .info {
@@ -37,6 +38,7 @@ html {
     .info .health span {
       background-color: red; }
   .info .experience {
+    -webkit-transform: translateX(-50%);
     transform: translateX(-50%);
     margin-top: 15px;
     margin-left: 50%;
