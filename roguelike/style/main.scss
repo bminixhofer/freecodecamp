@@ -24,6 +24,7 @@ html {
   }
   canvas {
     left: 50%;
+    -webkit-transform: translateX(-50%);
     transform: translateX(-50%);
   }
 }
@@ -54,6 +55,7 @@ html {
   }
 
   .experience {
+    -webkit-transform: translateX(-50%);
     transform: translateX(-50%);
     margin-top: 15px;
     margin-left: 50%;
