@@ -10,6 +10,7 @@ $google-blue: #3369E8;
   font-family: 'Open Sans';
   display: inline-block;
   margin-left: 50%;
+  -webkit-transform: translateX(-50%);
   transform: translateX(-50%);
   width: 700px;
   @include box-shadow();
