@@ -2,6 +2,7 @@
   font-family: 'Open Sans';
   display: inline-block;
   margin-left: 50%;
+  -webkit-transform: translateX(-50%);
   transform: translateX(-50%);
   width: 700px;
   -webkit-box-shadow: 4px 4px 5px 0px rgba(0, 0, 0, 0.5);
