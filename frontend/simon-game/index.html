@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en" >
+
+<head>
+  <meta charset="UTF-8">
+  <title>A Pen by  Benjamin Minixhofer</title>
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
+<script src="https://code.createjs.com/soundjs-0.6.1.min.js"></script>
+
+  
+  
+      <link rel="stylesheet" href="css/style.css">
+
+  
+</head>
+
+<body>
+
+    <body ng-app="SimonGame">
+  <div class="game" ng-controller="SimonCtrl as simon">
+    <h1>Simon Game</h1>
+    <div ng-click='simon.clicked("green")' ng-class="simon.state.green" id="green-part"></div>
+    <div ng-click='simon.clicked("red")' ng-class="simon.state.red" id="red-part"></div>
+    <br>
+    <div ng-click='simon.clicked("yellow")' ng-class="simon.state.yellow" id="yellow-part"></div>
+    <div ng-click='simon.clicked("blue")' ng-class="simon.state.blue" id="blue-part"></div>
+    <br>
+    <button ng-class='(simon.buttonText === "") ? "score" : "start"' ng-click="simon.startGame()" id="start-button">{{simon.buttonText || "Score: " + ((simon.currentSequence.length > 0) ? simon.currentSequence.length - 1 : 0)}}</button>
+  </div>
+</body>
+  <script src='http://cdnjs.cloudflare.com/ajax/libs/angular.js/1.3.14/angular.min.js'></script>
+
+  
+
+    <script  src="js/index.js"></script>
+
+
+
+
+</body>
+
+</html>

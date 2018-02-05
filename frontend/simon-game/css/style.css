@@ -1,0 +1,198 @@
+/*pulse effect from http://www.wifeo.com/code/50-pure-css-pulse-button.html*/
+
+* {
+  -moz-user-select: none;
+  -khtml-user-select: none;
+  -webkit-user-select: none;
+  -o-user-select: none;
+  transition: all 0.3s !important;
+}
+
+.score {
+  cursor: normal;
+  font-size: 27px !important;
+  color: #C4C5C5 !important;
+  background-color: #0E171D !important;
+}
+
+h1 {
+  color: #FFF;
+  font-size: 40px;
+  margin-bottom: 90px;
+}
+
+.game {
+  text-align: center;
+}
+
+.game div {
+  display: inline-block;
+  height: 100px;
+  width: 100px;
+  margin: 1px;
+}
+
+#start-button {
+  background-color: #FFF;
+  color: #0E171D;
+  margin-top: 30px;
+  outline: 0;
+  border: 0;
+  font-size: 25px;
+  width: 150px;
+  height: 40px;
+}
+
+#green-part {
+  background-color: #52A55C;
+  border-radius: 95px 0 0 0;
+}
+
+.green-targeted {
+  box-shadow: 0 0 0 0 rgba(83, 153, 50, 0.7);
+  -webkit-animation: pulse-green 0.75s infinite cubic-bezier(0.66, 0, 0, 1);
+  -moz-animation: pulse-green 0.75s infinite cubic-bezier(0.66, 0, 0, 1);
+  -ms-animation: pulse-green 0.75s infinite cubic-bezier(0.66, 0, 0, 1);
+  animation: pulse-green 0.75s infinite cubic-bezier(0.66, 0, 0, 1);
+}
+
+#red-part {
+  background-color: #D46F6A;
+  border-radius: 0 95px 0 0;
+}
+
+.red-targeted {
+  box-shadow: 0 0 0 0 rgba(165, 54, 76, 0.7);
+  -webkit-animation: pulse-red 0.75s infinite cubic-bezier(0.66, 0, 0, 1);
+  -moz-animation: pulse-red 0.75s infinite cubic-bezier(0.66, 0, 0, 1);
+  -ms-animation: pulse-red 0.75s infinite cubic-bezier(0.66, 0, 0, 1);
+  animation: pulse-red 0.75s infinite cubic-bezier(0.66, 0, 0, 1);
+}
+
+#yellow-part {
+  background-color: #D4BE6A;
+  border-radius: 0 0 0 95px;
+}
+
+.yellow-targeted {
+  box-shadow: 0 0 0 0 rgba(177, 150, 58, 0.7);
+  -webkit-animation: pulse-yellow 0.75s infinite cubic-bezier(0.66, 0, 0, 1);
+  -moz-animation: pulse-yellow 0.75s infinite cubic-bezier(0.66, 0, 0, 1);
+  -ms-animation: pulse-yellow 0.75s infinite cubic-bezier(0.66, 0, 0, 1);
+  animation: pulse-yellow 0.75s infinite cubic-bezier(0.66, 0, 0, 1);
+}
+
+#blue-part {
+  background-color: #5B5393;
+  border-radius: 0 0 95px 0;
+}
+
+.blue-targeted {
+  box-shadow: 0 0 0 0 rgba(58, 52, 123, 0.7);
+  -webkit-animation: pulse-blue 0.75s infinite cubic-bezier(0.66, 0, 0, 1);
+  -moz-animation: pulse-blue 0.75s infinite cubic-bezier(0.66, 0, 0, 1);
+  -ms-animation: pulse-blue 0.75s infinite cubic-bezier(0.66, 0, 0, 1);
+  animation: pulse-blue 0.75s infinite cubic-bezier(0.66, 0, 0, 1);
+}
+
+body {
+  background-color: #0E171D;
+  padding-top: 100px;
+  min-width: 400px;
+}
+
+@-webkit-keyframes pulse-green {
+  to {
+    box-shadow: 0 0 0 45px rgba(83, 153, 50, 0);
+  }
+}
+
+@-moz-keyframes pulse-green {
+  to {
+    box-shadow: 0 0 0 45px rgba(83, 153, 50, 0);
+  }
+}
+
+@-ms-keyframes pulse-green {
+  to {
+    box-shadow: 0 0 0 45px rgba(83, 153, 50, 0);
+  }
+}
+
+@keyframes pulse-green {
+  to {
+    box-shadow: 0 0 0 45px rgba(83, 153, 50, 0);
+  }
+}
+
+@-webkit-keyframes pulse-blue {
+  to {
+    box-shadow: 0 0 0 45px rgba(58, 52, 123, 0);
+  }
+}
+
+@-moz-keyframes pulse-blue {
+  to {
+    box-shadow: 0 0 0 45px rgba(58, 52, 123, 0);
+  }
+}
+
+@-ms-keyframes pulse-blue {
+  to {
+    box-shadow: 0 0 0 45px rgba(58, 52, 123, 0);
+  }
+}
+
+@keyframes pulse-blue {
+  to {
+    box-shadow: 0 0 0 45px rgba(58, 52, 123, 0);
+  }
+}
+
+@-webkit-keyframes pulse-yellow {
+  to {
+    box-shadow: 0 0 0 45px rgba(177, 150, 58, 0);
+  }
+}
+
+@-moz-keyframes pulse-yellow {
+  to {
+    box-shadow: 0 0 0 45px rgba(177, 150, 58, 0);
+  }
+}
+
+@-ms-keyframes pulse-yellow {
+  to {
+    box-shadow: 0 0 0 45px rgba(177, 150, 58, 0);
+  }
+}
+
+@keyframes pulse-yellow {
+  to {
+    box-shadow: 0 0 0 45px rgba(177, 150, 58, 0);
+  }
+}
+
+@-webkit-keyframes pulse-red {
+  to {
+    box-shadow: 0 0 0 45px rgba(165, 54, 76, 0);
+  }
+}
+
+@-moz-keyframes pulse-red {
+  to {
+    box-shadow: 0 0 0 45px rgba(165, 54, 76, 0);
+  }
+}
+
+@-ms-keyframes pulse-red {
+  to {
+    box-shadow: 0 0 0 45px rgba(165, 54, 76, 0);
+  }
+}
+
+@keyframes pulse-red {
+  to {
+    box-shadow: 0 0 0 45px rgba(165, 54, 76, 0);
+  }
+}

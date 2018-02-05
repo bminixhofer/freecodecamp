@@ -1,0 +1,126 @@
+* {
+  transition: all 0.5s !important;
+}
+
+#gameoverScreen {
+  text-align: center;
+  top: 593px;
+  width: 600px;
+  height: 202px;
+  background-color: white;
+  
+  position: absolute;
+  
+  left: 0;
+  right: 0;
+  margin: auto;
+  
+  border-radius: 10px;
+  opacity: 0;
+}
+
+#container div {
+  display: inline-block;
+  background-color: white;
+  width: 200px;
+  height: 200px;
+  margin: 3px 3px;
+  border-radius: 7px;
+  overflow: hidden;
+}
+
+h1 {
+  text-align: center;
+  font-family: "Open Sans";
+  color: white;
+  font-size: 100px;
+}
+
+h3 {
+  font-family: "Open Sans";
+  font-size: 130px;
+  margin-top: 0px;
+  color: #8791DB;
+}
+
+h4 {
+  font-size: 43px;
+  font-family: "Open Sans";
+  color: #8791DB;
+  margin-top: 15px;
+  margin-bottom: 35px;
+}
+
+#container {
+  text-align: center;
+  height: 700px;
+  margin: auto;
+  margin-top: 180px;
+  width: 700px;
+}
+
+#prompt {
+  border-radius: 10px;
+  position: absolute;
+  padding-top: 25px;
+  margin-left: auto;
+  margin-right: auto;
+  left: 0;
+  right: 0;
+  
+  margin-top: 310px;
+  width: 450px;
+  height: 250px;
+  background-color: white;
+  
+  opacity: 0;
+}
+
+button {
+  width: 130px;
+  height: 60px;
+  
+	font-family: "Open Sans";
+	font-size: 36px;
+  color: white;
+	background-color: #8791DB;
+	padding: -10px 20px;
+  border: 1px;
+  border-radius: 5px;
+}
+
+#prompt button {
+  bottom: 25px;
+  position: absolute;
+}
+
+button:hover {
+  background-color: #5D69C6;
+}
+
+.button-x {
+  left: 45px;
+}
+
+.button-o {
+  right: 45px;
+}
+
+h2 {
+  font-family: "Open Sans";
+  text-align: center;
+  color: #8791DB;
+  font-size: 35px;
+}
+
+body {
+  background-color: #8791DB;
+}
+
+.loaded {
+  opacity: 1 !important;
+}
+
+.hidden {
+  display: none;
+}

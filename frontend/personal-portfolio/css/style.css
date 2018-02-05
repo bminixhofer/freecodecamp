@@ -1,0 +1,150 @@
+#header {
+  position: fixed;
+  background-color: #3E5C5F;
+  width: 100%;
+  height: 50px;
+  z-index: 1;
+}
+
+.wrapper {
+  display: inline-block;
+  float: right;
+  margin-right: 30px;
+}
+
+.wrapper div {
+  padding-top: 15px;
+  text-align: center;
+  margin-left: 10px;
+  height: 50px;
+  display: inline-block;
+  width: 60px;
+}
+
+.wrapper div:hover {
+  background-color: #FFFFFF;
+}
+
+a:link {
+  text-decoration: none;
+  color: #949494;
+}
+
+a:visited {
+  color: #949494;
+}
+
+#home {
+  -webkit-filter: hue-rotate(90deg);
+  padding-top: 250px;
+  width: 100%;
+  background-image: url("https://static.pexels.com/photos/8230/sky-night-sun-leaf.jpg");
+  background-size: 2000px;
+  height: 750px;
+}
+
+#about {
+  padding-top: 80px;
+  width: 100%;
+  height: 500px;
+}
+
+#about h1 {
+  font-size: 60px;
+  margin-bottom: 30px; 
+}
+
+#about p {
+  margin: 0 auto;
+  width: 700px;
+  font-size: 23px;
+}
+
+#portfolio {
+  padding-left: 20px;
+  padding-right: 20px;
+  padding-top: 60px;
+  background-color: #EFEFEF;
+  width: 100%;
+  padding-bottom: 100px;
+}
+
+#portfolio h3 {
+  font-size: 24px;
+}
+
+#contact {
+  padding-top: 20px;
+  width: 100%;
+  height: 400px;
+  background-color: #FFFFFF;
+}
+
+#home h1 {
+  text-shadow: 2px 2px black;
+  color: #FFFFFF;
+  font-size: 60px;
+}
+
+#portfolio h1 {
+  color: #3F5D5F;
+  font-size: 50px;
+}
+
+#contact h1 {
+  color: #0F0F0F;
+  margin-bottom: 90px;
+}
+
+.projects {
+  margin-top: 70px;
+  text-align: center;
+}
+
+.projects div {
+  -webkit-box-shadow: 3px 3px 10px 0px rgba(0,0,0,0.75);
+  -moz-box-shadow: 3px 3px 10px 0px rgba(0,0,0,0.75);
+  box-shadow: 3px 3px 10px 0px rgba(0,0,0,0.75);
+  margin-left: 50px;
+  margin-top: 50px;
+  width: 420px;
+  height: 240px;
+  display: inline-block;
+}
+
+.projects div img {
+  width: 420px;
+  height: 240px;
+}
+
+.projects div h3 {
+  margin-top: 30px;
+  margin-bottom: -12px;
+}
+
+p {
+  font-size: 16px;
+  margin-top: 20px;
+}
+
+span {
+  font-size: 18px;
+}
+
+.link-wrapper {
+  width: 180px;
+  margin: 0 auto;
+}
+
+#header h3 {
+  margin-left: 7px;
+  margin-top: 17px;
+  color: #949494;
+  font-size: 17px;
+  display: inline-block;
+}
+
+.logo {
+  margin-left: 5px;
+  width: 50px;
+}

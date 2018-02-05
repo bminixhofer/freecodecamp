@@ -1,0 +1,59 @@
+* {
+  font-family: "Open Sans" !important;
+}
+
+h1 {
+  margin-top: 120px;
+  margin-bottom: 40px;
+}
+
+.btnCE {
+  background-color: #B51921;
+  color: #CDC4C5;
+}
+
+.btnDEL {
+  background-color: #B51921;
+  color: #CDC4C5;
+}
+
+button:last-child {
+  background-color: #127E50;
+  color: #CDC4C5;
+}
+
+.result {
+  border-radius: 10px;
+  margin: 0 auto;
+  padding-top: 10px;
+  width: 350px;
+  height: 60px;
+  background-color: white;
+  font-size: 30px;
+}
+
+.buttons {
+  position: relative;
+  margin: 0 auto;
+  width: 400px;
+  bottom: -30px;
+}
+
+button {
+  margin: 2px 2px;
+  outline: 0;
+  background-color: white;
+  width: 60px;
+  height: 60px;
+  display: inline-block;
+}
+
+.calculator {
+  padding-top: 40px;
+  text-align: center;
+  border-radius: 10px;
+  margin: 0 auto;
+  background-color: grey;
+  width: 500px;
+  height: 350px;
+}

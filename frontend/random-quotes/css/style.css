@@ -1,0 +1,49 @@
+*{
+  font-family: "Catamaran";
+}
+
+body {
+  background-color: #FDFEFF;
+}
+
+h1 {
+  color: #032736;
+  margin-top: 50px;
+}
+
+.button-main {
+  border-radius: 9px;
+  position: absolute;
+  margin: 0 auto 0 700px;
+  width: auto;
+  background-color: #F74389;
+  color: #FFFFFF;
+  height: 100px;
+  display: block;
+  font-size: 10px;
+  font-family: "Catamaran";
+}
+
+.button-main-large {
+  margin: 0 auto !important;
+  bottom: 10%;
+  left: 50%;
+  transform: translateX(-50%);
+}
+
+.button-main:hover {
+  color: #F74389;
+  background-color: #FFFFFF;
+}
+
+.quote-main {
+  line-height: 110%;
+  font-size: 33px;
+  margin: 50px auto 0 auto;
+  width: 600px;
+  color: #000000;
+}
+
+.quote-small {
+  margin: 0 0 !important;
+}

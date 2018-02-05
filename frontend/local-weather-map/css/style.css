@@ -1,0 +1,58 @@
+* {
+  font-family: "Lato";
+  -moz-user-select: none;  
+  -webkit-user-select: none;  
+  -ms-user-select: none; 
+}
+
+a:link {
+  target="_blank";
+  color: #EC53AA;
+}
+
+a:visited {
+  color: #EC53AA;
+}
+
+.credit {
+  float: right;
+  color: #EEEEEE;
+  margin-top: 12px;
+  margin-right: 2%;
+}
+
+.title {
+  color: #D62871;
+}
+
+#area {
+  display: inline-block;
+  color: #EEEEEE;
+  margin-left: 2%;
+}
+
+#weather-img {
+  display: block;
+  margin: 200px auto -30px auto;
+}
+
+#weather {
+  color: #EEEEEE;
+  font-size: 
+}
+
+#wind {
+  color: #EEEEEE;
+}
+
+h5 {
+  color: #D62871;
+  position: absolute;
+  transform: translateX(-50%);
+  left: 50%;
+  top: 95%;
+}
+
+body {
+  background-color: #050405;
+}

@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en" >
+
+<head>
+  <meta charset="UTF-8">
+  <title>Calculator</title>
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
+<link rel="stylesheet" href="https://yui.yahooapis.com/pure/0.6.0/pure-min.css">
+<link href='https://fonts.googleapis.com/css?family=Open+Sans' rel='stylesheet' type='text/css'>
+  
+  
+      <link rel="stylesheet" href="css/style.css">
+
+  
+</head>
+
+<body>
+
+  <body ng-app="ElectronicCalc">
+  <h1 class="text-center" style="font-size: 40px">Electronic Calculator</h1>
+  <div class="calculator" ng-controller="CalcCtrl as calc">
+    <div class="result">
+      {{calc.result}}
+    </div><div class="buttons">
+    <button ng-repeat="button in calc.buttons" ng-click="calc.add(button)" class="pure-button btn{{button}}">
+      {{button}}
+    </button></div>
+  </div>
+</body>
+  <script src='http://cdnjs.cloudflare.com/ajax/libs/angular.js/1.3.14/angular.min.js'></script>
+<script src='https://rawgithub.com/josdejong/mathjs/master/dist/math.js'></script>
+
+  
+
+    <script  src="js/index.js"></script>
+
+
+
+
+</body>
+
+</html>
