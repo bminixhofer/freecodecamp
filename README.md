@@ -37,11 +37,13 @@
 
 ### Backend
 
+Note: These projects may take some time to load because they are hosted for free at [Heroku](https://www.heroku.com).
+
 - Voting App ([Demo](https://appvote.herokuapp.com), [Code](https://github.com/bminixhofer/freecodecamp/tree/master/backend/appvote))
 - File Metadata Microservice ([Demo](https://bminixhofer-file-metadata.herokuapp.com), [Code](https://github.com/bminixhofer/freecodecamp/tree/master/backend/file-metadata-service))
 - Header Parser Microservice ([Demo](https://bminixhofer-header-parser-ms.herokuapp.com), [Code](https://github.com/bminixhofer/freecodecamp/tree/master/backend/header-parser-service))
 - Image Search Microservice ([Demo](https://bminixhofer-image-search.herokuapp.com), [Code](https://github.com/bminixhofer/freecodecamp/tree/master/backend/image-search))
-- Nightlife Coordination App ([Demo](https://nightlifecoordinatino.herokuapp.com), [Code](https://github.com/bminixhofer/freecodecamp/tree/master/backend/nightlife-coordination))
+- Nightlife Coordination App ([Demo](https://nightlifecoordination.herokuapp.com), [Code](https://github.com/bminixhofer/freecodecamp/tree/master/backend/nightlife-coordination))
 - Pinterest Clone ([Demo](https://fcc-simplerest.herokuapp.com), [Code](https://github.com/bminixhofer/freecodecamp/tree/master/backend/simplerest))
 - Stockmarket Chart ([Demo](https://stockmarket-chart.herokuapp.com), [Code](https://github.com/bminixhofer/freecodecamp/tree/master/backend/stockmarket-chart))
 - Timestamp Microservice ([Demo](https://bminixhofer-timestamp-ms.herokuapp.com), [Code](https://github.com/bminixhofer/freecodecamp/tree/master/backend/timestamp-service))
