@@ -1,60 +1,53 @@
 <!DOCTYPE html>
-<html lang="en" >
+<html lang="en">
 
 <head>
   <meta charset="UTF-8">
-  <title>A Pen by  Benjamin Minixhofer</title>
+  <title>A Pen by Benjamin Minixhofer</title>
   <link href='https://fonts.googleapis.com/css?family=Catamaran' rel='stylesheet' type='text/css'>
-<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
-
-
-  
-  
-      <link rel="stylesheet" href="css/style.css">
-
-  
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
+  <link rel="stylesheet" href="css/style.css">
 </head>
 
 <body>
-
   <html ng-app="camperNews">
+
   <body ng-controller="NewsController as news">
     <h1 class="text-center">Camper News</h1>
     <div>
-      <section class="container" ng-repeat="story in news.stories"><a target="_blank" href="{{story.link}}">
-        <div class="thumbnail" style="background-image:url({{story.image}})"></div>
-        <div class="content">
-          <div class="text">
-            <strong><h2>{{story.headline}}</h2></strong>
-            <p> {{story.metaDescription}}</p>
-          </div>
-          <div class="upvote"><h3>{{story.rank}}</h3>
-              <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEAAAABACAYAAACqaXHeAAADCElEQVR4Xu2bUW4TMRCGZ9JKvJo3JGiSnoDmBHhPQHqDcgLSE1BOQDhBe4OGE8ScoOEEZFOQeMOvRSFTbdpKpQq79uzYEXTyGo/t+WTP/DO7i7Cln9mzQ+jAh/XyKzj2l26yja3gNhY1z+0B7MIUAU21PgF5WELhv7tZ7v1sB0DPXiDgwX1nCWjmSzf47wGYrj1BxHebHCWi937hTnJCyHoCzAtrcQendQ7Sbyr8N+dyQcgGwPStAYLq6PdrAQDNAWHg587ngJAPQNeeIuJRiFNE9NEv3ChkbNsxWQBUKQ87eB6zWVrRYY7UmBzA7dH/epfyQiGsUyPCfuqrkB5Az54j4DDU8QepceJLd8ixDbVJCsB07QgRb9Qe80dEx37hxkzzRrNkAMwz24cn66i/Vnvc3/oqXMHA/3Bz7hx1dukAbFB7XAdSqsQkAOrUHhtCIpUoDqAqdHAXL7iO1oqkJQ2kCyZRAKFqjwunugqAUEimRlkAXTtGxLdcB0PspFWiGICQQifEwZAxkgWTCACu2gtxdtMYSZUoA6CF2msBQUQltgZg9uwRdvCU60gbO1rRG3/pztrM0QqAlNrjOiChEtsB6NmqsWm5DkjYEZDzpSu4c7EBpFB7XCfaFEwsACnVHhsCUyVGA7hNedXR/6Otzd24lB23YIoHkEHtcaFwVGIUgJxqjw0hsq0eB6BXOAR4xd1cDjsC+OzLaXBmigNQPdPbgeb+HuIQAV5KOkwAX4Co+QHqLziL6R5FAYhxyHTtBBFfx9j8bSwRffIL1wyesVg6AAGPwUL3S8wUFzJ/MgDV4k97BYVsomnMz3KabJ/JJlYAegL0CmgM0CCoWUDToOqAJpET8r8KIVWCKoWTSfZkE2stoLWA1gJitcCjb4hIvg/wUHf8E0FQAUT2+kPU5d0YPQExtGLHSvUD9AroFUj3GY3GgNh7HTNeY4BQT1CDoAbBxx4Er2g/5pl/TJxKmgVMr5i1fVGCAEpfTms/toxxOGsxdPOVOI65r9VUr7vAkkbSH0nch3ANlmHAUBH3eqoAAAAASUVORK5CYII="/>
+      <section class="container" ng-repeat="story in news.stories">
+        <a target="_blank" href="{{story.link}}">
+          <div class="thumbnail" style="background-image:url({{story.image}})"></div>
+          <div class="content">
+            <div class="text">
+              <strong><h2>{{story.headline}}</h2></strong>
+              <p> {{story.metaDescription}}</p>
             </div>
-        </div>  
-        <a target="_blank" href="https://www.freecodecamp.com/{{story.author.username}}"><section class="author">
-          <div class="author-inner">
-            <h2 class="text-center" style="margin-top: 15px">Author</h2>
-            <div class="author-profile">
-              <img class="author-img" ng-src="{{story.author.picture}}"/>
-              <p>{{story.author.username}}</p>
-            </div>  
+            <div class="upvote">
+              <h3>{{story.rank}}</h3>
+              <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEAAAABACAYAAACqaXHeAAADCElEQVR4Xu2bUW4TMRCGZ9JKvJo3JGiSnoDmBHhPQHqDcgLSE1BOQDhBe4OGE8ScoOEEZFOQeMOvRSFTbdpKpQq79uzYEXTyGo/t+WTP/DO7i7Cln9mzQ+jAh/XyKzj2l26yja3gNhY1z+0B7MIUAU21PgF5WELhv7tZ7v1sB0DPXiDgwX1nCWjmSzf47wGYrj1BxHebHCWi937hTnJCyHoCzAtrcQendQ7Sbyr8N+dyQcgGwPStAYLq6PdrAQDNAWHg587ngJAPQNeeIuJRiFNE9NEv3ChkbNsxWQBUKQ87eB6zWVrRYY7UmBzA7dH/epfyQiGsUyPCfuqrkB5Az54j4DDU8QepceJLd8ixDbVJCsB07QgRb9Qe80dEx37hxkzzRrNkAMwz24cn66i/Vnvc3/oqXMHA/3Bz7hx1dukAbFB7XAdSqsQkAOrUHhtCIpUoDqAqdHAXL7iO1oqkJQ2kCyZRAKFqjwunugqAUEimRlkAXTtGxLdcB0PspFWiGICQQifEwZAxkgWTCACu2gtxdtMYSZUoA6CF2msBQUQltgZg9uwRdvCU60gbO1rRG3/pztrM0QqAlNrjOiChEtsB6NmqsWm5DkjYEZDzpSu4c7EBpFB7XCfaFEwsACnVHhsCUyVGA7hNedXR/6Otzd24lB23YIoHkEHtcaFwVGIUgJxqjw0hsq0eB6BXOAR4xd1cDjsC+OzLaXBmigNQPdPbgeb+HuIQAV5KOkwAX4Co+QHqLziL6R5FAYhxyHTtBBFfx9j8bSwRffIL1wyesVg6AAGPwUL3S8wUFzJ/MgDV4k97BYVsomnMz3KabJ/JJlYAegL0CmgM0CCoWUDToOqAJpET8r8KIVWCKoWTSfZkE2stoLWA1gJitcCjb4hIvg/wUHf8E0FQAUT2+kPU5d0YPQExtGLHSvUD9AroFUj3GY3GgNh7HTNeY4BQT1CDoAbBxx4Er2g/5pl/TJxKmgVMr5i1fVGCAEpfTms/toxxOGsxdPOVOI65r9VUr7vAkkbSH0nch3ANlmHAUBH3eqoAAAAASUVORK5CYII="
+              />
+            </div>
           </div>
-        </section></a>
-      </a></section>
+          <a target="_blank" href="https://www.freecodecamp.com/{{story.author.username}}">
+            <section class="author">
+              <div class="author-inner">
+                <h2 class="text-center" style="margin-top: 15px">Author</h2>
+                <div class="author-profile">
+                  <img class="author-img" ng-src="{{story.author.picture}}" />
+                  <p>{{story.author.username}}</p>
+                </div>
+              </div>
+            </section>
+          </a>
+        </a>
+      </section>
     </div>
   </body>
-</html>
-  <script src='http://cdnjs.cloudflare.com/ajax/libs/angular.js/1.3.14/angular.min.js'></script>
-<script src='http://cdnjs.cloudflare.com/ajax/libs/jquery/2.1.3/jquery.min.js'></script>
 
-  
-
-    <script  src="js/index.js"></script>
-
-
-
-
+  </html>
+  <script src='https://cdnjs.cloudflare.com/ajax/libs/angular.js/1.3.14/angular.min.js'></script>
+  <script src='https://cdnjs.cloudflare.com/ajax/libs/jquery/2.1.3/jquery.min.js'></script>
+  <script src="js/index.js"></script>
 </body>
-
 </html>

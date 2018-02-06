@@ -1,38 +1,32 @@
 <!DOCTYPE html>
-<html lang="en" >
+<html lang="en">
 
 <head>
   <meta charset="UTF-8">
   <title>Pomodoro Clock</title>
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
-<link href='https://fonts.googleapis.com/css?family=Bitter' rel='stylesheet' type='text/css'>
-  
-  
-      <link rel="stylesheet" href="css/style.css">
-
-  
+  <link href='https://fonts.googleapis.com/css?family=Bitter' rel='stylesheet' type='text/css'>
+  <link rel="stylesheet" href="css/style.css">
 </head>
 
 <body>
-
   <h1 class="text-center">Pomodoro Timer</h1>
-<div class="pomodoro-times">
-<div class="session-div"><button class="session-time-decrease"><img class="flipped-img" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEAAAABACAYAAACqaXHeAAAB80lEQVR4Xt3b4U3DMBDF8dcJgA0YgQ2ACWAEGIEN2KCwAUwAG8AGwASwATAB1UkGAWqr2GffvZd8qxS3/f/ippIjL+A7dgEsARwB2AfwCOAawL3vbeNGLxwfZcFPAAzh/3ED4Nzx3mFDPQAP5cpv+rISCK0AdtXfJ1wmeoRWAPvN2wyYclAjtAJY+NeU+nIOLYIHwO70J+oIHgC7D7wB2FFG8ABY90H575dF8ALII/QAkEboBSCL0BNAEqE3gBzCCAAphFEAMggjASQQRgPQI0QAUCNEAdAiRAJQIkQD0CFkAFAhZAHQIGQCUCBkA6QjMACkIrAApCEwAaQgsAG0IlwAuKpYnf45lRGgBeEDwN6cAFoQjssSfZUD6wz4BrDnj+sev6+LnBWAPXCpif+sgPqDxzgDauMtaDY3wZb4WwBnVT/8XyczzYDweHNgAUiJZwFIi2cASI3PBkiPzwSgiM8CoInPAKCKjwagi48EoIyPAqCNjwCgjh8NQB8/EkAifhSATPwIAKn43gBy8T0BJON7AcjG9wCQjvcC2Hr9a+VytGsBs3Xhc9s4z5rgHYDTii9FF++dATWbpijjPQA12+Zo4z0AUzdOUsd7AGysbZQ+3HIPoI/3Atjm6ecN2+Yk4r0ANt4QLsu/gW2deymvZbbPrwAw3IJBUnddlQAAAABJRU5ErkJggg=="/></button><h3  class="session-time text-center">25</h3>
-<button class="session-time-increase"><img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEAAAABACAYAAACqaXHeAAAB80lEQVR4Xt3b4U3DMBDF8dcJgA0YgQ2ACWAEGIEN2KCwAUwAG8AGwASwATAB1UkGAWqr2GffvZd8qxS3/f/ippIjL+A7dgEsARwB2AfwCOAawL3vbeNGLxwfZcFPAAzh/3ED4Nzx3mFDPQAP5cpv+rISCK0AdtXfJ1wmeoRWAPvN2wyYclAjtAJY+NeU+nIOLYIHwO70J+oIHgC7D7wB2FFG8ABY90H575dF8ALII/QAkEboBSCL0BNAEqE3gBzCCAAphFEAMggjASQQRgPQI0QAUCNEAdAiRAJQIkQD0CFkAFAhZAHQIGQCUCBkA6QjMACkIrAApCEwAaQgsAG0IlwAuKpYnf45lRGgBeEDwN6cAFoQjssSfZUD6wz4BrDnj+sev6+LnBWAPXCpif+sgPqDxzgDauMtaDY3wZb4WwBnVT/8XyczzYDweHNgAUiJZwFIi2cASI3PBkiPzwSgiM8CoInPAKCKjwagi48EoIyPAqCNjwCgjh8NQB8/EkAifhSATPwIAKn43gBy8T0BJON7AcjG9wCQjvcC2Hr9a+VytGsBs3Xhc9s4z5rgHYDTii9FF++dATWbpijjPQA12+Zo4z0AUzdOUsd7AGysbZQ+3HIPoI/3Atjm6ecN2+Yk4r0ANt4QLsu/gW2deymvZbbPrwAw3IJBUnddlQAAAABJRU5ErkJggg=="/></button></div>
-<div class="break-div"><button class="break-time-decrease"><img class="flipped-img" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEAAAABACAYAAACqaXHeAAAB80lEQVR4Xt3b4U3DMBDF8dcJgA0YgQ2ACWAEGIEN2KCwAUwAG8AGwASwATAB1UkGAWqr2GffvZd8qxS3/f/ippIjL+A7dgEsARwB2AfwCOAawL3vbeNGLxwfZcFPAAzh/3ED4Nzx3mFDPQAP5cpv+rISCK0AdtXfJ1wmeoRWAPvN2wyYclAjtAJY+NeU+nIOLYIHwO70J+oIHgC7D7wB2FFG8ABY90H575dF8ALII/QAkEboBSCL0BNAEqE3gBzCCAAphFEAMggjASQQRgPQI0QAUCNEAdAiRAJQIkQD0CFkAFAhZAHQIGQCUCBkA6QjMACkIrAApCEwAaQgsAG0IlwAuKpYnf45lRGgBeEDwN6cAFoQjssSfZUD6wz4BrDnj+sev6+LnBWAPXCpif+sgPqDxzgDauMtaDY3wZb4WwBnVT/8XyczzYDweHNgAUiJZwFIi2cASI3PBkiPzwSgiM8CoInPAKCKjwagi48EoIyPAqCNjwCgjh8NQB8/EkAifhSATPwIAKn43gBy8T0BJON7AcjG9wCQjvcC2Hr9a+VytGsBs3Xhc9s4z5rgHYDTii9FF++dATWbpijjPQA12+Zo4z0AUzdOUsd7AGysbZQ+3HIPoI/3Atjm6ecN2+Yk4r0ANt4QLsu/gW2deymvZbbPrwAw3IJBUnddlQAAAABJRU5ErkJggg=="/></button><h3  class="break-time text-center">5</h3>
-<button class="break-time-increase"><img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEAAAABACAYAAACqaXHeAAAB80lEQVR4Xt3b4U3DMBDF8dcJgA0YgQ2ACWAEGIEN2KCwAUwAG8AGwASwATAB1UkGAWqr2GffvZd8qxS3/f/ippIjL+A7dgEsARwB2AfwCOAawL3vbeNGLxwfZcFPAAzh/3ED4Nzx3mFDPQAP5cpv+rISCK0AdtXfJ1wmeoRWAPvN2wyYclAjtAJY+NeU+nIOLYIHwO70J+oIHgC7D7wB2FFG8ABY90H575dF8ALII/QAkEboBSCL0BNAEqE3gBzCCAAphFEAMggjASQQRgPQI0QAUCNEAdAiRAJQIkQD0CFkAFAhZAHQIGQCUCBkA6QjMACkIrAApCEwAaQgsAG0IlwAuKpYnf45lRGgBeEDwN6cAFoQjssSfZUD6wz4BrDnj+sev6+LnBWAPXCpif+sgPqDxzgDauMtaDY3wZb4WwBnVT/8XyczzYDweHNgAUiJZwFIi2cASI3PBkiPzwSgiM8CoInPAKCKjwagi48EoIyPAqCNjwCgjh8NQB8/EkAifhSATPwIAKn43gBy8T0BJON7AcjG9wCQjvcC2Hr9a+VytGsBs3Xhc9s4z5rgHYDTii9FF++dATWbpijjPQA12+Zo4z0AUzdOUsd7AGysbZQ+3HIPoI/3Atjm6ecN2+Yk4r0ANt4QLsu/gW2deymvZbbPrwAw3IJBUnddlQAAAABJRU5ErkJggg=="/></button></div>
-</div><div class="pomodoro-area">
-<h2 class="pomodoro-state">Session</h2>
-  <button class="pomodoro"></button></div>
-<div class="credit">Icons made by <a target="_blank" href="http://www.flaticon.com/authors/freepik" title="Freepik"><strong>Freepik</strong></a> from <a target="_blank" href="http://www.flaticon.com" title="Flaticon"><strong>www.flaticon.com</strong></a>             are licensed by <a target="_blank" href="http://creativecommons.org/licenses/by/3.0/" title="Creative Commons BY 3.0"><strong>CC BY 3.0</strong></a></div>
-  
-  
-
-    <script  src="js/index.js"></script>
-
-
-
+  <div class="pomodoro-times">
+    <div class="session-div"><button class="session-time-decrease"><img class="flipped-img" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEAAAABACAYAAACqaXHeAAAB80lEQVR4Xt3b4U3DMBDF8dcJgA0YgQ2ACWAEGIEN2KCwAUwAG8AGwASwATAB1UkGAWqr2GffvZd8qxS3/f/ippIjL+A7dgEsARwB2AfwCOAawL3vbeNGLxwfZcFPAAzh/3ED4Nzx3mFDPQAP5cpv+rISCK0AdtXfJ1wmeoRWAPvN2wyYclAjtAJY+NeU+nIOLYIHwO70J+oIHgC7D7wB2FFG8ABY90H575dF8ALII/QAkEboBSCL0BNAEqE3gBzCCAAphFEAMggjASQQRgPQI0QAUCNEAdAiRAJQIkQD0CFkAFAhZAHQIGQCUCBkA6QjMACkIrAApCEwAaQgsAG0IlwAuKpYnf45lRGgBeEDwN6cAFoQjssSfZUD6wz4BrDnj+sev6+LnBWAPXCpif+sgPqDxzgDauMtaDY3wZb4WwBnVT/8XyczzYDweHNgAUiJZwFIi2cASI3PBkiPzwSgiM8CoInPAKCKjwagi48EoIyPAqCNjwCgjh8NQB8/EkAifhSATPwIAKn43gBy8T0BJON7AcjG9wCQjvcC2Hr9a+VytGsBs3Xhc9s4z5rgHYDTii9FF++dATWbpijjPQA12+Zo4z0AUzdOUsd7AGysbZQ+3HIPoI/3Atjm6ecN2+Yk4r0ANt4QLsu/gW2deymvZbbPrwAw3IJBUnddlQAAAABJRU5ErkJggg=="/></button>
+      <h3
+        class="session-time text-center">25</h3>
+        <button class="session-time-increase"><img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEAAAABACAYAAACqaXHeAAAB80lEQVR4Xt3b4U3DMBDF8dcJgA0YgQ2ACWAEGIEN2KCwAUwAG8AGwASwATAB1UkGAWqr2GffvZd8qxS3/f/ippIjL+A7dgEsARwB2AfwCOAawL3vbeNGLxwfZcFPAAzh/3ED4Nzx3mFDPQAP5cpv+rISCK0AdtXfJ1wmeoRWAPvN2wyYclAjtAJY+NeU+nIOLYIHwO70J+oIHgC7D7wB2FFG8ABY90H575dF8ALII/QAkEboBSCL0BNAEqE3gBzCCAAphFEAMggjASQQRgPQI0QAUCNEAdAiRAJQIkQD0CFkAFAhZAHQIGQCUCBkA6QjMACkIrAApCEwAaQgsAG0IlwAuKpYnf45lRGgBeEDwN6cAFoQjssSfZUD6wz4BrDnj+sev6+LnBWAPXCpif+sgPqDxzgDauMtaDY3wZb4WwBnVT/8XyczzYDweHNgAUiJZwFIi2cASI3PBkiPzwSgiM8CoInPAKCKjwagi48EoIyPAqCNjwCgjh8NQB8/EkAifhSATPwIAKn43gBy8T0BJON7AcjG9wCQjvcC2Hr9a+VytGsBs3Xhc9s4z5rgHYDTii9FF++dATWbpijjPQA12+Zo4z0AUzdOUsd7AGysbZQ+3HIPoI/3Atjm6ecN2+Yk4r0ANt4QLsu/gW2deymvZbbPrwAw3IJBUnddlQAAAABJRU5ErkJggg=="/></button></div>
+    <div class="break-div"><button class="break-time-decrease"><img class="flipped-img" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEAAAABACAYAAACqaXHeAAAB80lEQVR4Xt3b4U3DMBDF8dcJgA0YgQ2ACWAEGIEN2KCwAUwAG8AGwASwATAB1UkGAWqr2GffvZd8qxS3/f/ippIjL+A7dgEsARwB2AfwCOAawL3vbeNGLxwfZcFPAAzh/3ED4Nzx3mFDPQAP5cpv+rISCK0AdtXfJ1wmeoRWAPvN2wyYclAjtAJY+NeU+nIOLYIHwO70J+oIHgC7D7wB2FFG8ABY90H575dF8ALII/QAkEboBSCL0BNAEqE3gBzCCAAphFEAMggjASQQRgPQI0QAUCNEAdAiRAJQIkQD0CFkAFAhZAHQIGQCUCBkA6QjMACkIrAApCEwAaQgsAG0IlwAuKpYnf45lRGgBeEDwN6cAFoQjssSfZUD6wz4BrDnj+sev6+LnBWAPXCpif+sgPqDxzgDauMtaDY3wZb4WwBnVT/8XyczzYDweHNgAUiJZwFIi2cASI3PBkiPzwSgiM8CoInPAKCKjwagi48EoIyPAqCNjwCgjh8NQB8/EkAifhSATPwIAKn43gBy8T0BJON7AcjG9wCQjvcC2Hr9a+VytGsBs3Xhc9s4z5rgHYDTii9FF++dATWbpijjPQA12+Zo4z0AUzdOUsd7AGysbZQ+3HIPoI/3Atjm6ecN2+Yk4r0ANt4QLsu/gW2deymvZbbPrwAw3IJBUnddlQAAAABJRU5ErkJggg=="/></button>
+      <h3
+        class="break-time text-center">5</h3>
+        <button class="break-time-increase"><img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEAAAABACAYAAACqaXHeAAAB80lEQVR4Xt3b4U3DMBDF8dcJgA0YgQ2ACWAEGIEN2KCwAUwAG8AGwASwATAB1UkGAWqr2GffvZd8qxS3/f/ippIjL+A7dgEsARwB2AfwCOAawL3vbeNGLxwfZcFPAAzh/3ED4Nzx3mFDPQAP5cpv+rISCK0AdtXfJ1wmeoRWAPvN2wyYclAjtAJY+NeU+nIOLYIHwO70J+oIHgC7D7wB2FFG8ABY90H575dF8ALII/QAkEboBSCL0BNAEqE3gBzCCAAphFEAMggjASQQRgPQI0QAUCNEAdAiRAJQIkQD0CFkAFAhZAHQIGQCUCBkA6QjMACkIrAApCEwAaQgsAG0IlwAuKpYnf45lRGgBeEDwN6cAFoQjssSfZUD6wz4BrDnj+sev6+LnBWAPXCpif+sgPqDxzgDauMtaDY3wZb4WwBnVT/8XyczzYDweHNgAUiJZwFIi2cASI3PBkiPzwSgiM8CoInPAKCKjwagi48EoIyPAqCNjwCgjh8NQB8/EkAifhSATPwIAKn43gBy8T0BJON7AcjG9wCQjvcC2Hr9a+VytGsBs3Xhc9s4z5rgHYDTii9FF++dATWbpijjPQA12+Zo4z0AUzdOUsd7AGysbZQ+3HIPoI/3Atjm6ecN2+Yk4r0ANt4QLsu/gW2deymvZbbPrwAw3IJBUnddlQAAAABJRU5ErkJggg=="/></button></div>
+  </div>
+  <div class="pomodoro-area">
+    <h2 class="pomodoro-state">Session</h2>
+    <button class="pomodoro"></button></div>
+  <div class="credit">Icons made by <a target="_blank" href="http://www.flaticon.com/authors/freepik" title="Freepik"><strong>Freepik</strong></a> from <a target="_blank" href="http://www.flaticon.com" title="Flaticon"><strong>www.flaticon.com</strong></a> are licensed by
+    <a target="_blank" href="http://creativecommons.org/licenses/by/3.0/" title="Creative Commons BY 3.0"><strong>CC BY 3.0</strong></a></div>
+  <script src="js/index.js"></script>
 
 </body>
-
 </html>
