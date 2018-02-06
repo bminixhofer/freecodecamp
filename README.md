@@ -21,3 +21,16 @@
 - Twitch.tv Streamer List ([Demo](https://bminixhofer.github.io/freecodecamp/frontend/streamer-list/), [Code](https://github.com/bminixhofer/freecodecamp/tree/master/frontend/streamer-list))
 - Tic Tac Toe ([Demo](https://bminixhofer.github.io/freecodecamp/frontend/tic-tac-toe/), [Code](https://github.com/bminixhofer/freecodecamp/tree/master/frontend/tic-tac-toe))
 - Wikipedia Viewer ([Demo](https://bminixhofer.github.io/freecodecamp/frontend/wikipedia-viewer/), [Code](https://github.com/bminixhofer/freecodecamp/tree/master/frontend/wikipedia-viewer))
+
+### Data Visualization
+
+- Bar Chart ([Demo](https://bminixhofer.github.io/freecodecamp/dataviz/barchart), [Code](https://github.com/bminixhofer/freecodecamp/tree/master/dataviz/barchart))
+- Camper Leaderboard ([Demo](https://bminixhofer.github.io/freecodecamp/dataviz/camper-leaderboard), [Code](https://github.com/bminixhofer/freecodecamp/tree/master/dataviz/camper-leaderboard))
+- Force Directed Graph ([Demo](https://bminixhofer.github.io/freecodecamp/dataviz/forcegraph), [Code](https://github.com/bminixhofer/freecodecamp/tree/master/dataviz/forcegraph))
+- Game Of Life ([Demo](https://bminixhofer.github.io/freecodecamp/dataviz/game-of-life), [Code](https://github.com/bminixhofer/freecodecamp/tree/master/dataviz/game-of-life))
+- Heatmap ([Demo](https://bminixhofer.github.io/freecodecamp/dataviz/heatmap), [Code](https://github.com/bminixhofer/freecodecamp/tree/master/dataviz/heatmap))
+- Markdown Previewer ([Demo](https://bminixhofer.github.io/freecodecamp/dataviz/markdown-previewer), [Code](https://github.com/bminixhofer/freecodecamp/tree/master/dataviz/markdown-previewer))
+- Meteorite Map ([Demo](https://bminixhofer.github.io/freecodecamp/dataviz/meteoritemap), [Code](https://github.com/bminixhofer/freecodecamp/tree/master/dataviz/meteoritemap))
+- Recipe Box ([Demo](https://bminixhofer.github.io/freecodecamp/dataviz/recipe-box), [Code](https://github.com/bminixhofer/freecodecamp/tree/master/dataviz/recipe-box))
+- Roguelike ([Demo](https://bminixhofer.github.io/freecodecamp/dataviz/roguelike), [Code](https://github.com/bminixhofer/freecodecamp/tree/master/dataviz/roguelike))
+- Scatterplot ([Demo](https://bminixhofer.github.io/freecodecamp/dataviz/scatterplot), [Code](https://github.com/bminixhofer/freecodecamp/tree/master/dataviz/scatterplot))
